@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+:root {
+  --dz-green: #006233;
+  --dz-green-light: #00894a;
+  --dz-green-dark: #004d28;
+  --dz-red: #d21034;
+  --dz-white: #ffffff;
+  --dz-gray-50: #f8faf9;
+  --dz-gray-100: #f0f4f1;
+  --dz-gray-200: #dce5de;
+  --dz-gray-300: #b8c9bc;
+  --dz-gray-400: #8fa896;
+  --dz-gray-500: #6b8573;
+  --dz-gray-600: #4a5e50;
+  --dz-gray-700: #2d3b32;
+  --dz-gray-800: #1a2420;
+  --dz-gray-900: #0d1210;
+  --background: #ffffff;
+  --foreground: #1a2420;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-dz-green: var(--dz-green);
+  --color-dz-green-light: var(--dz-green-light);
+  --color-dz-green-dark: var(--dz-green-dark);
+  --color-dz-red: var(--dz-red);
+  --color-dz-gray-50: var(--dz-gray-50);
+  --color-dz-gray-100: var(--dz-gray-100);
+  --color-dz-gray-200: var(--dz-gray-200);
+  --color-dz-gray-300: var(--dz-gray-300);
+  --color-dz-gray-400: var(--dz-gray-400);
+  --color-dz-gray-500: var(--dz-gray-500);
+  --color-dz-gray-600: var(--dz-gray-600);
+  --color-dz-gray-700: var(--dz-gray-700);
+  --color-dz-gray-800: var(--dz-gray-800);
+  --color-dz-gray-900: var(--dz-gray-900);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
