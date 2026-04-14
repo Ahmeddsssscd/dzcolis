@@ -1,9 +1,18 @@
 import Link from "next/link";
 import HeroSearch from "@/components/HeroSearch";
+import { EUROPEAN_COUNTRIES } from "@/lib/data";
+
+const internationalRoutes = [
+  { country: "France", flag: "🇫🇷", route: "Alger → Paris", price: "à partir de 4 500 DA" },
+  { country: "Espagne", flag: "🇪🇸", route: "Oran → Madrid", price: "à partir de 3 800 DA" },
+  { country: "Belgique", flag: "🇧🇪", route: "Alger → Bruxelles", price: "à partir de 4 200 DA" },
+  { country: "Allemagne", flag: "🇩🇪", route: "Alger → Berlin", price: "à partir de 6 500 DA" },
+  { country: "Italie", flag: "🇮🇹", route: "Constantine → Milan", price: "à partir de 3 500 DA" },
+];
 
 const stats = [
   { value: "50 000+", label: "Utilisateurs" },
-  { value: "48 wilayas", label: "Couvertes" },
+  { value: "69 wilayas", label: "Couvertes" },
   { value: "0.2%", label: "Taux de réclamation" },
   { value: "60%", label: "D'économies en moyenne" },
 ];
@@ -131,7 +140,7 @@ export default function Home() {
       </section>
 
       {/* Stats */}
-      <section className="bg-dz-gray-50 border-b border-dz-gray-200">
+      <section className="bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((s) => (
@@ -169,7 +178,7 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section className="py-20 bg-dz-gray-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">Pourquoi DZColis ?</h2>
@@ -179,7 +188,7 @@ export default function Home() {
             {features.map((f) => (
               <div
                 key={f.title}
-                className="bg-white rounded-2xl p-6 border border-dz-gray-200 hover:border-dz-green/30 hover:shadow-lg transition-all"
+                className="bg-dz-gray-50 rounded-2xl p-6 border border-dz-gray-100 hover:border-dz-green/30 hover:shadow-lg transition-all"
               >
                 <div className="w-12 h-12 bg-dz-green/10 text-dz-green rounded-xl flex items-center justify-center mb-4">
                   {f.icon}
@@ -193,7 +202,7 @@ export default function Home() {
       </section>
 
       {/* Popular Routes */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-white pt-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">Trajets populaires</h2>
@@ -204,7 +213,7 @@ export default function Home() {
               <Link
                 key={`${r.from}-${r.to}`}
                 href="/annonces"
-                className="flex items-center justify-between p-5 bg-dz-gray-50 rounded-xl border border-dz-gray-200 hover:border-dz-green/30 hover:shadow-md transition-all group"
+                className="flex items-center justify-between p-5 bg-dz-gray-50 rounded-xl border border-dz-gray-100 hover:border-dz-green/30 hover:shadow-md transition-all group"
               >
                 <div className="flex items-center gap-3">
                   <div className="text-dz-green">
@@ -220,6 +229,58 @@ export default function Home() {
                 <span className="text-sm text-dz-green font-medium">{r.price}</span>
               </Link>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* International Section */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <div className="inline-flex items-center gap-2 bg-dz-green/10 text-dz-green rounded-full px-4 py-1.5 text-sm font-medium mb-4">
+              ✈️ Nouveau — Service international
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">
+              Envoyez entre l&apos;Algérie et l&apos;Europe
+            </h2>
+            <p className="text-dz-gray-500 mt-3 max-w-xl mx-auto">
+              Des transporteurs vérifiés qui font régulièrement le trajet entre l&apos;Algérie et 5 pays européens
+            </p>
+            <div className="flex justify-center gap-3 mt-4 text-3xl">
+              {EUROPEAN_COUNTRIES.map((c) => (
+                <span key={c.code} title={c.name}>{c.flag}</span>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+            {internationalRoutes.map((r) => (
+              <Link
+                key={r.country}
+                href="/international"
+                className="bg-dz-gray-50 rounded-2xl border border-dz-gray-100 hover:border-dz-green/40 hover:shadow-md transition-all p-5 text-center group"
+              >
+                <div className="text-4xl mb-2">{r.flag}</div>
+                <div className="font-semibold text-dz-gray-800 text-sm mb-1">{r.country}</div>
+                <div className="text-xs text-dz-gray-500 mb-2">{r.route}</div>
+                <div className="text-xs font-medium text-dz-green">{r.price}</div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/international"
+              className="bg-dz-green hover:bg-dz-green-light text-white px-8 py-3.5 rounded-xl font-semibold transition-colors text-center"
+            >
+              Voir les transporteurs internationaux
+            </Link>
+            <Link
+              href="/international/devenir-transporteur"
+              className="border-2 border-dz-green text-dz-green hover:bg-dz-green/5 px-8 py-3.5 rounded-xl font-semibold transition-colors text-center"
+            >
+              Devenir transporteur international
+            </Link>
           </div>
         </div>
       </section>

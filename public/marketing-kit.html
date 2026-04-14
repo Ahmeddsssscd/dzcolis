@@ -1,0 +1,1440 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DZColis — Kit Marketing 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --green: #16a34a;
+    --green-light: #22c55e;
+    --green-dark: #15803d;
+    --green-50: #f0fdf4;
+    --green-100: #dcfce7;
+    --gray-50: #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --orange: #f97316;
+    --blue: #3b82f6;
+    --red: #ef4444;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--gray-800);
+    background: #fff;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  /* ── Cover page ── */
+  .cover {
+    background: var(--gray-900);
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 60px;
+    page-break-after: always;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -120px; right: -120px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(22,163,74,0.25) 0%, transparent 70%);
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 350px; height: 350px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(22,163,74,0.15) 0%, transparent 70%);
+  }
+  .cover-logo {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: auto;
+  }
+  .logo-box {
+    width: 56px; height: 56px;
+    background: var(--green);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; font-weight: 900; color: white;
+    letter-spacing: -0.5px;
+  }
+  .logo-text { font-size: 28px; font-weight: 800; }
+  .logo-text span { color: var(--green-light); }
+  .cover-content { margin-top: auto; }
+  .cover-tag {
+    display: inline-block;
+    background: rgba(22,163,74,0.2);
+    color: var(--green-light);
+    border: 1px solid rgba(22,163,74,0.4);
+    border-radius: 20px;
+    padding: 5px 16px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 24px;
+  }
+  .cover h1 {
+    font-size: 52px;
+    font-weight: 900;
+    line-height: 1.1;
+    margin-bottom: 20px;
+    letter-spacing: -1px;
+  }
+  .cover h1 span { color: var(--green-light); }
+  .cover-sub {
+    font-size: 18px;
+    color: rgba(255,255,255,0.6);
+    max-width: 520px;
+    margin-bottom: 48px;
+  }
+  .cover-meta {
+    display: flex; gap: 40px;
+  }
+  .cover-meta-item { }
+  .cover-meta-item .label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: rgba(255,255,255,0.4); margin-bottom: 4px; }
+  .cover-meta-item .value { font-size: 15px; font-weight: 600; color: rgba(255,255,255,0.9); }
+
+  /* ── Page layout ── */
+  .page {
+    padding: 56px 60px;
+    page-break-after: always;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .page:last-child { page-break-after: auto; }
+
+  /* ── Section headers ── */
+  .section-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-50);
+    color: var(--green);
+    border: 1px solid var(--green-100);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-bottom: 12px;
+  }
+  .section-tag .dot {
+    width: 6px; height: 6px;
+    background: var(--green);
+    border-radius: 50%;
+  }
+  h2 {
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--gray-900);
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+    line-height: 1.2;
+  }
+  h2 span { color: var(--green); }
+  .subtitle {
+    font-size: 15px;
+    color: var(--gray-500);
+    margin-bottom: 40px;
+  }
+  h3 { font-size: 18px; font-weight: 700; color: var(--gray-800); margin-bottom: 12px; }
+  h4 { font-size: 14px; font-weight: 700; color: var(--gray-800); margin-bottom: 8px; }
+
+  /* ── Divider ── */
+  .divider { height: 1px; background: var(--gray-100); margin: 32px 0; }
+
+  /* ── Stat cards ── */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+    margin-bottom: 40px;
+  }
+  .stat-card {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    padding: 20px;
+  }
+  .stat-card .number {
+    font-size: 32px; font-weight: 900; color: var(--green);
+    line-height: 1;
+  }
+  .stat-card .stat-label { font-size: 12px; color: var(--gray-500); margin-top: 4px; }
+
+  /* ── Positioning matrix ── */
+  .positioning-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
+    margin-bottom: 32px;
+  }
+  .pos-card {
+    border-radius: 16px; padding: 20px;
+  }
+  .pos-card.us { background: var(--green-50); border: 1.5px solid var(--green-100); }
+  .pos-card.them { background: #fff7ed; border: 1.5px solid #fed7aa; }
+  .pos-card .pos-label {
+    font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+  .pos-card.us .pos-label { color: var(--green); }
+  .pos-card.them .pos-label { color: var(--orange); }
+  .pos-card ul { list-style: none; }
+  .pos-card ul li { font-size: 13px; padding: 4px 0; color: var(--gray-700); }
+  .pos-card ul li::before { content: '→ '; color: var(--green); font-weight: 700; }
+  .pos-card.them ul li::before { color: var(--orange); }
+
+  /* ── Timeline / phases ── */
+  .phases { display: flex; flex-direction: column; gap: 0; }
+  .phase {
+    display: flex; gap: 24px; align-items: flex-start;
+    padding-bottom: 32px;
+    position: relative;
+  }
+  .phase:last-child { padding-bottom: 0; }
+  .phase-line {
+    position: absolute;
+    left: 19px; top: 40px;
+    width: 2px;
+    bottom: 0;
+    background: var(--gray-200);
+  }
+  .phase:last-child .phase-line { display: none; }
+  .phase-num {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 800;
+    flex-shrink: 0;
+    position: relative; z-index: 1;
+  }
+  .phase-num.p1 { background: var(--green-50); color: var(--green); border: 2px solid var(--green); }
+  .phase-num.p2 { background: #eff6ff; color: var(--blue); border: 2px solid var(--blue); }
+  .phase-num.p3 { background: #fff7ed; color: var(--orange); border: 2px solid var(--orange); }
+  .phase-content { flex: 1; }
+  .phase-header { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+  .phase-title { font-size: 16px; font-weight: 700; color: var(--gray-800); }
+  .phase-period {
+    font-size: 11px; font-weight: 600;
+    padding: 3px 10px; border-radius: 20px;
+  }
+  .p1 + .phase-content .phase-period { background: var(--green-50); color: var(--green); }
+  .p2 + .phase-content .phase-period { background: #eff6ff; color: var(--blue); }
+  .p3 + .phase-content .phase-period { background: #fff7ed; color: var(--orange); }
+  .phase-content ul { list-style: none; }
+  .phase-content ul li {
+    font-size: 13px; color: var(--gray-600);
+    padding: 3px 0;
+    padding-left: 16px;
+    position: relative;
+  }
+  .phase-content ul li::before {
+    content: '·';
+    position: absolute; left: 0;
+    font-weight: 900; color: var(--green);
+  }
+
+  /* ── Target segments ── */
+  .segments { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+  .segment-card {
+    border: 1px solid var(--gray-200);
+    border-radius: 16px; padding: 20px;
+    background: #fff;
+  }
+  .seg-icon {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 12px;
+  }
+  .seg-icon svg { width: 22px; height: 22px; }
+  .segment-card h4 { margin-bottom: 4px; }
+  .segment-card p { font-size: 12px; color: var(--gray-500); }
+  .seg-tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 8px; }
+
+  /* ── Channel strategy ── */
+  .channels { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .channel-card {
+    border: 1px solid var(--gray-200);
+    border-radius: 16px; padding: 20px;
+  }
+  .channel-header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+  .channel-icon {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .ch-fb { background: #1877f2; }
+  .ch-ig { background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+  .ch-wa { background: #25d366; }
+  .ch-yt { background: #ff0000; }
+  .channel-icon svg { width: 18px; height: 18px; fill: white; }
+  .channel-card h4 { font-size: 14px; margin-bottom: 0; }
+  .channel-card .freq { font-size: 11px; color: var(--gray-400); }
+  .channel-card ul { list-style: none; margin-top: 10px; }
+  .channel-card ul li { font-size: 12px; color: var(--gray-600); padding: 3px 0; padding-left: 14px; position: relative; }
+  .channel-card ul li::before { content: '→'; position: absolute; left: 0; color: var(--green); font-size: 11px; }
+
+  /* ── LOGO SECTION ── */
+  .logo-variants { display: flex; flex-direction: column; gap: 24px; }
+  .logo-row {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;
+  }
+  .logo-swatch {
+    border-radius: 16px;
+    padding: 32px 20px;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 8px;
+  }
+  .logo-swatch .swatch-label { font-size: 10px; color: var(--gray-400); margin-top: 8px; text-align: center; }
+  .ls-light { background: #fff; border: 1px solid var(--gray-200); }
+  .ls-dark { background: var(--gray-900); }
+  .ls-green { background: var(--green); }
+
+  /* inline logo */
+  .dz-logo { display: flex; align-items: center; gap: 10px; }
+  .dz-box {
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; color: white;
+    letter-spacing: -0.5px;
+    flex-shrink: 0;
+  }
+  .dz-box.sm { width: 32px; height: 32px; font-size: 12px; border-radius: 8px; }
+  .dz-box.md { width: 44px; height: 44px; font-size: 16px; border-radius: 11px; }
+  .dz-box.lg { width: 56px; height: 56px; font-size: 20px; border-radius: 14px; }
+  .dz-box.green { background: var(--green); }
+  .dz-box.white { background: #fff; color: var(--green); }
+  .dz-name { font-weight: 800; }
+  .dz-name.dark { color: var(--gray-900); }
+  .dz-name.light { color: #fff; }
+  .dz-name.sm { font-size: 16px; }
+  .dz-name.md { font-size: 22px; }
+  .dz-name.lg { font-size: 28px; }
+  .accent-green { color: var(--green-light); }
+  .accent-dark { color: var(--green); }
+
+  /* icon-only logo */
+  .icon-logo-wrap {
+    display: flex; gap: 12px; justify-content: center;
+  }
+
+  /* ── Color palette ── */
+  .palette { display: flex; gap: 12px; margin-bottom: 24px; }
+  .color-swatch { flex: 1; }
+  .color-swatch .swatch { height: 64px; border-radius: 10px; margin-bottom: 6px; }
+  .color-swatch .hex { font-size: 12px; font-weight: 600; color: var(--gray-700); font-family: monospace; }
+  .color-swatch .name { font-size: 11px; color: var(--gray-500); }
+
+  /* ── Typography ── */
+  .type-samples { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .type-sample { display: flex; align-items: baseline; gap: 20px; }
+  .type-sample .ts-label { font-size: 11px; color: var(--gray-400); width: 100px; flex-shrink: 0; }
+  .ts-h1 { font-size: 32px; font-weight: 900; color: var(--gray-900); letter-spacing: -0.5px; }
+  .ts-h2 { font-size: 22px; font-weight: 700; color: var(--gray-800); }
+  .ts-body { font-size: 14px; color: var(--gray-600); }
+  .ts-caption { font-size: 11px; color: var(--gray-400); }
+  .ts-cta { font-size: 13px; font-weight: 600; color: var(--green); }
+
+  /* ── Instagram grid ── */
+  .ig-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 3px; border-radius: 8px; overflow: hidden; margin-bottom: 32px; }
+  .ig-post {
+    aspect-ratio: 1;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: 12px;
+    text-align: center; padding: 12px;
+    position: relative; overflow: hidden;
+  }
+  .ig-post .post-label { position: relative; z-index: 1; }
+  .ig-1 { background: var(--green); color: #fff; }
+  .ig-2 { background: var(--gray-900); color: #fff; }
+  .ig-3 { background: var(--green-50); color: var(--green-dark); border: 1px solid var(--green-100); }
+  .ig-4 { background: var(--gray-800); color: #fff; }
+  .ig-5 { background: var(--green-light); color: #fff; }
+  .ig-6 { background: #fff; color: var(--gray-800); border: 1px solid var(--gray-200); }
+  .ig-7 { background: var(--green); color: #fff; }
+  .ig-8 { background: var(--green-50); color: var(--green-dark); border: 1px solid var(--green-100); }
+  .ig-9 { background: var(--gray-900); color: #fff; }
+
+  /* ── Post templates ── */
+  .post-templates { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 32px; }
+  .post-tpl {
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  .post-tpl .pt-header { padding: 10px 14px; display: flex; align-items: center; gap: 8px; background: #fff; border-bottom: 1px solid var(--gray-100); }
+  .pt-avatar { width: 28px; height: 28px; border-radius: 50%; background: var(--green); display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; flex-shrink: 0; }
+  .pt-name { font-size: 11px; font-weight: 700; color: var(--gray-800); }
+  .pt-handle { font-size: 10px; color: var(--gray-400); }
+  .pt-body { aspect-ratio: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; position: relative; overflow: hidden; }
+  .pt-footer { padding: 10px 14px; background: #fff; }
+  .pt-caption { font-size: 10px; color: var(--gray-600); line-height: 1.5; }
+  .pt-tags { font-size: 10px; color: var(--blue); margin-top: 4px; }
+
+  /* Post 1 — dark */
+  .pt1-body { background: var(--gray-900); }
+  .pt1-body .pt-kicker { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: var(--green-light); margin-bottom: 12px; }
+  .pt1-body .pt-headline { font-size: 20px; font-weight: 900; color: #fff; line-height: 1.2; margin-bottom: 12px; letter-spacing: -0.3px; }
+  .pt1-body .pt-sub { font-size: 11px; color: rgba(255,255,255,0.5); }
+  .pt1-body .pt-badge { background: var(--green); color: #fff; font-size: 10px; font-weight: 700; padding: 5px 14px; border-radius: 20px; margin-top: 16px; }
+
+  /* Post 2 — green */
+  .pt2-body { background: var(--green); }
+  .pt2-body .pt-kicker { font-size: 9px; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.7); margin-bottom: 10px; }
+  .pt2-body .pt-headline { font-size: 22px; font-weight: 900; color: #fff; line-height: 1.15; margin-bottom: 10px; }
+  .pt2-body .pt-sub { font-size: 11px; color: rgba(255,255,255,0.75); }
+  .pt2-deco { position: absolute; top: -20px; right: -20px; width: 100px; height: 100px; border-radius: 50%; background: rgba(255,255,255,0.08); }
+
+  /* Post 3 — testimonial */
+  .pt3-body { background: var(--green-50); border: 1px solid var(--green-100); }
+  .pt3-body .pt-quote { font-size: 36px; color: var(--green); line-height: 1; margin-bottom: 8px; font-family: Georgia, serif; }
+  .pt3-body .pt-headline { font-size: 14px; font-weight: 600; color: var(--gray-800); line-height: 1.5; margin-bottom: 12px; font-style: italic; }
+  .pt3-body .pt-author { font-size: 11px; font-weight: 700; color: var(--green); }
+  .pt3-body .pt-stars { color: #f59e0b; font-size: 14px; margin-bottom: 8px; }
+
+  /* Post 4 — stats */
+  .pt4-body { background: var(--gray-900); flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  .pt4-stat { flex: 1; min-width: 45%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 12px; }
+  .pt4-stat .pt4-num { font-size: 22px; font-weight: 900; color: var(--green-light); }
+  .pt4-stat .pt4-lbl { font-size: 10px; color: rgba(255,255,255,0.5); margin-top: 2px; }
+  .pt4-title { width: 100%; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; text-align: center; padding-bottom: 4px; }
+
+  /* ── FB page mockup ── */
+  .fb-mockup {
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .fb-cover {
+    height: 160px;
+    background: linear-gradient(135deg, var(--gray-900) 0%, #1a2f1a 100%);
+    position: relative;
+    display: flex; align-items: flex-end; padding: 20px;
+  }
+  .fb-cover-logo {
+    position: absolute;
+    bottom: -28px; left: 20px;
+    width: 80px; height: 80px;
+    background: var(--green);
+    border-radius: 16px;
+    border: 4px solid #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 900; color: #fff;
+  }
+  .fb-cover-text {
+    position: absolute; top: 20px; right: 20px;
+    text-align: right;
+  }
+  .fb-cover-text .fc-tag { font-size: 9px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 1px; }
+  .fb-cover-text .fc-name { font-size: 18px; font-weight: 800; color: #fff; }
+  .fb-cover-text .fc-name span { color: var(--green-light); }
+  .fb-cover-slogan { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 2px; }
+  .fb-info {
+    background: #fff;
+    padding: 40px 20px 20px;
+  }
+  .fb-name { font-size: 20px; font-weight: 800; color: var(--gray-900); }
+  .fb-cat { font-size: 12px; color: var(--gray-400); margin-bottom: 8px; }
+  .fb-desc { font-size: 12px; color: var(--gray-600); line-height: 1.6; max-width: 400px; }
+  .fb-stats { display: flex; gap: 24px; margin-top: 16px; }
+  .fb-stat { font-size: 11px; color: var(--gray-500); }
+  .fb-stat strong { display: block; font-size: 15px; color: var(--gray-800); font-weight: 700; }
+
+  /* ── IG bio ── */
+  .ig-profile {
+    display: flex; gap: 24px; align-items: flex-start;
+    margin-bottom: 24px;
+    padding: 24px;
+    background: #fff;
+    border: 1px solid var(--gray-200);
+    border-radius: 16px;
+  }
+  .ig-avatar {
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: var(--green);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; font-weight: 900; color: #fff;
+    flex-shrink: 0;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    box-shadow: 0 0 0 3px var(--green);
+  }
+  .ig-bio-name { font-size: 16px; font-weight: 700; color: var(--gray-900); margin-bottom: 2px; }
+  .ig-bio-handle { font-size: 12px; color: var(--gray-400); margin-bottom: 8px; }
+  .ig-bio-text { font-size: 12px; color: var(--gray-700); line-height: 1.6; }
+  .ig-bio-link { font-size: 12px; color: var(--blue); margin-top: 4px; }
+  .ig-bio-stats { display: flex; gap: 20px; margin-top: 12px; }
+  .ig-bio-stat { text-align: center; }
+  .ig-bio-stat .num { font-size: 15px; font-weight: 700; color: var(--gray-900); }
+  .ig-bio-stat .lbl { font-size: 10px; color: var(--gray-500); }
+
+  /* ── KPI table ── */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--gray-50); }
+  th { text-align: left; padding: 10px 14px; font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.8px; border-bottom: 1px solid var(--gray-200); }
+  td { padding: 10px 14px; border-bottom: 1px solid var(--gray-100); color: var(--gray-700); }
+  tr:last-child td { border-bottom: none; }
+  .kpi-tag { display: inline-block; font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 10px; }
+  .kpi-acq { background: #eff6ff; color: var(--blue); }
+  .kpi-eng { background: var(--green-50); color: var(--green); }
+  .kpi-rev { background: #fff7ed; color: var(--orange); }
+  .kpi-ret { background: #fdf4ff; color: #9333ea; }
+
+  /* ── Referral schema ── */
+  .referral-schema {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: 20px;
+    padding: 32px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 0; flex-wrap: nowrap;
+    margin-bottom: 24px;
+    overflow-x: auto;
+  }
+  .rs-node {
+    display: flex; flex-direction: column; align-items: center;
+    text-align: center; min-width: 80px;
+  }
+  .rs-circle {
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .rs-circle.c-green { background: var(--green); color: #fff; }
+  .rs-circle.c-blue { background: #eff6ff; color: var(--blue); border: 2px solid #bfdbfe; }
+  .rs-circle.c-orange { background: #fff7ed; color: var(--orange); border: 2px solid #fed7aa; }
+  .rs-label { font-size: 10px; color: var(--gray-500); }
+  .rs-arrow {
+    display: flex; flex-direction: column; align-items: center;
+    padding: 0 8px; padding-bottom: 20px;
+  }
+  .rs-arrow-line { width: 40px; height: 2px; background: var(--gray-300); }
+  .rs-arrow-tip { color: var(--gray-400); font-size: 18px; margin-left: -4px; line-height: 1; margin-top: -2px; }
+  .rs-arrow-label { font-size: 9px; color: var(--green); font-weight: 600; margin-top: 6px; white-space: nowrap; }
+
+  /* ── Print styles ── */
+  @media print {
+    body { font-size: 12px; }
+    .cover { min-height: 297mm; }
+    .page { padding: 40px 48px; }
+    h2 { font-size: 26px; }
+    .post-templates { grid-template-columns: 1fr 1fr; }
+    .no-print { display: none; }
+  }
+
+  @page {
+    margin: 0;
+    size: A4 portrait;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ COVER ═══════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-logo">
+    <div class="logo-box">DZ</div>
+    <div class="logo-text">Colis <span>Algeria</span></div>
+  </div>
+  <div class="cover-content">
+    <div class="cover-tag">Kit Marketing Officiel</div>
+    <h1>Stratégie<br/>Go-to-<span>Market</span><br/>Algérie 2026</h1>
+    <p class="cover-sub">Positionnement, acquisition, réseaux sociaux, identité visuelle et templates de contenu pour le lancement de DZColis sur le marché algérien.</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="label">Document</div>
+        <div class="value">Confidentiel</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">Version</div>
+        <div class="value">1.0 — Avril 2026</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="label">Marché</div>
+        <div class="value">Algérie + Europe</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ PAGE 1 — Opportunité ═══════════════════════════════════════ -->
+<div class="page">
+  <div class="section-tag"><span class="dot"></span> Contexte</div>
+  <h2>L'opportunité de <span>marché</span></h2>
+  <p class="subtitle">Le marché du colis en Algérie est sous-équipé — DZColis arrive au bon moment.</p>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="number">46M</div>
+      <div class="stat-label">habitants en Algérie</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">3M+</div>
+      <div class="stat-label">Algériens en Europe (diaspora)</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">~0</div>
+      <div class="stat-label">plateforme P2P de colis existante</div>
+    </div>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="number">+40%</div>
+      <div class="stat-label">croissance e-commerce en DZ (2023–2025)</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">5×</div>
+      <div class="stat-label">moins cher que DHL/Fedex pour envois EU→DZ</div>
+    </div>
+    <div class="stat-card">
+      <div class="number">2 à 7j</div>
+      <div class="stat-label">délai de livraison moyen visé</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Problèmes actuels du marché</h3>
+  <div class="positioning-grid">
+    <div class="pos-card them">
+      <div class="pos-label">⚠ Ce qui bloque les gens aujourd'hui</div>
+      <ul>
+        <li>Envois EU→DZ très coûteux (DHL, Chronopost)</li>
+        <li>Aucune solution de confiance entre particuliers</li>
+        <li>Paiements non sécurisés, arnaques fréquentes</li>
+        <li>Zéro traçabilité sur les colis</li>
+        <li>Douanes complexes, mal expliquées</li>
+        <li>Aucune assurance sur les envois particuliers</li>
+      </ul>
+    </div>
+    <div class="pos-card us">
+      <div class="pos-label">✓ Ce que DZColis résout</div>
+      <ul>
+        <li>Mise en relation directe voyageurs ↔ expéditeurs</li>
+        <li>Paiement sécurisé en escrow (déblocage à réception)</li>
+        <li>Suivi en temps réel avec étape douane</li>
+        <li>Score de confiance + avis vérifiés</li>
+        <li>Assurance DZColis Protect intégrée</li>
+        <li>Déclaration de contenu légale à chaque envoi</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ PAGE 2 — Audiences ═══════════════════════════════════════ -->
+<div class="page">
+  <div class="section-tag"><span class="dot"></span> Audiences cibles</div>
+  <h2>À qui on <span>s'adresse</span></h2>
+  <p class="subtitle">Trois profils prioritaires pour les 6 premiers mois.</p>
+
+  <div class="segments">
+    <div class="segment-card">
+      <div class="seg-icon" style="background:#dcfce7">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#16a34a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+        </svg>
+      </div>
+      <h4>La diaspora algérienne</h4>
+      <p>Algériens en France, Espagne, Belgique qui veulent envoyer des produits ou cadeaux à leur famille en Algérie.</p>
+      <div class="seg-tag" style="background:#dcfce7;color:#15803d">Priorité 1</div>
+    </div>
+    <div class="segment-card">
+      <div class="seg-icon" style="background:#eff6ff">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8zM5.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3zM18.5 21a1.5 1.5 0 100-3 1.5 1.5 0 000 3z"/>
+        </svg>
+      </div>
+      <h4>Les voyageurs fréquents</h4>
+      <p>Personnes qui font régulièrement le trajet Algérie ↔ Europe et peuvent transporter des colis contre rémunération.</p>
+      <div class="seg-tag" style="background:#eff6ff;color:#3b82f6">Priorité 1</div>
+    </div>
+    <div class="segment-card">
+      <div class="seg-icon" style="background:#fff7ed">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+        </svg>
+      </div>
+      <h4>PME &amp; e-commerçants DZ</h4>
+      <p>Petites boutiques algériennes qui importent des produits d'Europe et cherchent une alternative moins chère aux transporteurs classiques.</p>
+      <div class="seg-tag" style="background:#fff7ed;color:#f97316">Priorité 2</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <h3>Message clé par audience</h3>
+  <div style="display:flex;flex-direction:column;gap:12px;">
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <div style="width:28px;height:28px;background:var(--green);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:11px;flex-shrink:0">1</div>
+      <div>
+        <strong style="font-size:13px">Diaspora :</strong>
+        <span style="font-size:13px;color:var(--gray-600)"> « Envoyez à vos proches en Algérie pour 5× moins cher — en toute sécurité. »</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <div style="width:28px;height:28px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:11px;flex-shrink:0">2</div>
+      <div>
+        <strong style="font-size:13px">Voyageurs :</strong>
+        <span style="font-size:13px;color:var(--gray-600)"> « Rentabilisez vos trajets — transportez des colis et gagnez de l'argent facilement. »</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;align-items:flex-start">
+      <div style="width:28px;height:28px;background:var(--orange);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:11px;flex-shrink:0">3</div>
+      <div>
+        <strong style="font-size:13px">PME :</strong>
+        <span style="font-size:13px;color:var(--gray-600)"> « Importez vos produits depuis l'Europe sans passer par DHL. Économisez jusqu'à 70% sur vos frais d'envoi. »</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ PAGE 3 — Phases ═══════════════════════════════════════ -->
+<div class="page">
+  <div class="section-tag"><span class="dot"></span> Plan de lancement</div>
+  <h2>Stratégie en <span>3 phases</span></h2>
+  <p class="subtitle">Un déploiement progressif pour valider, croître et dominer le marché.</p>
+
+  <div class="phases">
+    <div class="phase">
+      <div class="phase-line"></div>
+      <div class="phase-num p1">1</div>
+      <div class="phase-content">
+        <div class="phase-header">
+          <div class="phase-title">Validation &amp; Community Building</div>
+          <div class="phase-period">Mois 1–2</div>
+        </div>
+        <ul>
+          <li>Lancement soft — invitations fermées (100 beta users)</li>
+          <li>Groupe Facebook privé "DZColis Bêta" — feedback quotidien</li>
+          <li>Identifier les 10 premiers "ambassadeurs" influents (voyageurs fréquents)</li>
+          <li>Tests sur la route Alger–Paris (volume, friction, temps de livraison)</li>
+          <li>Collecte de 50+ avis Google Business + stories Instagram réels</li>
+          <li>Objectif : 100 expéditions réussies documentées</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-line"></div>
+      <div class="phase-num p2">2</div>
+      <div class="phase-content">
+        <div class="phase-header">
+          <div class="phase-title">Acquisition &amp; Croissance Organique</div>
+          <div class="phase-period">Mois 3–6</div>
+        </div>
+        <ul>
+          <li>Lancement programme de parrainage (500 DA offerts / filleul actif)</li>
+          <li>Contenu viral : vidéos TikTok/Reels "Je transporte des colis pour gagner de l'argent"</li>
+          <li>Partenariats micro-influenceurs diaspora (10K–100K abonnés)</li>
+          <li>Annonces Facebook ciblées : Algériens en France, 25–45 ans</li>
+          <li>Articles dans la presse algérienne (Liberté, El Watan, TSA)</li>
+          <li>Objectif : 1 000 utilisateurs actifs / mois</li>
+        </ul>
+      </div>
+    </div>
+    <div class="phase">
+      <div class="phase-num p3">3</div>
+      <div class="phase-content">
+        <div class="phase-header">
+          <div class="phase-title">Scalabilité &amp; Monétisation</div>
+          <div class="phase-period">Mois 7–12</div>
+        </div>
+        <ul>
+          <li>Expansion wilaya par wilaya (commencer par Alger, Oran, Constantine)</li>
+          <li>Intégration paiement CIB/Edahabia pour utilisateurs algériens locaux</li>
+          <li>Offre B2B : abonnement mensuel pour PME importatrices</li>
+          <li>Application mobile (iOS + Android)</li>
+          <li>Partenariats agences de voyage algériennes (conversion voyageurs)</li>
+          <li>Objectif : 10 000 utilisateurs, 500 expéditions/mois</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ PAGE 4 — Canaux ═══════════════════════════════════════ -->
+<div class="page">
+  <div class="section-tag"><span class="dot"></span> Réseaux sociaux</div>
+  <h2>Stratégie <span>digitale</span></h2>
+  <p class="subtitle">Les canaux à activer, dans l'ordre de priorité.</p>
+
+  <div class="channels">
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon ch-fb">
+          <svg viewBox="0 0 24 24"><path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z"/></svg>
+        </div>
+        <div>
+          <h4>Facebook</h4>
+          <div class="freq">Priorité 1 — 1 post/jour</div>
+        </div>
+      </div>
+      <ul>
+        <li>Page officielle + groupe communautaire</li>
+        <li>Publicités ciblées diaspora (France, Belgique, Canada)</li>
+        <li>Marketplace : annonces de trajets disponibles</li>
+        <li>Témoignages vidéo clients</li>
+        <li>FAQ et support direct via Messenger</li>
+      </ul>
+    </div>
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon ch-ig">
+          <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </div>
+        <div>
+          <h4>Instagram</h4>
+          <div class="freq">Priorité 1 — 5 Reels/semaine</div>
+        </div>
+      </div>
+      <ul>
+        <li>Reels : "Un colis envoyé en 3 étapes" (viral format)</li>
+        <li>Stories quotidiennes : annonces disponibles, témoignages</li>
+        <li>Carousels éducatifs : douane, emballage, assurance</li>
+        <li>Collaboration influenceurs diaspora</li>
+        <li>Grille cohérente : vert + dark (voir templates)</li>
+      </ul>
+    </div>
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon ch-wa">
+          <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </div>
+        <div>
+          <h4>WhatsApp Business</h4>
+          <div class="freq">Priorité 1 — Support temps réel</div>
+        </div>
+      </div>
+      <ul>
+        <li>Numéro dédié : +33 6 27 53 04 84</li>
+        <li>Catalogue de services dans l'appli</li>
+        <li>Diffusion hebdo : annonces disponibles</li>
+        <li>Groupes communautaires par wilaya</li>
+        <li>Automatisation réponses fréquentes</li>
+      </ul>
+    </div>
+    <div class="channel-card">
+      <div class="channel-header">
+        <div class="channel-icon ch-yt">
+          <svg viewBox="0 0 24 24"><path d="M22.54 6.42a2.78 2.78 0 00-1.95-1.96C18.88 4 12 4 12 4s-6.88 0-8.59.46a2.78 2.78 0 00-1.95 1.96A29 29 0 001 12a29 29 0 00.46 5.58A2.78 2.78 0 003.41 19.6C5.12 20 12 20 12 20s6.88 0 8.59-.4a2.78 2.78 0 001.95-1.95A29 29 0 0023 12a29 29 0 00-.46-5.58z"/><polygon points="9.75 15.02 15.5 12 9.75 8.98 9.75 15.02"/></svg>
+        </div>
+        <div>
+          <h4>TikTok / YouTube Shorts</h4>
+          <div class="freq">Priorité 2 — 3 vidéos/semaine</div>
+        </div>
+      </div>
+      <ul>
+        <li>"Day in the life" d'un transporteur DZColis</li>
+        <li>Tutoriels : comment envoyer un colis pas à pas</li>
+        <li>Comparatifs prix DZColis vs DHL vs Amis</li>
+        <li>Contenu en darija + français pour toucher les deux publics</li>
+        <li>Format court : 30–60 secondes, sous-titres systématiques</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+  <h3>Programme de parrainage — schéma</h3>
+  <div class="referral-schema">
+    <div class="rs-node">
+      <div class="rs-circle c-green" style="font-size:9px;text-align:center;line-height:1.3">Utilisateur<br/>DZColis</div>
+      <div class="rs-label">Parrain</div>
+    </div>
+    <div class="rs-arrow">
+      <div style="display:flex;align-items:center">
+        <div class="rs-arrow-line"></div>
+        <div class="rs-arrow-tip">›</div>
+      </div>
+      <div class="rs-arrow-label">Partage code<br/>DZC-XXXX</div>
+    </div>
+    <div class="rs-node">
+      <div class="rs-circle c-blue" style="font-size:9px;text-align:center;line-height:1.3">Ami<br/>s'inscrit</div>
+      <div class="rs-label">Filleul</div>
+    </div>
+    <div class="rs-arrow">
+      <div style="display:flex;align-items:center">
+        <div class="rs-arrow-line"></div>
+        <div class="rs-arrow-tip">›</div>
+      </div>
+      <div class="rs-arrow-label">1ère expédition<br/>complétée</div>
+    </div>
+    <div class="rs-node">
+      <div class="rs-circle c-orange" style="font-size:9px;text-align:center;line-height:1.3">Récompense<br/>débloquée</div>
+      <div class="rs-label">Résultat</div>
+    </div>
+    <div class="rs-arrow">
+      <div style="display:flex;align-items:center">
+        <div class="rs-arrow-line"></div>
+        <div class="rs-arrow-tip">›</div>
+      </div>
+      <div class="rs-arrow-label">Crédit versé</div>
+    </div>
+    <div class="rs-node">
+      <div class="rs-circle c-green" style="font-size:9px;text-align:center;line-height:1.3">+500 DA<br/>chacun</div>
+      <div class="rs-label">Win-Win</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ PAGE 5 — Logo ═══════════════════════════════════════ -->
+<div class="page">
+  <div class="section-tag"><span class="dot"></span> Identité visuelle</div>
+  <h2>Logo &amp; <span>couleurs</span></h2>
+  <p class="subtitle">Utilisez ces variantes selon le fond et le contexte.</p>
+
+  <!-- Logo variants -->
+  <div class="logo-row" style="margin-bottom:32px">
+    <div class="logo-swatch ls-light">
+      <div class="dz-logo">
+        <div class="dz-box md green">DZ</div>
+        <div class="dz-name md dark">Colis<span class="accent-dark"> DZ</span></div>
+      </div>
+      <div class="swatch-label">Fond blanc / clair</div>
+    </div>
+    <div class="logo-swatch ls-dark">
+      <div class="dz-logo">
+        <div class="dz-box md green">DZ</div>
+        <div class="dz-name md light">Colis<span class="accent-green"> DZ</span></div>
+      </div>
+      <div class="swatch-label" style="color:rgba(255,255,255,0.4)">Fond sombre</div>
+    </div>
+    <div class="logo-swatch ls-green">
+      <div class="dz-logo">
+        <div class="dz-box md white">DZ</div>
+        <div class="dz-name md light">Colis<span style="color:rgba(255,255,255,0.7)"> DZ</span></div>
+      </div>
+      <div class="swatch-label" style="color:rgba(255,255,255,0.6)">Fond vert (brand)</div>
+    </div>
+  </div>
+
+  <!-- Icon only -->
+  <h3 style="margin-bottom:16px">Icône seule (avatar réseaux sociaux)</h3>
+  <div class="icon-logo-wrap" style="margin-bottom:32px;justify-content:flex-start;gap:20px">
+    <!-- Round green -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+      <div style="width:80px;height:80px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff">DZ</div>
+      <div style="font-size:10px;color:var(--gray-400)">Instagram / TikTok</div>
+    </div>
+    <!-- Rounded square green -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+      <div style="width:80px;height:80px;background:var(--green);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff">DZ</div>
+      <div style="font-size:10px;color:var(--gray-400)">Facebook / LinkedIn</div>
+    </div>
+    <!-- Dark square -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+      <div style="width:80px;height:80px;background:var(--gray-900);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:var(--green-light)">DZ</div>
+      <div style="font-size:10px;color:var(--gray-400)">Version sombre</div>
+    </div>
+    <!-- White on green bg -->
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+      <div style="width:80px;height:80px;background:linear-gradient(135deg,var(--green-dark),var(--green-light));border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;color:#fff">DZ</div>
+      <div style="font-size:10px;color:var(--gray-400)">Gradient (stories)</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Color palette -->
+  <h3 style="margin-bottom:16px">Palette de couleurs officielle</h3>
+  <div class="palette">
+    <div class="color-swatch">
+      <div class="swatch" style="background:#16a34a"></div>
+      <div class="hex">#16a34a</div>
+      <div class="name">Vert Principal</div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch" style="background:#22c55e"></div>
+      <div class="hex">#22c55e</div>
+      <div class="name">Vert Clair</div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch" style="background:#15803d"></div>
+      <div class="hex">#15803d</div>
+      <div class="name">Vert Foncé</div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch" style="background:#111827"></div>
+      <div class="hex">#111827</div>
+      <div class="name">Noir Principal</div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch" style="background:#f9fafb;border:1px solid #e5e7eb"></div>
+      <div class="hex">#f9fafb</div>
+      <div class="name">Blanc Cassé</div>
+    </div>
+    <div class="color-swatch">
+      <div class="swatch" style="background:#f97316"></div>
+      <div class="hex">#f97316</div>
+      <div class="name">Orange Accent</div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Typography -->
+  <h3 style="margin-bottom:16px">Typographie</h3>
+  <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:16px;padding:24px">
+    <div class="type-samples">
+      <div class="type-sample">
+        <div class="ts-label">Titre H1</div>
+        <div class="ts-h1">DZColis</div>
+      </div>
+      <div class="type-sample">
+        <div class="ts-label">Titre H2</div>
+        <div class="ts-h2">Envoyez en toute confiance</div>
+      </div>
+      <div class="type-sample">
+        <div class="ts-label">Corps de texte</div>
+        <div class="ts-body">Plateforme collaborative de livraison de colis entre particuliers en Algérie.</div>
+      </div>
+      <div class="type-sample">
+        <div class="ts-label">Légende</div>
+        <div class="ts-caption">Protégé par DZColis Protect — Paiement sécurisé en escrow</div>
+      </div>
+      <div class="type-sample">
+        <div class="ts-label">CTA / Lien</div>
+        <div class="ts-cta">Rejoindre DZColis →</div>
+      </div>
+    </div>
+    <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--gray-200)">
+      <div style="font-size:11px;color:var(--gray-500)">Police officielle : <strong>Inter</strong> (Google Fonts, gratuit) — Poids utilisés : 400, 600, 700, 800, 900</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ PAGE 6 — Facebook ═══════════════════════════════════════ -->
+<div class="page">
+  <div class="section-tag"><span class="dot"></span> Réseaux sociaux</div>
+  <h2>Page <span>Facebook</span></h2>
+  <p class="subtitle">Configuration de la page officielle DZColis.</p>
+
+  <div class="fb-mockup">
+    <div class="fb-cover">
+      <div class="fb-cover-logo">DZ</div>
+      <div class="fb-cover-text">
+        <div class="fc-tag">Plateforme officielle</div>
+        <div class="fc-name">DZ<span>Colis</span></div>
+        <div class="fb-cover-slogan">Envoyez malin. Livrez en confiance.</div>
+      </div>
+      <!-- Cover visual elements -->
+      <div style="position:absolute;bottom:20px;left:120px;color:rgba(255,255,255,0.3);font-size:11px">
+        🇩🇿 Algérie ↔ 🇫🇷 France &nbsp;|&nbsp; 🇩🇿 Algérie ↔ 🇪🇸 Espagne &nbsp;|&nbsp; 🇩🇿 Algérie ↔ 🇧🇪 Belgique
+      </div>
+    </div>
+    <div class="fb-info">
+      <div class="fb-name">DZColis — Livraison Collaborative</div>
+      <div class="fb-cat">Service de transport et logistique · Algérie</div>
+      <div class="fb-desc">La première plateforme collaborative de livraison de colis entre l'Algérie et l'Europe. Envoyez en toute sécurité grâce à des voyageurs vérifiés, un paiement sécurisé et une assurance intégrée.</div>
+      <div class="fb-stats">
+        <div class="fb-stat"><strong>dzcolis.com</strong> Site web</div>
+        <div class="fb-stat"><strong>+33 6 27 53 04 84</strong> WhatsApp</div>
+        <div class="fb-stat"><strong>@dzcolis.officiel</strong> Instagram</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <h3>Calendrier éditorial Facebook — Semaine type</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Jour</th>
+        <th>Type de contenu</th>
+        <th>Format</th>
+        <th>Hashtags clés</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Lundi</strong></td>
+        <td>Annonce trajet disponible (ex: Paris→Alger ce samedi)</td>
+        <td>Image + texte</td>
+        <td>#DZColis #CernisAlgérie</td>
+      </tr>
+      <tr>
+        <td><strong>Mardi</strong></td>
+        <td>Tutoriel : Comment créer une annonce</td>
+        <td>Vidéo 60s</td>
+        <td>#EnvoiColis #AlgérieFrance</td>
+      </tr>
+      <tr>
+        <td><strong>Mercredi</strong></td>
+        <td>Témoignage client (photo + citation)</td>
+        <td>Image</td>
+        <td>#AvisClient #DZColisAvis</td>
+      </tr>
+      <tr>
+        <td><strong>Jeudi</strong></td>
+        <td>Conseil pratique (emballage, douane, assurance)</td>
+        <td>Carrousel 5 slides</td>
+        <td>#ConseilColis #Douane</td>
+      </tr>
+      <tr>
+        <td><strong>Vendredi</strong></td>
+        <td>Offre parrainage : "Invitez un ami, gagnez 500 DA"</td>
+        <td>Image promo</td>
+        <td>#Parrainage #DZColis500DA</td>
+      </tr>
+      <tr>
+        <td><strong>Samedi</strong></td>
+        <td>Stories : derrière les coulisses, équipe, livraisons</td>
+        <td>Stories</td>
+        <td>#DZColisTeam</td>
+      </tr>
+      <tr>
+        <td><strong>Dimanche</strong></td>
+        <td>Question communauté ou sondage</td>
+        <td>Post interactif</td>
+        <td>#CommunautéDZ #VotreAvis</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ═══════════════════════════════════════ PAGE 7 — Instagram ═══════════════════════════════════════ -->
+<div class="page">
+  <div class="section-tag"><span class="dot"></span> Réseaux sociaux</div>
+  <h2>Thème <span>Instagram</span></h2>
+  <p class="subtitle">Grille cohérente : alternance vert — sombre — clair. Moderne et professionnel.</p>
+
+  <!-- IG Profile mockup -->
+  <div class="ig-profile">
+    <div class="ig-avatar">DZ</div>
+    <div>
+      <div class="ig-bio-name">dzcolis.officiel</div>
+      <div class="ig-bio-handle">@dzcolis.officiel</div>
+      <div class="ig-bio-text">
+        📦 Livraison collaborative Algérie ↔ Europe<br/>
+        ✅ Paiement sécurisé · Transporteurs vérifiés<br/>
+        🛡️ DZColis Protect — Assurance intégrée<br/>
+        📲 Envoie ton colis en 3 clics ↓
+      </div>
+      <div class="ig-bio-link">🔗 dzcolis.com</div>
+      <div class="ig-bio-stats">
+        <div class="ig-bio-stat"><div class="num">247</div><div class="lbl">publications</div></div>
+        <div class="ig-bio-stat"><div class="num">12.4K</div><div class="lbl">abonnés</div></div>
+        <div class="ig-bio-stat"><div class="num">892</div><div class="lbl">abonnements</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IG Grid preview -->
+  <h3 style="margin-bottom:12px">Aperçu grille Instagram (thème recommandé)</h3>
+  <div class="ig-grid">
+    <div class="ig-post ig-1"><div class="post-label">📦 Trajet<br/>Paris→Alger<br/>disponible</div></div>
+    <div class="ig-post ig-2"><div class="post-label" style="font-size:16px;font-weight:900">5×<br/><span style="font-size:10px;font-weight:400;opacity:0.6">moins cher<br/>que DHL</span></div></div>
+    <div class="ig-post ig-3"><div class="post-label"><span style="font-size:20px">⭐⭐⭐⭐⭐</span><br/>"Livraison parfaite,<br/>merci DZColis!"</div></div>
+    <div class="ig-post ig-4"><div class="post-label">Comment<br/>emballer<br/>votre colis ?<br/><span style="font-size:9px;opacity:0.5">Tutoriel →</span></div></div>
+    <div class="ig-post ig-5"><div class="post-label" style="font-size:18px;font-weight:900">+500 DA<br/><span style="font-size:10px;font-weight:400">par ami parrainé</span></div></div>
+    <div class="ig-post ig-6"><div class="post-label"><span style="font-size:11px;color:var(--green);font-weight:700">DZColis Protect</span><br/><span style="font-size:10px;color:var(--gray-500)">Votre colis<br/>est assuré</span></div></div>
+    <div class="ig-post ig-7"><div class="post-label">🇩🇿 → 🇫🇷<br/>3 jours<br/>de transit</div></div>
+    <div class="ig-post ig-8"><div class="post-label"><span style="font-size:10px;color:var(--green);font-weight:700">COMMENT ÇA MARCHE</span><br/><span style="font-size:10px;color:var(--gray-600)">3 étapes simples<br/>→ Swipe</span></div></div>
+    <div class="ig-post ig-9"><div class="post-label" style="font-size:9px;opacity:0.6;font-weight:400">Rejoignez<br/>12 000+<br/>utilisateurs</div></div>
+  </div>
+
+  <p style="font-size:11px;color:var(--gray-400);margin-top:8px;margin-bottom:24px">
+    Règle de grille : Vert · Sombre · Clair — répéter. Fond blanc toujours, jamais de bordures colorées sur fond blanc.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════ PAGE 8 — Templates posts ═══════════════════════════════════════ -->
+<div class="page">
+  <div class="section-tag"><span class="dot"></span> Templates</div>
+  <h2>Templates de <span>posts</span></h2>
+  <p class="subtitle">4 formats à répliquer sur Facebook &amp; Instagram. Format carré 1:1.</p>
+
+  <div class="post-templates">
+
+    <!-- POST 1 — Annonce trajet -->
+    <div class="post-tpl">
+      <div class="pt-header">
+        <div class="pt-avatar">DZ</div>
+        <div>
+          <div class="pt-name">dzcolis.officiel</div>
+          <div class="pt-handle">@dzcolis.officiel</div>
+        </div>
+      </div>
+      <div class="pt-body pt1-body">
+        <div class="pt-kicker">Trajet disponible</div>
+        <div class="pt-headline">Paris → Alger<br/>Ce Samedi 19 Avril</div>
+        <div class="pt-sub">Places disponibles · Jusqu'à 10 kg</div>
+        <div style="margin-top:20px;display:flex;gap:20px">
+          <div style="text-align:center">
+            <div style="font-size:18px;font-weight:900;color:var(--green-light)">3j</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.4)">Transit</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:18px;font-weight:900;color:var(--green-light)">5×</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.4)">Moins cher</div>
+          </div>
+          <div style="text-align:center">
+            <div style="font-size:18px;font-weight:900;color:var(--green-light)">✓</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.4)">Assuré</div>
+          </div>
+        </div>
+        <div class="pt-badge">Réserver sur dzcolis.com</div>
+      </div>
+      <div class="pt-footer">
+        <div class="pt-caption">📦 Un trajet disponible sur DZColis ! Envoyez votre colis en toute sécurité avec un voyageur vérifié.</div>
+        <div class="pt-tags">#DZColis #Paris #Alger #EnvoiColis #AlgérieFrance</div>
+      </div>
+    </div>
+
+    <!-- POST 2 — Parrainage -->
+    <div class="post-tpl">
+      <div class="pt-header">
+        <div class="pt-avatar">DZ</div>
+        <div>
+          <div class="pt-name">dzcolis.officiel</div>
+          <div class="pt-handle">@dzcolis.officiel</div>
+        </div>
+      </div>
+      <div class="pt-body pt2-body">
+        <div class="pt2-deco"></div>
+        <div class="pt-kicker">Programme de parrainage</div>
+        <div class="pt-headline">Invitez vos amis.<br/>Gagnez 500 DA.</div>
+        <div class="pt-sub">Vous + votre ami, tous les deux gagnants</div>
+        <div style="display:flex;gap:12px;margin-top:24px">
+          <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:12px 16px;text-align:center">
+            <div style="font-size:20px;font-weight:900;color:#fff">500 DA</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.7);margin-top:2px">pour vous</div>
+          </div>
+          <div style="background:rgba(255,255,255,0.15);border-radius:12px;padding:12px 16px;text-align:center">
+            <div style="font-size:20px;font-weight:900;color:#fff">500 DA</div>
+            <div style="font-size:9px;color:rgba(255,255,255,0.7);margin-top:2px">pour votre ami</div>
+          </div>
+        </div>
+      </div>
+      <div class="pt-footer">
+        <div class="pt-caption">🎁 Parrainez vos amis sur DZColis et gagnez 500 DA de crédit chacun ! Lien en bio 👆</div>
+        <div class="pt-tags">#Parrainage #DZColis #500DA #GagnerArgent</div>
+      </div>
+    </div>
+
+    <!-- POST 3 — Témoignage -->
+    <div class="post-tpl">
+      <div class="pt-header">
+        <div class="pt-avatar">DZ</div>
+        <div>
+          <div class="pt-name">dzcolis.officiel</div>
+          <div class="pt-handle">@dzcolis.officiel</div>
+        </div>
+      </div>
+      <div class="pt-body pt3-body">
+        <div class="pt-stars">★★★★★</div>
+        <div class="pt-quote">"</div>
+        <div class="pt-headline">J'ai envoyé un colis de 8 kg de Paris à Alger pour 1 200 DA. DHL me demandait 9 000 DA !</div>
+        <div class="pt-author">— Karim B., Paris 🇫🇷</div>
+      </div>
+      <div class="pt-footer">
+        <div class="pt-caption">⭐ Merci Karim pour ce retour ! Des milliers d'Algériens font confiance à DZColis chaque mois.</div>
+        <div class="pt-tags">#AvisClient #DZColis #ParisDZ #EnvoiPasCher</div>
+      </div>
+    </div>
+
+    <!-- POST 4 — Stats chiffres -->
+    <div class="post-tpl">
+      <div class="pt-header">
+        <div class="pt-avatar">DZ</div>
+        <div>
+          <div class="pt-name">dzcolis.officiel</div>
+          <div class="pt-handle">@dzcolis.officiel</div>
+        </div>
+      </div>
+      <div class="pt-body pt4-body">
+        <div class="pt4-title">DZColis en chiffres</div>
+        <div class="pt4-stat">
+          <div class="pt4-num">10K+</div>
+          <div class="pt4-lbl">Utilisateurs actifs</div>
+        </div>
+        <div class="pt4-stat">
+          <div class="pt4-num">5×</div>
+          <div class="pt4-lbl">Moins cher que DHL</div>
+        </div>
+        <div class="pt4-stat">
+          <div class="pt4-num">4.9★</div>
+          <div class="pt4-lbl">Note moyenne</div>
+        </div>
+        <div class="pt4-stat">
+          <div class="pt4-num">48h</div>
+          <div class="pt4-lbl">Délai moyen EU→DZ</div>
+        </div>
+      </div>
+      <div class="pt-footer">
+        <div class="pt-caption">📊 DZColis grandit chaque jour. Rejoignez la communauté la plus fiable pour vos envois Algérie ↔ Europe !</div>
+        <div class="pt-tags">#DZColis #Stats #LiveurColis #Algérie</div>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:16px;padding:20px">
+    <h4 style="margin-bottom:8px">Règles de contenu à respecter</h4>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--green);margin-bottom:4px">✓ Toujours inclure</div>
+        <ul style="list-style:none;font-size:11px;color:var(--gray-600)">
+          <li>→ Un appel à l'action clair (Réserver / Rejoindre / Swipe)</li>
+          <li>→ Le logo DZColis visible</li>
+          <li>→ Au moins 5 hashtags pertinents</li>
+          <li>→ La langue : français + quelques mots en darija</li>
+        </ul>
+      </div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--red);margin-bottom:4px">✗ À éviter</div>
+        <ul style="list-style:none;font-size:11px;color:var(--gray-600)">
+          <li>→ Photos floues ou mal cadrées</li>
+          <li>→ Texte trop long sur l'image</li>
+          <li>→ Utiliser trop de couleurs hors palette</li>
+          <li>→ Publier sans légende ni hashtags</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ PAGE 9 — KPIs ═══════════════════════════════════════ -->
+<div class="page">
+  <div class="section-tag"><span class="dot"></span> Mesure</div>
+  <h2>KPIs &amp; <span>objectifs</span></h2>
+  <p class="subtitle">Les métriques à suivre chaque semaine pour piloter la croissance.</p>
+
+  <table style="margin-bottom:32px">
+    <thead>
+      <tr>
+        <th>Métrique</th>
+        <th>Catégorie</th>
+        <th>Objectif M3</th>
+        <th>Objectif M6</th>
+        <th>Outil</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>Inscriptions / mois</td>
+        <td><span class="kpi-tag kpi-acq">Acquisition</span></td>
+        <td>200</td>
+        <td>1 000</td>
+        <td>Dashboard admin</td>
+      </tr>
+      <tr>
+        <td>Expéditions complétées / mois</td>
+        <td><span class="kpi-tag kpi-rev">Revenu</span></td>
+        <td>50</td>
+        <td>500</td>
+        <td>Dashboard admin</td>
+      </tr>
+      <tr>
+        <td>Taux de conversion visiteurs → inscrits</td>
+        <td><span class="kpi-tag kpi-acq">Acquisition</span></td>
+        <td>3%</td>
+        <td>7%</td>
+        <td>Google Analytics</td>
+      </tr>
+      <tr>
+        <td>Abonnés Instagram</td>
+        <td><span class="kpi-tag kpi-eng">Engagement</span></td>
+        <td>500</td>
+        <td>5 000</td>
+        <td>Instagram Insights</td>
+      </tr>
+      <tr>
+        <td>Abonnés Facebook</td>
+        <td><span class="kpi-tag kpi-eng">Engagement</span></td>
+        <td>1 000</td>
+        <td>10 000</td>
+        <td>Meta Business Suite</td>
+      </tr>
+      <tr>
+        <td>Taux d'engagement moyen</td>
+        <td><span class="kpi-tag kpi-eng">Engagement</span></td>
+        <td>4%</td>
+        <td>6%</td>
+        <td>Meta Insights</td>
+      </tr>
+      <tr>
+        <td>Filleuls actifs (parrainage)</td>
+        <td><span class="kpi-tag kpi-acq">Acquisition</span></td>
+        <td>20</td>
+        <td>200</td>
+        <td>Dashboard admin</td>
+      </tr>
+      <tr>
+        <td>Note moyenne (avis)</td>
+        <td><span class="kpi-tag kpi-ret">Rétention</span></td>
+        <td>4.5/5</td>
+        <td>4.7/5</td>
+        <td>Dashboard admin</td>
+      </tr>
+      <tr>
+        <td>Commission perçue / mois</td>
+        <td><span class="kpi-tag kpi-rev">Revenu</span></td>
+        <td>5 000 DA</td>
+        <td>80 000 DA</td>
+        <td>Dashboard admin</td>
+      </tr>
+      <tr>
+        <td>Taux de retour (2ème expédition)</td>
+        <td><span class="kpi-tag kpi-ret">Rétention</span></td>
+        <td>25%</td>
+        <td>40%</td>
+        <td>Dashboard admin</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="divider"></div>
+
+  <h3>Budget marketing recommandé — Mois 1 à 6</h3>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px">
+    <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:16px;padding:20px">
+      <div style="font-size:11px;color:var(--gray-400);margin-bottom:4px">Pub Facebook/Meta</div>
+      <div style="font-size:22px;font-weight:800;color:var(--gray-800)">300€</div>
+      <div style="font-size:11px;color:var(--gray-500);margin-top:4px">/ mois — ciblage diaspora</div>
+    </div>
+    <div style="background:var(--gray-50);border:1px solid var(--gray-200);border-radius:16px;padding:20px">
+      <div style="font-size:11px;color:var(--gray-400);margin-bottom:4px">Micro-influenceurs</div>
+      <div style="font-size:22px;font-weight:800;color:var(--gray-800)">200€</div>
+      <div style="font-size:11px;color:var(--gray-500);margin-top:4px">/ mois — 2 à 3 partenariats</div>
+    </div>
+    <div style="background:var(--green-50);border:1px solid var(--green-100);border-radius:16px;padding:20px">
+      <div style="font-size:11px;color:var(--green);margin-bottom:4px">Parrainage (crédits)</div>
+      <div style="font-size:22px;font-weight:800;color:var(--green)">Variable</div>
+      <div style="font-size:11px;color:var(--green-dark);margin-top:4px">500 DA / filleul actif</div>
+    </div>
+  </div>
+
+  <!-- Final CTA / watermark -->
+  <div style="background:var(--gray-900);border-radius:20px;padding:32px;text-align:center;margin-top:40px">
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:16px">
+      <div style="width:44px;height:44px;background:var(--green);border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;color:#fff">DZ</div>
+      <div style="font-size:22px;font-weight:800;color:#fff">Colis <span style="color:var(--green-light)">Algeria</span></div>
+    </div>
+    <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:4px">Document confidentiel — Usage interne</div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.3)">DZColis © 2026 · dzcolis.com · +33 6 27 53 04 84</div>
+  </div>
+</div>
+
+</body>
+</html>

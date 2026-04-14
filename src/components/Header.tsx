@@ -2,6 +2,9 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/context";
+import ThemeToggle from "@/components/ThemeToggle";
+import PushNotifications from "@/components/PushNotifications";
+import DzColisLogo from "@/components/DzColisLogo";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -20,19 +23,15 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="bg-white border-b border-dz-gray-200 sticky top-0 z-50">
+    <header className="bg-white dark:bg-dz-gray-800 border-b border-dz-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-dz-green rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-lg">DZ</span>
-            </div>
-            <span className="text-xl font-bold text-dz-gray-800">
-              DZ<span className="text-dz-green">Colis</span>
-            </span>
-          </Link>
+          <DzColisLogo size="sm" href="/" />
 
           <nav className="hidden md:flex items-center gap-8">
+            <Link href="/international" className="text-dz-gray-600 hover:text-dz-green font-medium transition-colors">
+              International
+            </Link>
             <Link href="/envoyer" className="text-dz-gray-600 hover:text-dz-green font-medium transition-colors">
               Envoyer un colis
             </Link>
@@ -48,6 +47,8 @@ export default function Header() {
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
+            <PushNotifications />
+            <ThemeToggle />
             {user ? (
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -63,7 +64,7 @@ export default function Header() {
                   </svg>
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white border border-dz-gray-200 rounded-xl shadow-lg py-2">
+                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-dz-gray-100 border border-dz-gray-200 rounded-xl shadow-lg py-2">
                     <div className="px-4 py-2 border-b border-dz-gray-100">
                       <p className="text-sm font-medium text-dz-gray-800">{user.firstName} {user.lastName}</p>
                       <p className="text-xs text-dz-gray-500">{user.email}</p>
@@ -74,8 +75,8 @@ export default function Header() {
                     <Link href="/messages" className="block px-4 py-2.5 text-sm text-dz-gray-700 hover:bg-dz-gray-50" onClick={() => setDropdownOpen(false)}>
                       Messages
                     </Link>
-                    <Link href="/tableau-de-bord" className="block px-4 py-2.5 text-sm text-dz-gray-700 hover:bg-dz-gray-50" onClick={() => setDropdownOpen(false)}>
-                      Mes annonces
+                    <Link href="/profil" className="block px-4 py-2.5 text-sm text-dz-gray-700 hover:bg-dz-gray-50" onClick={() => setDropdownOpen(false)}>
+                      Mon profil
                     </Link>
                     <div className="border-t border-dz-gray-100 mt-1 pt-1">
                       <button
@@ -112,7 +113,9 @@ export default function Header() {
         </div>
 
         {mobileOpen && (
-          <div className="md:hidden pb-4 border-t border-dz-gray-200 pt-4 space-y-2">
+          <div className="md:hidden pb-4 border-t border-dz-gray-200 pt-4 space-y-2 dark:bg-dz-gray-800">
+            <div className="py-1"><ThemeToggle /></div>
+            <Link href="/international" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>International</Link>
             <Link href="/envoyer" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Envoyer un colis</Link>
             <Link href="/transporter" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Transporter</Link>
             <Link href="/annonces" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Annonces</Link>
@@ -121,6 +124,7 @@ export default function Header() {
               <>
                 <Link href="/tableau-de-bord" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Tableau de bord</Link>
                 <Link href="/messages" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Messages</Link>
+                <Link href="/profil" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Mon profil</Link>
                 <button onClick={() => { logout(); setMobileOpen(false); }} className="block py-2 text-dz-red font-medium">Déconnexion</button>
               </>
             ) : (

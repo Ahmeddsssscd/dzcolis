@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="96" fill="#16a34a"/>
+  <defs>
+    <mask id="cm">
+      <rect width="512" height="512" fill="white"/>
+      <circle cx="340" cy="136" r="110" fill="black"/>
+    </mask>
+  </defs>
+  <circle cx="290" cy="160" r="128" fill="#22c55e" mask="url(#cm)"/>
+  <rect x="80" y="276" width="352" height="96" rx="28" fill="#15803d"/>
+  <rect x="80" y="348" width="352" height="164" rx="28" fill="white" opacity="0.15"/>
+  <rect x="80" y="348" width="352" height="164" rx="28" fill="#16a34a"/>
+  <rect x="240" y="276" width="32" height="236" fill="white" opacity="0.2"/>
+  <rect x="80" y="380" width="352" height="28" fill="white" opacity="0.2"/>
+</svg>

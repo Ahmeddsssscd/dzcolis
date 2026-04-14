@@ -5,6 +5,8 @@ import { AppProvider } from "@/lib/context";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ToastContainer from "@/components/Toast";
+import ThemeProvider from "@/components/ThemeProvider";
+import WhatsAppButton from "@/components/WhatsAppButton";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -12,9 +14,22 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "DZColis - Livraison collaborative en Algérie",
-  description:
-    "Envoyez vos colis partout en Algérie grâce au co-transport. Économique, écologique et sécurisé.",
+  title: "DZColis — Livraison collaborative Algérie ↔ Europe",
+  description: "Envoyez vos colis entre l'Algérie et l'Europe grâce à des voyageurs vérifiés. 5× moins cher que DHL. Paiement sécurisé, assurance incluse.",
+  manifest: "/manifest.json",
+  themeColor: "#16a34a",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "DZColis",
+  },
+  openGraph: {
+    title: "DZColis — Livraison collaborative Algérie ↔ Europe",
+    description: "Envoyez vos colis entre l'Algérie et l'Europe grâce à des voyageurs vérifiés. 5× moins cher que DHL.",
+    type: "website",
+    locale: "fr_DZ",
+    siteName: "DZColis",
+  },
 };
 
 export default function RootLayout({
@@ -25,12 +40,15 @@ export default function RootLayout({
   return (
     <html lang="fr" className={`${geistSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <AppProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <ToastContainer />
-        </AppProvider>
+        <ThemeProvider>
+          <AppProvider>
+            <Header />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <ToastContainer />
+            <WhatsAppButton />
+          </AppProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -1,21 +1,94 @@
 "use client";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { useState } from "react";
-import { useAuth, useListings, useBookings, useMessages, useToast } from "@/lib/context";
+import { useState, useEffect } from "react";
+import { useAuth, useToast } from "@/lib/context";
+import { createClient } from "@/lib/supabase/client";
+import type { Listing, Profile } from "@/lib/supabase/types";
+
+type ListingRow = Listing;
+type ProfileRow = Profile;
 
 export default function ListingDetailPage() {
-  const { id } = useParams<{ id: string }>();
-  const { getListingById } = useListings();
+  const { id }   = useParams<{ id: string }>();
   const { user } = useAuth();
-  const { createBooking } = useBookings();
-  const { getOrCreateConversation, sendMessage } = useMessages();
   const { addToast } = useToast();
-  const router = useRouter();
-  const [message, setMessage] = useState("");
-  const [booked, setBooked] = useState(false);
+  const [sendingMsg, setSendingMsg] = useState(false);
+  const router   = useRouter();
+  const supabase = createClient();
 
-  const listing = getListingById(id);
+  const [listing, setListing]       = useState<ListingRow | null>(null);
+  const [transporter, setTransporter] = useState<ProfileRow | null>(null);
+  const [loading, setLoading]       = useState(true);
+  const [message, setMessage]       = useState("");
+
+  useEffect(() => {
+    async function load() {
+      setLoading(true);
+      const { data: l } = await supabase
+        .from("listings").select("*").eq("id", id).single();
+      const listing = l as ListingRow | null;
+      if (listing) {
+        setListing(listing);
+        const { data: p } = await supabase
+          .from("profiles").select("*").eq("id", listing.user_id).single();
+        setTransporter(p as ProfileRow | null);
+      }
+      setLoading(false);
+    }
+    load();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
+
+  const handleBook = () => {
+    if (!user) { router.push("/connexion"); return; }
+    router.push(`/reserver/${id}`);
+  };
+
+  const handleSendMessage = async () => {
+    if (!user) { router.push("/connexion"); return; }
+    if (!message.trim() || !transporter || sendingMsg) return;
+    setSendingMsg(true);
+    try {
+      const res = await fetch("/api/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          other_user_id: transporter.id,
+          listing_id: id,
+          text: message.trim(),
+        }),
+      });
+      if (res.ok) {
+        setMessage("");
+        addToast("Message envoyé !");
+        router.push("/messages");
+      } else {
+        addToast("Erreur lors de l'envoi du message", "error");
+      }
+    } catch {
+      addToast("Erreur lors de l'envoi du message", "error");
+    } finally {
+      setSendingMsg(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="bg-dz-gray-50 min-h-screen">
+        <div className="max-w-4xl mx-auto px-4 py-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 bg-white rounded-2xl border border-dz-gray-200 p-6 animate-pulse">
+              <div className="h-6 bg-dz-gray-200 rounded w-1/4 mb-4" />
+              <div className="h-8 bg-dz-gray-200 rounded w-3/4 mb-6" />
+              <div className="h-24 bg-dz-gray-200 rounded" />
+            </div>
+            <div className="bg-white rounded-2xl border border-dz-gray-200 p-6 animate-pulse h-48" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   if (!listing) {
     return (
@@ -28,24 +101,13 @@ export default function ListingDetailPage() {
     );
   }
 
-  const isTrip = listing.type === "trip";
-
-  const handleBook = () => {
-    if (!user) { router.push("/connexion"); return; }
-    createBooking(listing.id, listing.user.avatar);
-    setBooked(true);
-    addToast(isTrip ? "Réservation effectuée ! Le transporteur va vous contacter." : "Proposition envoyée ! L'expéditeur va vous contacter.");
-  };
-
-  const handleSendMessage = () => {
-    if (!user) { router.push("/connexion"); return; }
-    if (!message.trim()) return;
-    const conv = getOrCreateConversation(listing.user.avatar, listing.id);
-    sendMessage(conv.id, message);
-    setMessage("");
-    addToast("Message envoyé !");
-    router.push("/messages");
-  };
+  const priceTotal   = Math.round(listing.price_per_kg * listing.available_weight);
+  const transporterInitials = transporter
+    ? (transporter.first_name[0] ?? "") + (transporter.last_name[0] ?? "")
+    : "?";
+  const transporterName = transporter
+    ? `${transporter.first_name} ${transporter.last_name}`
+    : "Transporteur";
 
   return (
     <div className="bg-dz-gray-50 min-h-screen">
@@ -58,68 +120,56 @@ export default function ListingDetailPage() {
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main content */}
+          {/* Main */}
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
               <div className="flex items-start justify-between mb-4">
-                <span className={`text-xs font-semibold px-3 py-1 rounded-full ${isTrip ? "bg-blue-50 text-blue-600" : "bg-amber-50 text-amber-600"}`}>
-                  {isTrip ? "Transporteur" : "Colis à envoyer"}
+                <span className={`text-xs font-semibold px-3 py-1 rounded-full ${listing.is_international ? "bg-purple-50 text-purple-600" : "bg-blue-50 text-blue-600"}`}>
+                  {listing.is_international ? "✈️ International" : "🇩🇿 National"}
                 </span>
-                <span className="text-2xl font-bold text-dz-green">{listing.price.toLocaleString()} DA</span>
+                <span className="text-2xl font-bold text-dz-green">{listing.price_per_kg.toLocaleString()} DA/kg</span>
               </div>
-
-              <h1 className="text-2xl font-bold text-dz-gray-800 mb-4">{listing.title}</h1>
 
               {/* Route */}
               <div className="flex items-center gap-4 p-4 bg-dz-gray-50 rounded-xl mb-6">
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-dz-green rounded-full" />
-                  <span className="font-medium text-dz-gray-700">{listing.from}</span>
+                <div className="text-center">
+                  <div className="w-3 h-3 bg-dz-green rounded-full mx-auto mb-1" />
+                  <span className="font-semibold text-dz-gray-800 text-sm">{listing.from_city}</span>
                 </div>
-                <svg className="w-6 h-6 text-dz-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-8 h-5 text-dz-green flex-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-                <div className="flex items-center gap-2">
-                  <div className="w-3 h-3 bg-dz-red rounded-full" />
-                  <span className="font-medium text-dz-gray-700">{listing.to}</span>
+                <div className="text-center">
+                  <div className="w-3 h-3 bg-dz-red rounded-full mx-auto mb-1" />
+                  <span className="font-semibold text-dz-gray-800 text-sm">{listing.to_city}</span>
                 </div>
               </div>
 
-              {/* Details */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+              {/* Details grid */}
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
                 <div className="p-3 bg-dz-gray-50 rounded-xl">
-                  <p className="text-xs text-dz-gray-500">Date</p>
+                  <p className="text-xs text-dz-gray-500 mb-1">Départ</p>
                   <p className="font-medium text-dz-gray-800 text-sm">
-                    {new Date(listing.date).toLocaleDateString("fr-DZ", { day: "numeric", month: "long", year: "numeric" })}
+                    {new Date(listing.departure_date).toLocaleDateString("fr-DZ", { day: "numeric", month: "long", year: "numeric" })}
                   </p>
                 </div>
-                {listing.weight && (
-                  <div className="p-3 bg-dz-gray-50 rounded-xl">
-                    <p className="text-xs text-dz-gray-500">Poids</p>
-                    <p className="font-medium text-dz-gray-800 text-sm">{listing.weight}</p>
-                  </div>
-                )}
-                {listing.dimensions && (
-                  <div className="p-3 bg-dz-gray-50 rounded-xl">
-                    <p className="text-xs text-dz-gray-500">Dimensions</p>
-                    <p className="font-medium text-dz-gray-800 text-sm">{listing.dimensions}</p>
-                  </div>
-                )}
-                {listing.category && (
-                  <div className="p-3 bg-dz-gray-50 rounded-xl">
-                    <p className="text-xs text-dz-gray-500">Catégorie</p>
-                    <p className="font-medium text-dz-gray-800 text-sm">{listing.category}</p>
-                  </div>
-                )}
+                <div className="p-3 bg-dz-gray-50 rounded-xl">
+                  <p className="text-xs text-dz-gray-500 mb-1">Poids disponible</p>
+                  <p className="font-medium text-dz-gray-800 text-sm">{listing.available_weight} kg</p>
+                </div>
+                <div className="p-3 bg-dz-gray-50 rounded-xl">
+                  <p className="text-xs text-dz-gray-500 mb-1">Prix au kg</p>
+                  <p className="font-medium text-dz-green text-sm">{listing.price_per_kg.toLocaleString()} DA</p>
+                </div>
               </div>
 
               <h3 className="font-semibold text-dz-gray-800 mb-2">Description</h3>
               <p className="text-dz-gray-600 leading-relaxed">{listing.description}</p>
             </div>
 
-            {/* Insurance info */}
+            {/* Insurance */}
             <div className="bg-dz-green/5 border border-dz-green/20 rounded-2xl p-5 flex items-start gap-3">
-              <svg className="w-6 h-6 text-dz-green mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-6 h-6 text-dz-green mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
               <div>
@@ -131,68 +181,68 @@ export default function ListingDetailPage() {
 
           {/* Sidebar */}
           <div className="space-y-6">
-            {/* User card */}
+            {/* Transporter card */}
             <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-14 h-14 bg-dz-green/10 text-dz-green rounded-full flex items-center justify-center text-lg font-bold">
-                  {listing.user.avatar}
+                <div className="w-14 h-14 bg-dz-green/10 text-dz-green rounded-full flex items-center justify-center text-lg font-bold shrink-0">
+                  {transporterInitials}
                 </div>
                 <div>
-                  <p className="font-semibold text-dz-gray-800">{listing.user.name}</p>
+                  <p className="font-semibold text-dz-gray-800">{transporterName}</p>
                   <div className="flex items-center gap-1 text-sm text-dz-gray-500">
                     <svg className="w-4 h-4 text-yellow-400 fill-yellow-400" viewBox="0 0 24 24">
                       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                     </svg>
-                    {listing.user.rating} ({listing.user.reviews} avis)
+                    {transporter?.rating ?? "—"} ({transporter?.review_count ?? 0} avis)
                   </div>
+                  {transporter?.kyc_status === "approved" && (
+                    <span className="text-xs text-dz-green flex items-center gap-1 mt-0.5">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944..." />
+                      </svg>
+                      Identité vérifiée
+                    </span>
+                  )}
                 </div>
               </div>
 
-              {booked ? (
-                <div className="bg-dz-green/10 text-dz-green text-center py-3 rounded-xl font-medium text-sm">
-                  {isTrip ? "Réservé !" : "Proposition envoyée !"}
-                </div>
-              ) : (
-                <button onClick={handleBook} className="w-full bg-dz-green hover:bg-dz-green-light text-white py-3 rounded-xl font-semibold transition-colors">
-                  {isTrip ? "Réserver ce trajet" : "Proposer mon transport"}
-                </button>
-              )}
+              <button onClick={handleBook}
+                className="w-full bg-dz-green hover:bg-dz-green-light text-white py-3 rounded-xl font-semibold transition-colors">
+                Réserver ce trajet
+              </button>
             </div>
 
             {/* Message */}
             <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
-              <h3 className="font-semibold text-dz-gray-800 mb-3">Envoyer un message</h3>
-              <textarea
-                rows={3}
-                value={message}
-                onChange={(e) => setMessage(e.target.value)}
-                placeholder={`Bonjour, je suis intéressé par votre ${isTrip ? "trajet" : "annonce"}...`}
-                className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green resize-none text-sm"
-              />
-              <button onClick={handleSendMessage} className="w-full mt-3 border border-dz-green text-dz-green hover:bg-dz-green hover:text-white py-2.5 rounded-xl font-medium transition-colors text-sm">
-                Envoyer
+              <h3 className="font-semibold text-dz-gray-800 mb-3 text-sm">Envoyer un message</h3>
+              <textarea rows={3} value={message} onChange={(e) => setMessage(e.target.value)}
+                placeholder="Bonjour, je suis intéressé par votre trajet..."
+                className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green resize-none text-sm" />
+              <button onClick={handleSendMessage} disabled={sendingMsg}
+                className="w-full mt-3 border border-dz-green text-dz-green hover:bg-dz-green hover:text-white disabled:opacity-50 py-2.5 rounded-xl font-medium transition-colors text-sm">
+                {sendingMsg ? "Envoi..." : "Envoyer"}
               </button>
             </div>
 
-            {/* Payment info */}
+            {/* Price breakdown */}
             <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
               <h3 className="font-semibold text-dz-gray-800 mb-3 text-sm">Détail du prix</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between text-dz-gray-600">
-                  <span>Prix du transport</span>
-                  <span>{listing.price.toLocaleString()} DA</span>
+                  <span>{listing.price_per_kg.toLocaleString()} DA × {listing.available_weight} kg</span>
+                  <span>{priceTotal.toLocaleString()} DA</span>
                 </div>
                 <div className="flex justify-between text-dz-gray-600">
                   <span>Commission DZColis (10%)</span>
-                  <span>{Math.round(listing.price * 0.1).toLocaleString()} DA</span>
+                  <span>{Math.round(priceTotal * 0.1).toLocaleString()} DA</span>
                 </div>
                 <div className="flex justify-between text-dz-gray-600">
                   <span>Assurance</span>
                   <span className="text-dz-green">Gratuit</span>
                 </div>
                 <div className="border-t border-dz-gray-200 pt-2 flex justify-between font-semibold text-dz-gray-800">
-                  <span>Total</span>
-                  <span>{listing.price.toLocaleString()} DA</span>
+                  <span>Total estimé</span>
+                  <span>{Math.round(priceTotal * 1.1).toLocaleString()} DA</span>
                 </div>
               </div>
             </div>

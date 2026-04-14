@@ -1,11 +1,13 @@
 @import "tailwindcss";
 
+/* Dark mode variant (class-based) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --dz-green: #006233;
   --dz-green-light: #00894a;
   --dz-green-dark: #004d28;
   --dz-red: #d21034;
-  --dz-white: #ffffff;
   --dz-gray-50: #f8faf9;
   --dz-gray-100: #f0f4f1;
   --dz-gray-200: #dce5de;
@@ -18,6 +20,30 @@
   --dz-gray-900: #0d1210;
   --background: #ffffff;
   --foreground: #1a2420;
+  --card-bg: #ffffff;
+  --card-border: #e2e8f0;
+  --input-bg: #ffffff;
+  --muted: #64748b;
+}
+
+.dark {
+  /* Neutral charcoal palette — not greenish */
+  --dz-gray-50: #0f1117;
+  --dz-gray-100: #1c1f26;
+  --dz-gray-200: #252a34;
+  --dz-gray-300: #374151;
+  --dz-gray-400: #6b7280;
+  --dz-gray-500: #9ca3af;
+  --dz-gray-600: #d1d5db;
+  --dz-gray-700: #e5e7eb;
+  --dz-gray-800: #f3f4f6;
+  --dz-gray-900: #f9fafb;
+  --background: #0f1117;
+  --foreground: #e5e7eb;
+  --card-bg: #1c1f26;
+  --card-border: #252a34;
+  --input-bg: #252a34;
+  --muted: #9ca3af;
 }
 
 @theme inline {
@@ -45,8 +71,73 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 html {
   scroll-behavior: smooth;
 }
+
+/* ── Dark mode overrides ─────────────────────────────────── */
+
+/* Cards & white surfaces */
+.dark .bg-white { background-color: var(--card-bg) !important; }
+
+/* Borders */
+.dark [class*="border-dz-gray"],
+.dark [class*="border-gray"] {
+  border-color: var(--card-border) !important;
+}
+
+/* Inputs */
+.dark input:not([type="checkbox"]):not([type="radio"]),
+.dark textarea,
+.dark select {
+  background-color: var(--input-bg) !important;
+  color: var(--foreground) !important;
+  border-color: var(--card-border) !important;
+}
+.dark input::placeholder,
+.dark textarea::placeholder {
+  color: var(--muted) !important;
+  opacity: 1;
+}
+.dark input:disabled {
+  background-color: var(--dz-gray-50) !important;
+  color: var(--muted) !important;
+}
+
+/* Green tinted sections */
+.dark .bg-green-50  { background-color: rgba(0,98,51,0.12) !important; }
+.dark .bg-green-100 { background-color: rgba(0,98,51,0.2) !important; }
+.dark .border-green-100 { border-color: rgba(0,137,74,0.25) !important; }
+.dark .text-green-700 { color: #34d399 !important; }
+.dark .text-green-800 { color: #6ee7b7 !important; }
+
+/* Badges */
+.dark .bg-orange-50  { background-color: rgba(124,45,18,0.2) !important; }
+.dark .bg-orange-100 { background-color: rgba(124,45,18,0.3) !important; }
+.dark .bg-amber-50   { background-color: rgba(120,80,0,0.2) !important; }
+.dark .bg-amber-100  { background-color: rgba(120,80,0,0.3) !important; }
+.dark .bg-red-50     { background-color: rgba(127,29,29,0.2) !important; }
+.dark .bg-blue-50    { background-color: rgba(30,58,138,0.2) !important; }
+.dark .bg-blue-100   { background-color: rgba(30,58,138,0.3) !important; }
+.dark .bg-purple-50  { background-color: rgba(76,29,149,0.2) !important; }
+.dark .bg-teal-50    { background-color: rgba(19,78,74,0.2) !important; }
+
+/* Hover states */
+.dark .hover\:bg-dz-gray-50:hover { background-color: var(--dz-gray-200) !important; }
+.dark .hover\:bg-red-50:hover { background-color: rgba(127,29,29,0.2) !important; }
+
+/* Shadows */
+.dark .shadow-sm,
+.dark .shadow-lg,
+.dark .shadow-2xl {
+  --tw-shadow: 0 1px 8px 0 rgba(0,0,0,0.5);
+  --tw-shadow-colored: 0 1px 8px 0 var(--tw-shadow-color);
+}
+
+/* Scrollbar */
+.dark ::-webkit-scrollbar { width: 8px; }
+.dark ::-webkit-scrollbar-track { background: var(--dz-gray-100); }
+.dark ::-webkit-scrollbar-thumb { background: var(--dz-gray-300); border-radius: 4px; }

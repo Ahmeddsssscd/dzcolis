@@ -1,0 +1,50 @@
+{
+  "name": "DZColis — Livraison Collaborative",
+  "short_name": "DZColis",
+  "description": "Envoyez vos colis entre l'Algérie et l'Europe grâce à des voyageurs vérifiés.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#16a34a",
+  "orientation": "portrait-primary",
+  "categories": ["logistics", "shopping", "travel"],
+  "lang": "fr",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Envoyer un colis",
+      "short_name": "Envoyer",
+      "description": "Publiez une annonce d'envoi",
+      "url": "/envoyer",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Proposer un trajet",
+      "short_name": "Trajet",
+      "description": "Proposez votre trajet",
+      "url": "/transporter",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Suivre mon colis",
+      "short_name": "Suivi",
+      "description": "Suivez votre expédition",
+      "url": "/suivi",
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}

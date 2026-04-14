@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DZColis — Logo Concepts 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  :root {
+    --green: #16a34a; --green-light: #22c55e; --green-dark: #15803d;
+    --green-50: #f0fdf4; --green-100: #dcfce7;
+    --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+    --gray-400: #9ca3af; --gray-500: #6b7280; --gray-700: #374151;
+    --gray-800: #1f2937; --gray-900: #111827;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: var(--gray-50); color: var(--gray-800); }
+
+  /* Header */
+  .hero {
+    background: var(--gray-900); color: white;
+    padding: 64px; text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute;
+    top: -100px; left: 50%; transform: translateX(-50%);
+    width: 600px; height: 300px; border-radius: 50%;
+    background: radial-gradient(ellipse, rgba(22,163,74,0.2) 0%, transparent 70%);
+  }
+  .hero-tag {
+    display: inline-block; background: rgba(22,163,74,0.15);
+    color: var(--green-light); border: 1px solid rgba(22,163,74,0.3);
+    border-radius: 20px; padding: 5px 16px; font-size: 11px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+    margin-bottom: 20px; position: relative;
+  }
+  .hero h1 { font-size: 42px; font-weight: 900; letter-spacing: -1px; margin-bottom: 12px; position: relative; }
+  .hero h1 span { color: var(--green-light); }
+  .hero p { color: rgba(255,255,255,0.5); font-size: 16px; position: relative; }
+
+  /* Layout */
+  .container { max-width: 1000px; margin: 0 auto; padding: 48px 32px; }
+  .section { margin-bottom: 80px; }
+
+  .section-label {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--green-50); color: var(--green);
+    border: 1px solid var(--green-100);
+    border-radius: 20px; padding: 4px 14px; font-size: 10px;
+    font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px;
+    margin-bottom: 10px;
+  }
+  .section h2 { font-size: 28px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 6px; }
+  .section h2 span { color: var(--green); }
+  .section .desc { font-size: 14px; color: var(--gray-500); margin-bottom: 32px; }
+
+  /* Logo concept card */
+  .logo-concept {
+    background: white; border: 1px solid var(--gray-200);
+    border-radius: 24px; overflow: hidden; margin-bottom: 32px;
+  }
+  .logo-concept.recommended {
+    border: 2px solid var(--green);
+    box-shadow: 0 0 0 4px rgba(22,163,74,0.08);
+  }
+  .concept-badge {
+    background: var(--green); color: white;
+    font-size: 10px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; padding: 6px 16px; display: inline-block;
+  }
+
+  /* Preview area: 3 swatches side by side */
+  .preview-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+  }
+  .swatch {
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 40px 20px; gap: 20px;
+    position: relative;
+  }
+  .sw-light { background: #fff; border-right: 1px solid var(--gray-100); }
+  .sw-dark { background: var(--gray-900); border-right: 1px solid rgba(255,255,255,0.05); }
+  .sw-green { background: var(--green); }
+  .swatch-label {
+    font-size: 10px; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 1px; opacity: 0.4;
+    position: absolute; top: 12px; left: 16px;
+  }
+  .sw-light .swatch-label { color: var(--gray-800); }
+  .sw-dark .swatch-label { color: white; }
+  .sw-green .swatch-label { color: white; }
+
+  /* Brand lockup inside swatch */
+  .lockup { display: flex; align-items: center; gap: 12px; }
+  .lockup-text { display: flex; flex-direction: column; }
+  .lockup-name { font-size: 20px; font-weight: 800; line-height: 1; }
+  .lockup-tag { font-size: 9px; font-weight: 500; opacity: 0.5; margin-top: 3px; letter-spacing: 0.5px; }
+
+  /* Text colors per background */
+  .sw-light .lockup-name { color: var(--gray-900); }
+  .sw-light .lockup-name em { color: var(--green); font-style: normal; }
+  .sw-dark .lockup-name { color: white; }
+  .sw-dark .lockup-name em { color: var(--green-light); font-style: normal; }
+  .sw-green .lockup-name { color: white; }
+  .sw-green .lockup-name em { color: rgba(255,255,255,0.75); font-style: normal; }
+
+  /* Concept info panel */
+  .concept-info {
+    padding: 28px 32px;
+    border-top: 1px solid var(--gray-100);
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+  .ci-block h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-400); margin-bottom: 6px; }
+  .ci-block p { font-size: 13px; color: var(--gray-700); line-height: 1.6; }
+  .ci-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .ci-tag {
+    font-size: 10px; font-weight: 600; padding: 3px 10px;
+    border-radius: 10px; border: 1px solid var(--gray-200);
+    color: var(--gray-600);
+  }
+  .ci-tag.good { background: var(--green-50); color: var(--green); border-color: var(--green-100); }
+  .ci-tag.bad { background: #fff1f2; color: #e11d48; border-color: #fecdd3; }
+
+  /* Sizes row */
+  .sizes-row {
+    padding: 20px 32px;
+    background: var(--gray-50);
+    border-top: 1px solid var(--gray-100);
+    display: flex; align-items: center; gap: 32px;
+  }
+  .sizes-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gray-400); }
+  .sizes-items { display: flex; align-items: center; gap: 24px; }
+  .size-item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .size-item span { font-size: 10px; color: var(--gray-400); }
+
+  /* Taglines section */
+  .taglines-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .tagline-card {
+    background: white; border: 1.5px solid var(--gray-200);
+    border-radius: 16px; padding: 20px 24px;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .tagline-card:hover { border-color: var(--green); background: var(--green-50); }
+  .tagline-card.pick { border-color: var(--green); background: var(--green-50); }
+  .tagline-card.pick::before { content: '⭐ RECOMMANDÉ'; display: block; font-size: 9px; font-weight: 800; color: var(--green); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .tagline-card h3 { font-size: 18px; font-weight: 800; color: var(--gray-900); margin-bottom: 6px; letter-spacing: -0.3px; }
+  .tagline-card p { font-size: 12px; color: var(--gray-500); }
+  .tagline-card .tl-category { font-size: 10px; font-weight: 600; color: var(--gray-400); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--gray-200); margin: 48px 0; }
+
+  /* Final rec */
+  .final-rec {
+    background: var(--gray-900); border-radius: 24px;
+    padding: 48px; text-align: center; color: white;
+  }
+  .final-rec h2 { font-size: 28px; font-weight: 900; margin-bottom: 12px; }
+  .final-rec p { color: rgba(255,255,255,0.5); font-size: 15px; margin-bottom: 32px; }
+  .final-preview {
+    display: inline-flex; flex-direction: column; align-items: center; gap: 16px;
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px; padding: 40px 60px;
+  }
+  .final-preview .tagline-show { font-size: 13px; color: rgba(255,255,255,0.4); letter-spacing: 0.5px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-tag">Identité Visuelle</div>
+  <h1>DZColis — <span>Logo Concepts</span></h1>
+  <p>4 propositions de logo · 9 taglines · Choisissez votre identité</p>
+</div>
+
+<div class="container">
+
+  <!-- ═══════════════ TAGLINES ═══════════════ -->
+  <div class="section">
+    <div class="section-label">Étape 1</div>
+    <h2>Choisissez votre <span>tagline</span></h2>
+    <p class="desc">Le slogan qui accompagne votre logo partout — réseaux sociaux, app, cartes de visite.</p>
+
+    <div class="taglines-grid">
+      <div class="tagline-card pick">
+        <div class="tl-category">Émotionnel · Diaspora</div>
+        <h3>"Reliez vos deux mondes"</h3>
+        <p>Frappe la corde émotionnelle de la diaspora. Universel, intemporel, fonctionne en FR / AR / EN.</p>
+      </div>
+      <div class="tagline-card">
+        <div class="tl-category">Émotionnel · Famille</div>
+        <h3>"Vos proches, à portée de colis"</h3>
+        <p>Chaleureux, direct. Évoque la famille et la proximité malgré la distance.</p>
+      </div>
+      <div class="tagline-card">
+        <div class="tl-category">Malin · Économique</div>
+        <h3>"Traversez les frontières, pas le budget"</h3>
+        <p>Accrocheur, met en avant le bénéfice prix. Idéal pour les pubs Facebook.</p>
+      </div>
+      <div class="tagline-card">
+        <div class="tl-category">Communauté · Collaboratif</div>
+        <h3>"Chaque voyage devient une livraison"</h3>
+        <p>Explique le modèle P2P en une phrase. Très clair pour les nouveaux utilisateurs.</p>
+      </div>
+      <div class="tagline-card">
+        <div class="tl-category">Court · App store</div>
+        <h3>"Vos colis, nos voyageurs"</h3>
+        <p>Court, symétrique, mémorable. Parfait pour l'app store et les stories.</p>
+      </div>
+      <div class="tagline-card">
+        <div class="tl-category">Puissant · Chiffres</div>
+        <h3>"5× moins cher. 100× plus simple."</h3>
+        <p>Aucune place à l'interprétation — valeur pure. Fonctionne très bien en pub payante.</p>
+      </div>
+      <div class="tagline-card">
+        <div class="tl-category">Collaboratif · Ensemble</div>
+        <h3>"Ensemble, on livre plus loin"</h3>
+        <p>Met la communauté au centre. Ton bienveillant et inclusif.</p>
+      </div>
+      <div class="tagline-card">
+        <div class="tl-category">Action · Simple</div>
+        <h3>"Expédiez malin, voyagez utile"</h3>
+        <p>Parle aux deux audiences (expéditeurs + voyageurs) en une seule phrase.</p>
+      </div>
+      <div class="tagline-card">
+        <div class="tl-category">Identité · Fort</div>
+        <h3>"On relie l'Algérie"</h3>
+        <p>Court, ambitieux, revendicatif. Parfait pour la communication institutionnelle.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════ LOGO 1 — CRESCENT + BOX ═══════════════ -->
+  <div class="section">
+    <div class="section-label">Concept 01</div>
+    <h2>Croissant <span>+ Colis</span></h2>
+    <p class="desc">Le croissant algérien fusionne avec une boîte de colis. Unique, instantanément identifiable, jamais vu dans la livraison.</p>
+
+    <div class="logo-concept recommended">
+      <div class="concept-badge">⭐ RECOMMANDÉ — Mon choix #1</div>
+      <div class="preview-grid">
+
+        <!-- Light bg -->
+        <div class="swatch sw-light">
+          <div class="swatch-label">FOND BLANC</div>
+          <!-- LARGE icon -->
+          <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <mask id="cm-lg">
+                <rect width="80" height="80" fill="white"/>
+                <circle cx="62" cy="16" r="17" fill="black"/>
+              </mask>
+            </defs>
+            <!-- Crescent -->
+            <circle cx="52" cy="20" r="20" fill="#22c55e" mask="url(#cm-lg)"/>
+            <!-- Box lid -->
+            <rect x="10" y="36" width="60" height="12" rx="4" fill="#15803d"/>
+            <!-- Box body -->
+            <rect x="10" y="46" width="60" height="28" rx="4" fill="#16a34a"/>
+            <!-- Ribbon vertical -->
+            <rect x="37" y="36" width="6" height="38" fill="rgba(255,255,255,0.22)"/>
+            <!-- Ribbon horizontal -->
+            <rect x="10" y="56" width="60" height="5" fill="rgba(255,255,255,0.22)"/>
+            <!-- Lid highlight -->
+            <rect x="10" y="36" width="60" height="3" rx="2" fill="rgba(255,255,255,0.15)"/>
+          </svg>
+          <!-- Lockup -->
+          <div class="lockup">
+            <svg width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <defs><mask id="cm-sm1"><rect width="80" height="80" fill="white"/><circle cx="62" cy="16" r="17" fill="black"/></mask></defs>
+              <circle cx="52" cy="20" r="20" fill="#22c55e" mask="url(#cm-sm1)"/>
+              <rect x="10" y="36" width="60" height="12" rx="4" fill="#15803d"/>
+              <rect x="10" y="46" width="60" height="28" rx="4" fill="#16a34a"/>
+              <rect x="37" y="36" width="6" height="38" fill="rgba(255,255,255,0.22)"/>
+              <rect x="10" y="56" width="60" height="5" fill="rgba(255,255,255,0.22)"/>
+            </svg>
+            <div class="lockup-text">
+              <div class="lockup-name">DZ<em>Colis</em></div>
+              <div class="lockup-tag" style="color:var(--gray-400)">Reliez vos deux mondes</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Dark bg -->
+        <div class="swatch sw-dark">
+          <div class="swatch-label">FOND SOMBRE</div>
+          <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <mask id="cm-dk">
+                <rect width="80" height="80" fill="white"/>
+                <circle cx="62" cy="16" r="17" fill="black"/>
+              </mask>
+            </defs>
+            <circle cx="52" cy="20" r="20" fill="#22c55e" mask="url(#cm-dk)"/>
+            <rect x="10" y="36" width="60" height="12" rx="4" fill="#15803d"/>
+            <rect x="10" y="46" width="60" height="28" rx="4" fill="#16a34a"/>
+            <rect x="37" y="36" width="6" height="38" fill="rgba(255,255,255,0.22)"/>
+            <rect x="10" y="56" width="60" height="5" fill="rgba(255,255,255,0.22)"/>
+            <rect x="10" y="36" width="60" height="3" rx="2" fill="rgba(255,255,255,0.15)"/>
+          </svg>
+          <div class="lockup">
+            <svg width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <defs><mask id="cm-dk2"><rect width="80" height="80" fill="white"/><circle cx="62" cy="16" r="17" fill="black"/></mask></defs>
+              <circle cx="52" cy="20" r="20" fill="#22c55e" mask="url(#cm-dk2)"/>
+              <rect x="10" y="36" width="60" height="12" rx="4" fill="#15803d"/>
+              <rect x="10" y="46" width="60" height="28" rx="4" fill="#16a34a"/>
+              <rect x="37" y="36" width="6" height="38" fill="rgba(255,255,255,0.22)"/>
+              <rect x="10" y="56" width="60" height="5" fill="rgba(255,255,255,0.22)"/>
+            </svg>
+            <div class="lockup-text">
+              <div class="lockup-name" style="color:white">DZ<em style="color:#22c55e">Colis</em></div>
+              <div class="lockup-tag" style="color:rgba(255,255,255,0.35)">Reliez vos deux mondes</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Green bg -->
+        <div class="swatch sw-green">
+          <div class="swatch-label">FOND VERT</div>
+          <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <mask id="cm-gn">
+                <rect width="80" height="80" fill="white"/>
+                <circle cx="62" cy="16" r="17" fill="black"/>
+              </mask>
+            </defs>
+            <circle cx="52" cy="20" r="20" fill="rgba(255,255,255,0.9)" mask="url(#cm-gn)"/>
+            <rect x="10" y="36" width="60" height="12" rx="4" fill="rgba(0,0,0,0.2)"/>
+            <rect x="10" y="46" width="60" height="28" rx="4" fill="rgba(0,0,0,0.12)"/>
+            <rect x="37" y="36" width="6" height="38" fill="rgba(255,255,255,0.3)"/>
+            <rect x="10" y="56" width="60" height="5" fill="rgba(255,255,255,0.3)"/>
+          </svg>
+          <div class="lockup">
+            <svg width="40" height="40" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+              <defs><mask id="cm-gn2"><rect width="80" height="80" fill="white"/><circle cx="62" cy="16" r="17" fill="black"/></mask></defs>
+              <circle cx="52" cy="20" r="20" fill="rgba(255,255,255,0.9)" mask="url(#cm-gn2)"/>
+              <rect x="10" y="36" width="60" height="12" rx="4" fill="rgba(0,0,0,0.2)"/>
+              <rect x="10" y="46" width="60" height="28" rx="4" fill="rgba(0,0,0,0.12)"/>
+              <rect x="37" y="36" width="6" height="38" fill="rgba(255,255,255,0.3)"/>
+              <rect x="10" y="56" width="60" height="5" fill="rgba(255,255,255,0.3)"/>
+            </svg>
+            <div class="lockup-text">
+              <div class="lockup-name" style="color:white">DZ<em style="color:rgba(255,255,255,0.7)">Colis</em></div>
+              <div class="lockup-tag" style="color:rgba(255,255,255,0.4)">Reliez vos deux mondes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sizes -->
+      <div class="sizes-row">
+        <div class="sizes-label">Tailles</div>
+        <div class="sizes-items">
+          <div class="size-item">
+            <svg width="64" height="64" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><defs><mask id="s64"><rect width="80" height="80" fill="white"/><circle cx="62" cy="16" r="17" fill="black"/></mask></defs><circle cx="52" cy="20" r="20" fill="#22c55e" mask="url(#s64)"/><rect x="10" y="36" width="60" height="12" rx="4" fill="#15803d"/><rect x="10" y="46" width="60" height="28" rx="4" fill="#16a34a"/><rect x="37" y="36" width="6" height="38" fill="rgba(255,255,255,0.22)"/><rect x="10" y="56" width="60" height="5" fill="rgba(255,255,255,0.22)"/></svg>
+            <span>64px</span>
+          </div>
+          <div class="size-item">
+            <svg width="48" height="48" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><defs><mask id="s48"><rect width="80" height="80" fill="white"/><circle cx="62" cy="16" r="17" fill="black"/></mask></defs><circle cx="52" cy="20" r="20" fill="#22c55e" mask="url(#s48)"/><rect x="10" y="36" width="60" height="12" rx="4" fill="#15803d"/><rect x="10" y="46" width="60" height="28" rx="4" fill="#16a34a"/><rect x="37" y="36" width="6" height="38" fill="rgba(255,255,255,0.22)"/><rect x="10" y="56" width="60" height="5" fill="rgba(255,255,255,0.22)"/></svg>
+            <span>48px</span>
+          </div>
+          <div class="size-item">
+            <svg width="32" height="32" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><defs><mask id="s32"><rect width="80" height="80" fill="white"/><circle cx="62" cy="16" r="17" fill="black"/></mask></defs><circle cx="52" cy="20" r="20" fill="#22c55e" mask="url(#s32)"/><rect x="10" y="36" width="60" height="12" rx="4" fill="#15803d"/><rect x="10" y="46" width="60" height="28" rx="4" fill="#16a34a"/><rect x="37" y="36" width="6" height="38" fill="rgba(255,255,255,0.22)"/><rect x="10" y="56" width="60" height="5" fill="rgba(255,255,255,0.22)"/></svg>
+            <span>32px</span>
+          </div>
+          <div class="size-item">
+            <svg width="20" height="20" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><defs><mask id="s20"><rect width="80" height="80" fill="white"/><circle cx="62" cy="16" r="17" fill="black"/></mask></defs><circle cx="52" cy="20" r="20" fill="#22c55e" mask="url(#s20)"/><rect x="10" y="36" width="60" height="12" rx="4" fill="#15803d"/><rect x="10" y="46" width="60" height="28" rx="4" fill="#16a34a"/><rect x="37" y="36" width="6" height="38" fill="rgba(255,255,255,0.22)"/><rect x="10" y="56" width="60" height="5" fill="rgba(255,255,255,0.22)"/></svg>
+            <span>20px</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="concept-info">
+        <div class="ci-block">
+          <h4>Concept</h4>
+          <p>Le croissant algérien (symbole culturel fort) fusionne avec une boîte de colis. Deux éléments, une seule idée.</p>
+        </div>
+        <div class="ci-block">
+          <h4>Points forts</h4>
+          <div class="ci-tags">
+            <span class="ci-tag good">Unique au monde</span>
+            <span class="ci-tag good">Identité algérienne</span>
+            <span class="ci-tag good">Lisible à 20px</span>
+            <span class="ci-tag good">App icon parfait</span>
+          </div>
+        </div>
+        <div class="ci-block">
+          <h4>À noter</h4>
+          <div class="ci-tags">
+            <span class="ci-tag bad">Lien à la religion perçu par certains</span>
+          </div>
+          <p style="font-size:12px;color:var(--gray-500);margin-top:8px">Risque faible — le croissant est d'abord un symbole algérien/maghrébin, pas uniquement religieux.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LOGO 2 — MAP PIN ═══════════════ -->
+  <div class="section">
+    <div class="section-label">Concept 02</div>
+    <h2>Pin de <span>livraison</span></h2>
+    <p class="desc">Un pin de carte géographique dont l'intérieur révèle une boîte de colis. Universel, immédiatement compréhensible partout dans le monde.</p>
+
+    <div class="logo-concept">
+      <div class="preview-grid">
+        <div class="swatch sw-light">
+          <div class="swatch-label">FOND BLANC</div>
+          <svg width="70" height="88" viewBox="0 0 70 88" xmlns="http://www.w3.org/2000/svg">
+            <!-- Pin outer shape -->
+            <path d="M35 4 C16.2 4 1 19.2 1 38 C1 58 35 84 35 84 C35 84 69 58 69 38 C69 19.2 53.8 4 35 4Z" fill="#16a34a"/>
+            <!-- Pin inner highlight -->
+            <path d="M35 10 C19.5 10 7 22.5 7 38 C7 54 35 77 35 77 C35 77 63 54 63 38 C63 22.5 50.5 10 35 10Z" fill="#22c55e" opacity="0.25"/>
+            <!-- Box inside pin -->
+            <rect x="19" y="22" width="32" height="28" rx="4" fill="white"/>
+            <!-- Box lid -->
+            <rect x="19" y="22" width="32" height="10" rx="3" fill="rgba(255,255,255,0.85)"/>
+            <!-- Lid shadow -->
+            <rect x="19" y="22" width="32" height="10" rx="3" fill="rgba(0,0,0,0.08)"/>
+            <!-- Ribbon V -->
+            <rect x="33" y="22" width="4" height="28" fill="#16a34a" opacity="0.4"/>
+            <!-- Ribbon H -->
+            <rect x="19" y="33" width="32" height="4" fill="#16a34a" opacity="0.4"/>
+          </svg>
+          <div class="lockup">
+            <svg width="36" height="44" viewBox="0 0 70 88" xmlns="http://www.w3.org/2000/svg">
+              <path d="M35 4 C16.2 4 1 19.2 1 38 C1 58 35 84 35 84 C35 84 69 58 69 38 C69 19.2 53.8 4 35 4Z" fill="#16a34a"/>
+              <rect x="19" y="22" width="32" height="28" rx="4" fill="white"/>
+              <rect x="33" y="22" width="4" height="28" fill="#16a34a" opacity="0.4"/>
+              <rect x="19" y="33" width="32" height="4" fill="#16a34a" opacity="0.4"/>
+            </svg>
+            <div class="lockup-text">
+              <div class="lockup-name">DZ<em>Colis</em></div>
+              <div class="lockup-tag" style="color:var(--gray-400)">Reliez vos deux mondes</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swatch sw-dark">
+          <div class="swatch-label">FOND SOMBRE</div>
+          <svg width="70" height="88" viewBox="0 0 70 88" xmlns="http://www.w3.org/2000/svg">
+            <path d="M35 4 C16.2 4 1 19.2 1 38 C1 58 35 84 35 84 C35 84 69 58 69 38 C69 19.2 53.8 4 35 4Z" fill="#16a34a"/>
+            <path d="M35 10 C19.5 10 7 22.5 7 38 C7 54 35 77 35 77 C35 77 63 54 63 38 C63 22.5 50.5 10 35 10Z" fill="#22c55e" opacity="0.2"/>
+            <rect x="19" y="22" width="32" height="28" rx="4" fill="white"/>
+            <rect x="33" y="22" width="4" height="28" fill="#16a34a" opacity="0.4"/>
+            <rect x="19" y="33" width="32" height="4" fill="#16a34a" opacity="0.4"/>
+          </svg>
+          <div class="lockup">
+            <svg width="36" height="44" viewBox="0 0 70 88" xmlns="http://www.w3.org/2000/svg">
+              <path d="M35 4 C16.2 4 1 19.2 1 38 C1 58 35 84 35 84 C35 84 69 58 69 38 C69 19.2 53.8 4 35 4Z" fill="#16a34a"/>
+              <rect x="19" y="22" width="32" height="28" rx="4" fill="white"/>
+              <rect x="33" y="22" width="4" height="28" fill="#16a34a" opacity="0.4"/>
+              <rect x="19" y="33" width="32" height="4" fill="#16a34a" opacity="0.4"/>
+            </svg>
+            <div class="lockup-text">
+              <div class="lockup-name" style="color:white">DZ<em style="color:#22c55e">Colis</em></div>
+              <div class="lockup-tag" style="color:rgba(255,255,255,0.35)">Reliez vos deux mondes</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swatch sw-green">
+          <div class="swatch-label">FOND VERT</div>
+          <svg width="70" height="88" viewBox="0 0 70 88" xmlns="http://www.w3.org/2000/svg">
+            <path d="M35 4 C16.2 4 1 19.2 1 38 C1 58 35 84 35 84 C35 84 69 58 69 38 C69 19.2 53.8 4 35 4Z" fill="rgba(0,0,0,0.2)"/>
+            <path d="M35 10 C19.5 10 7 22.5 7 38 C7 54 35 77 35 77 C35 77 63 54 63 38 C63 22.5 50.5 10 35 10Z" fill="rgba(255,255,255,0.08)"/>
+            <rect x="19" y="22" width="32" height="28" rx="4" fill="rgba(255,255,255,0.9)"/>
+            <rect x="33" y="22" width="4" height="28" fill="#16a34a" opacity="0.5"/>
+            <rect x="19" y="33" width="32" height="4" fill="#16a34a" opacity="0.5"/>
+          </svg>
+          <div class="lockup">
+            <svg width="36" height="44" viewBox="0 0 70 88" xmlns="http://www.w3.org/2000/svg">
+              <path d="M35 4 C16.2 4 1 19.2 1 38 C1 58 35 84 35 84 C35 84 69 58 69 38 C69 19.2 53.8 4 35 4Z" fill="rgba(0,0,0,0.2)"/>
+              <rect x="19" y="22" width="32" height="28" rx="4" fill="rgba(255,255,255,0.9)"/>
+              <rect x="33" y="22" width="4" height="28" fill="#16a34a" opacity="0.5"/>
+              <rect x="19" y="33" width="32" height="4" fill="#16a34a" opacity="0.5"/>
+            </svg>
+            <div class="lockup-text">
+              <div class="lockup-name" style="color:white">DZ<em style="color:rgba(255,255,255,0.7)">Colis</em></div>
+              <div class="lockup-tag" style="color:rgba(255,255,255,0.4)">Reliez vos deux mondes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="concept-info">
+        <div class="ci-block">
+          <h4>Concept</h4>
+          <p>Le pin de carte géographique universel, avec un colis visible à l'intérieur. "Je suis ici et mon colis aussi."</p>
+        </div>
+        <div class="ci-block">
+          <h4>Points forts</h4>
+          <div class="ci-tags">
+            <span class="ci-tag good">Compris partout</span>
+            <span class="ci-tag good">App icon naturel</span>
+            <span class="ci-tag good">Moderne & tech</span>
+          </div>
+        </div>
+        <div class="ci-block">
+          <h4>À noter</h4>
+          <div class="ci-tags">
+            <span class="ci-tag bad">Similaire à beaucoup d'apps</span>
+            <span class="ci-tag bad">Moins distinctif</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LOGO 3 — FLOW ARROWS ═══════════════ -->
+  <div class="section">
+    <div class="section-label">Concept 03</div>
+    <h2>Colis en <span>mouvement</span></h2>
+    <p class="desc">Une boîte de colis traversée par deux flèches opposées — expéditeur à gauche, destinataire à droite. Le modèle P2P en une image.</p>
+
+    <div class="logo-concept">
+      <div class="preview-grid">
+        <div class="swatch sw-light">
+          <div class="swatch-label">FOND BLANC</div>
+          <svg width="100" height="72" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg">
+            <!-- Left arrow -->
+            <line x1="4" y1="36" x2="22" y2="36" stroke="#16a34a" stroke-width="3.5" stroke-linecap="round"/>
+            <polyline points="16,28 24,36 16,44" fill="none" stroke="#16a34a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Box body -->
+            <rect x="24" y="14" width="52" height="44" rx="7" fill="#16a34a"/>
+            <!-- Box lid -->
+            <rect x="24" y="14" width="52" height="16" rx="5" fill="#15803d"/>
+            <!-- Ribbon V -->
+            <rect x="47" y="14" width="6" height="44" fill="rgba(255,255,255,0.2)"/>
+            <!-- Ribbon H -->
+            <rect x="24" y="40" width="52" height="6" fill="rgba(255,255,255,0.2)"/>
+            <!-- Shine on lid -->
+            <rect x="24" y="14" width="52" height="4" rx="3" fill="rgba(255,255,255,0.18)"/>
+            <!-- Right arrow -->
+            <line x1="78" y1="36" x2="96" y2="36" stroke="#16a34a" stroke-width="3.5" stroke-linecap="round"/>
+            <polyline points="84,28 92,36 84,44" fill="none" stroke="#16a34a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="lockup">
+            <svg width="52" height="36" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg">
+              <line x1="4" y1="36" x2="22" y2="36" stroke="#16a34a" stroke-width="3.5" stroke-linecap="round"/>
+              <polyline points="16,28 24,36 16,44" fill="none" stroke="#16a34a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="24" y="14" width="52" height="44" rx="7" fill="#16a34a"/>
+              <rect x="24" y="14" width="52" height="16" rx="5" fill="#15803d"/>
+              <rect x="47" y="14" width="6" height="44" fill="rgba(255,255,255,0.2)"/>
+              <rect x="24" y="40" width="52" height="6" fill="rgba(255,255,255,0.2)"/>
+              <line x1="78" y1="36" x2="96" y2="36" stroke="#16a34a" stroke-width="3.5" stroke-linecap="round"/>
+              <polyline points="84,28 92,36 84,44" fill="none" stroke="#16a34a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="lockup-text">
+              <div class="lockup-name">DZ<em>Colis</em></div>
+              <div class="lockup-tag" style="color:var(--gray-400)">Reliez vos deux mondes</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swatch sw-dark">
+          <div class="swatch-label">FOND SOMBRE</div>
+          <svg width="100" height="72" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg">
+            <line x1="4" y1="36" x2="22" y2="36" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round"/>
+            <polyline points="16,28 24,36 16,44" fill="none" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="24" y="14" width="52" height="44" rx="7" fill="#16a34a"/>
+            <rect x="24" y="14" width="52" height="16" rx="5" fill="#15803d"/>
+            <rect x="47" y="14" width="6" height="44" fill="rgba(255,255,255,0.2)"/>
+            <rect x="24" y="40" width="52" height="6" fill="rgba(255,255,255,0.2)"/>
+            <line x1="78" y1="36" x2="96" y2="36" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round"/>
+            <polyline points="84,28 92,36 84,44" fill="none" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="lockup">
+            <svg width="52" height="36" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg">
+              <line x1="4" y1="36" x2="22" y2="36" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round"/>
+              <polyline points="16,28 24,36 16,44" fill="none" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="24" y="14" width="52" height="44" rx="7" fill="#16a34a"/>
+              <rect x="24" y="14" width="52" height="16" rx="5" fill="#15803d"/>
+              <rect x="47" y="14" width="6" height="44" fill="rgba(255,255,255,0.2)"/>
+              <rect x="24" y="40" width="52" height="6" fill="rgba(255,255,255,0.2)"/>
+              <line x1="78" y1="36" x2="96" y2="36" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round"/>
+              <polyline points="84,28 92,36 84,44" fill="none" stroke="#22c55e" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="lockup-text">
+              <div class="lockup-name" style="color:white">DZ<em style="color:#22c55e">Colis</em></div>
+              <div class="lockup-tag" style="color:rgba(255,255,255,0.35)">Reliez vos deux mondes</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swatch sw-green">
+          <div class="swatch-label">FOND VERT</div>
+          <svg width="100" height="72" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg">
+            <line x1="4" y1="36" x2="22" y2="36" stroke="rgba(255,255,255,0.85)" stroke-width="3.5" stroke-linecap="round"/>
+            <polyline points="16,28 24,36 16,44" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <rect x="24" y="14" width="52" height="44" rx="7" fill="rgba(0,0,0,0.18)"/>
+            <rect x="24" y="14" width="52" height="16" rx="5" fill="rgba(0,0,0,0.12)"/>
+            <rect x="47" y="14" width="6" height="44" fill="rgba(255,255,255,0.25)"/>
+            <rect x="24" y="40" width="52" height="6" fill="rgba(255,255,255,0.25)"/>
+            <line x1="78" y1="36" x2="96" y2="36" stroke="rgba(255,255,255,0.85)" stroke-width="3.5" stroke-linecap="round"/>
+            <polyline points="84,28 92,36 84,44" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="lockup">
+            <svg width="52" height="36" viewBox="0 0 100 72" xmlns="http://www.w3.org/2000/svg">
+              <line x1="4" y1="36" x2="22" y2="36" stroke="rgba(255,255,255,0.85)" stroke-width="3.5" stroke-linecap="round"/>
+              <polyline points="16,28 24,36 16,44" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <rect x="24" y="14" width="52" height="44" rx="7" fill="rgba(0,0,0,0.18)"/>
+              <rect x="24" y="14" width="52" height="16" rx="5" fill="rgba(0,0,0,0.12)"/>
+              <rect x="47" y="14" width="6" height="44" fill="rgba(255,255,255,0.25)"/>
+              <rect x="24" y="40" width="52" height="6" fill="rgba(255,255,255,0.25)"/>
+              <line x1="78" y1="36" x2="96" y2="36" stroke="rgba(255,255,255,0.85)" stroke-width="3.5" stroke-linecap="round"/>
+              <polyline points="84,28 92,36 84,44" fill="none" stroke="rgba(255,255,255,0.85)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <div class="lockup-text">
+              <div class="lockup-name" style="color:white">DZ<em style="color:rgba(255,255,255,0.7)">Colis</em></div>
+              <div class="lockup-tag" style="color:rgba(255,255,255,0.4)">Reliez vos deux mondes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="concept-info">
+        <div class="ci-block">
+          <h4>Concept</h4>
+          <p>La boîte traversée par les flèches représente le voyage du colis d'un monde à l'autre. Simple, logique, narratif.</p>
+        </div>
+        <div class="ci-block">
+          <h4>Points forts</h4>
+          <div class="ci-tags">
+            <span class="ci-tag good">Raconte une histoire</span>
+            <span class="ci-tag good">Illustre le P2P</span>
+            <span class="ci-tag good">Propre en grande taille</span>
+          </div>
+        </div>
+        <div class="ci-block">
+          <h4>À noter</h4>
+          <div class="ci-tags">
+            <span class="ci-tag bad">Lisibilité réduite < 32px</span>
+            <span class="ci-tag bad">Format rectangulaire</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ LOGO 4 — C ROUTE ═══════════════ -->
+  <div class="section">
+    <div class="section-label">Concept 04</div>
+    <h2>Route en <span>C</span></h2>
+    <p class="desc">Le "C" de Colis dessiné comme un itinéraire. Deux villes reliées par une courbe — le voyage de votre colis, abstraitement représenté.</p>
+
+    <div class="logo-concept">
+      <div class="preview-grid">
+        <div class="swatch sw-light">
+          <div class="swatch-label">FOND BLANC</div>
+          <svg width="76" height="76" viewBox="0 0 76 76" xmlns="http://www.w3.org/2000/svg">
+            <!-- C curve -->
+            <path d="M 62 14 A 30 30 0 1 0 62 62" fill="none" stroke="#16a34a" stroke-width="7" stroke-linecap="round"/>
+            <!-- Departure city dot -->
+            <circle cx="62" cy="14" r="7" fill="#16a34a"/>
+            <circle cx="62" cy="14" r="3.5" fill="white"/>
+            <!-- Arrival city dot -->
+            <circle cx="62" cy="62" r="7" fill="#22c55e"/>
+            <circle cx="62" cy="62" r="3.5" fill="white"/>
+            <!-- Parcel on the route (leftmost point of C = approx x:8, y:38) -->
+            <rect x="4" y="30" width="16" height="16" rx="3" fill="#16a34a"/>
+            <rect x="4" y="35" width="16" height="3" fill="rgba(255,255,255,0.35)"/>
+            <rect x="11" y="30" width="3" height="16" fill="rgba(255,255,255,0.35)"/>
+          </svg>
+          <div class="lockup">
+            <svg width="40" height="40" viewBox="0 0 76 76" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 62 14 A 30 30 0 1 0 62 62" fill="none" stroke="#16a34a" stroke-width="7" stroke-linecap="round"/>
+              <circle cx="62" cy="14" r="7" fill="#16a34a"/>
+              <circle cx="62" cy="14" r="3.5" fill="white"/>
+              <circle cx="62" cy="62" r="7" fill="#22c55e"/>
+              <circle cx="62" cy="62" r="3.5" fill="white"/>
+              <rect x="4" y="30" width="16" height="16" rx="3" fill="#16a34a"/>
+              <rect x="4" y="35" width="16" height="3" fill="rgba(255,255,255,0.35)"/>
+              <rect x="11" y="30" width="3" height="16" fill="rgba(255,255,255,0.35)"/>
+            </svg>
+            <div class="lockup-text">
+              <div class="lockup-name">DZ<em>Colis</em></div>
+              <div class="lockup-tag" style="color:var(--gray-400)">Reliez vos deux mondes</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swatch sw-dark">
+          <div class="swatch-label">FOND SOMBRE</div>
+          <svg width="76" height="76" viewBox="0 0 76 76" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 62 14 A 30 30 0 1 0 62 62" fill="none" stroke="#16a34a" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="62" cy="14" r="7" fill="#16a34a"/>
+            <circle cx="62" cy="14" r="3.5" fill="#111827"/>
+            <circle cx="62" cy="62" r="7" fill="#22c55e"/>
+            <circle cx="62" cy="62" r="3.5" fill="#111827"/>
+            <rect x="4" y="30" width="16" height="16" rx="3" fill="#22c55e"/>
+            <rect x="4" y="35" width="16" height="3" fill="rgba(0,0,0,0.3)"/>
+            <rect x="11" y="30" width="3" height="16" fill="rgba(0,0,0,0.3)"/>
+          </svg>
+          <div class="lockup">
+            <svg width="40" height="40" viewBox="0 0 76 76" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 62 14 A 30 30 0 1 0 62 62" fill="none" stroke="#16a34a" stroke-width="7" stroke-linecap="round"/>
+              <circle cx="62" cy="14" r="7" fill="#16a34a"/>
+              <circle cx="62" cy="14" r="3.5" fill="#111827"/>
+              <circle cx="62" cy="62" r="7" fill="#22c55e"/>
+              <circle cx="62" cy="62" r="3.5" fill="#111827"/>
+              <rect x="4" y="30" width="16" height="16" rx="3" fill="#22c55e"/>
+              <rect x="4" y="35" width="16" height="3" fill="rgba(0,0,0,0.3)"/>
+              <rect x="11" y="30" width="3" height="16" fill="rgba(0,0,0,0.3)"/>
+            </svg>
+            <div class="lockup-text">
+              <div class="lockup-name" style="color:white">DZ<em style="color:#22c55e">Colis</em></div>
+              <div class="lockup-tag" style="color:rgba(255,255,255,0.35)">Reliez vos deux mondes</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="swatch sw-green">
+          <div class="swatch-label">FOND VERT</div>
+          <svg width="76" height="76" viewBox="0 0 76 76" xmlns="http://www.w3.org/2000/svg">
+            <path d="M 62 14 A 30 30 0 1 0 62 62" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="7" stroke-linecap="round"/>
+            <circle cx="62" cy="14" r="7" fill="rgba(255,255,255,0.85)"/>
+            <circle cx="62" cy="14" r="3.5" fill="#16a34a"/>
+            <circle cx="62" cy="62" r="7" fill="white"/>
+            <circle cx="62" cy="62" r="3.5" fill="#16a34a"/>
+            <rect x="4" y="30" width="16" height="16" rx="3" fill="rgba(255,255,255,0.85)"/>
+            <rect x="4" y="35" width="16" height="3" fill="rgba(22,163,74,0.4)"/>
+            <rect x="11" y="30" width="3" height="16" fill="rgba(22,163,74,0.4)"/>
+          </svg>
+          <div class="lockup">
+            <svg width="40" height="40" viewBox="0 0 76 76" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 62 14 A 30 30 0 1 0 62 62" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="7" stroke-linecap="round"/>
+              <circle cx="62" cy="14" r="7" fill="rgba(255,255,255,0.85)"/>
+              <circle cx="62" cy="14" r="3.5" fill="#16a34a"/>
+              <circle cx="62" cy="62" r="7" fill="white"/>
+              <circle cx="62" cy="62" r="3.5" fill="#16a34a"/>
+              <rect x="4" y="30" width="16" height="16" rx="3" fill="rgba(255,255,255,0.85)"/>
+              <rect x="4" y="35" width="16" height="3" fill="rgba(22,163,74,0.4)"/>
+              <rect x="11" y="30" width="3" height="16" fill="rgba(22,163,74,0.4)"/>
+            </svg>
+            <div class="lockup-text">
+              <div class="lockup-name" style="color:white">DZ<em style="color:rgba(255,255,255,0.7)">Colis</em></div>
+              <div class="lockup-tag" style="color:rgba(255,255,255,0.4)">Reliez vos deux mondes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="concept-info">
+        <div class="ci-block">
+          <h4>Concept</h4>
+          <p>Le "C" de Colis est un itinéraire. Deux points de connexion (villes), une route courbe, un colis en transit.</p>
+        </div>
+        <div class="ci-block">
+          <h4>Points forts</h4>
+          <div class="ci-tags">
+            <span class="ci-tag good">Élégant & minimal</span>
+            <span class="ci-tag good">Double lecture C + route</span>
+            <span class="ci-tag good">Haut de gamme</span>
+          </div>
+        </div>
+        <div class="ci-block">
+          <h4>À noter</h4>
+          <div class="ci-tags">
+            <span class="ci-tag bad">Moins accrocheur que les autres</span>
+            <span class="ci-tag bad">Complexe à < 24px</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- Final recommendation -->
+  <div class="final-rec">
+    <div style="display:inline-block;background:rgba(22,163,74,0.2);color:#22c55e;border:1px solid rgba(22,163,74,0.3);border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;margin-bottom:20px">
+      Ma recommandation finale
+    </div>
+    <h2>Concept 01 + "Reliez vos deux mondes"</h2>
+    <p>Le croissant + colis est unique, possède une identité forte, et aucun concurrent ne l'utilise.<br/>La tagline frappe directement l'émotion de la diaspora algérienne.</p>
+    <div class="final-preview">
+      <svg width="96" height="96" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+        <defs><mask id="final-m"><rect width="80" height="80" fill="white"/><circle cx="62" cy="16" r="17" fill="black"/></mask></defs>
+        <circle cx="52" cy="20" r="20" fill="#22c55e" mask="url(#final-m)"/>
+        <rect x="10" y="36" width="60" height="12" rx="4" fill="#15803d"/>
+        <rect x="10" y="46" width="60" height="28" rx="4" fill="#16a34a"/>
+        <rect x="37" y="36" width="6" height="38" fill="rgba(255,255,255,0.22)"/>
+        <rect x="10" y="56" width="60" height="5" fill="rgba(255,255,255,0.22)"/>
+        <rect x="10" y="36" width="60" height="3" rx="2" fill="rgba(255,255,255,0.15)"/>
+      </svg>
+      <div style="font-size:32px;font-weight:900;color:white;letter-spacing:-0.5px">DZ<span style="color:#22c55e">Colis</span></div>
+      <div class="tagline-show">Reliez vos deux mondes</div>
+    </div>
+    <div style="margin-top:28px;font-size:12px;color:rgba(255,255,255,0.3)">
+      Ouvrez ce fichier dans Chrome · Ctrl+P → Enregistrer en PDF pour l'exporter<br/>
+      logos.html · DZColis © 2026
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

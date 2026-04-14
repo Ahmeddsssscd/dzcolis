@@ -34,32 +34,31 @@ export default function TransporterPage() {
     );
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.from || !form.to || !form.price) {
       addToast("Veuillez remplir tous les champs obligatoires", "error");
       return;
     }
 
-    addListing({
-      type: "trip",
-      title: `Trajet ${form.from} → ${form.to} - ${form.vehicle}`,
+    const result = await addListing({
+      user_id: user.id,
+      from_city: form.from,
+      to_city: form.to,
+      departure_date: form.date || new Date().toISOString().split("T")[0],
+      arrival_date: null,
+      price_per_kg: parseInt(form.price),
+      available_weight: parseFloat(form.maxWeight) || 0,
       description: form.description || `${form.vehicle} disponible. ${form.recurring ? "Trajet régulier." : ""}`,
-      from: form.from,
-      to: form.to,
-      date: form.date || new Date().toISOString().split("T")[0],
-      price: parseInt(form.price),
-      weight: form.maxWeight ? `jusqu'à ${form.maxWeight} kg` : undefined,
-      user: {
-        name: `${user.firstName} ${user.lastName[0]}.`,
-        rating: user.rating,
-        reviews: user.reviews,
-        avatar: user.avatar,
-      },
+      is_international: false,
     });
 
-    addToast("Trajet publié avec succès !");
-    router.push("/annonces");
+    if (result) {
+      addToast("Trajet publié avec succès !");
+      router.push("/annonces");
+    } else {
+      addToast("Erreur lors de la publication. Veuillez réessayer.", "error");
+    }
   };
 
   return (
