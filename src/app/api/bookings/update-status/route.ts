@@ -52,5 +52,28 @@ export async function PATCH(req: NextRequest) {
     });
   }
 
+  // Send delivery email when status = delivered
+  if (status === "delivered") {
+    // Get sender email from auth
+    try {
+      const { createClient: createAdmin } = await import("@/lib/supabase/admin");
+      const adminSb = createAdmin();
+      const { data: senderAuth } = await adminSb.auth.admin.getUserById(booking.sender_id);
+      const senderEmail = senderAuth?.user?.email;
+      if (senderEmail) {
+        const { data: senderProfile } = await (supabase as any)
+          .from("profiles")
+          .select("first_name")
+          .eq("id", booking.sender_id)
+          .single();
+        const { sendDeliveryConfirmedEmail } = await import("@/lib/email");
+        await sendDeliveryConfirmedEmail(senderEmail, {
+          firstName: senderProfile?.first_name ?? "Client",
+          bookingRef: booking.booking_ref,
+        }).catch(() => {});
+      }
+    } catch { /* email is non-critical */ }
+  }
+
   return NextResponse.json({ ok: true });
 }

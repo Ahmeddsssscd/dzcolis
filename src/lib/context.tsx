@@ -360,6 +360,31 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }
 
     await fetchBookings();
+
+    // Send booking confirmation email (fire and forget)
+    if (booking && user?.email) {
+      const { data: listingForEmail } = await db
+        .from("listings")
+        .select("from_city, to_city, departure_date")
+        .eq("id", data.listing_id)
+        .single();
+      if (listingForEmail) {
+        fetch("/api/email/booking-confirmation", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            to: user.email,
+            firstName: user.firstName,
+            bookingRef: booking.booking_ref,
+            fromCity: listingForEmail.from_city,
+            toCity: listingForEmail.to_city,
+            departureDate: listingForEmail.departure_date,
+            totalAmount: data.total_amount,
+          }),
+        }).catch(() => {});
+      }
+    }
+
     return booking;
   };
 

@@ -1,50 +1,49 @@
 {
   "name": "DZColis — Livraison Collaborative",
   "short_name": "DZColis",
-  "description": "Envoyez vos colis entre l'Algérie et l'Europe grâce à des voyageurs vérifiés.",
+  "description": "Envoyez vos colis partout en Algérie grâce à des transporteurs vérifiés.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#16a34a",
+  "theme_color": "#00a651",
   "orientation": "portrait-primary",
   "categories": ["logistics", "shopping", "travel"],
   "lang": "fr",
   "icons": [
     {
-      "src": "/icons/icon-192.png",
+      "src": "/api/icon?size=192",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icons/icon-512.png",
+      "src": "/api/icon?size=512",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
     }
   ],
-  "screenshots": [],
   "shortcuts": [
     {
       "name": "Envoyer un colis",
       "short_name": "Envoyer",
       "description": "Publiez une annonce d'envoi",
       "url": "/envoyer",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/api/icon?size=96", "sizes": "96x96" }]
     },
     {
       "name": "Proposer un trajet",
       "short_name": "Trajet",
-      "description": "Proposez votre trajet",
+      "description": "Proposez votre trajet en tant que transporteur",
       "url": "/transporter",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/api/icon?size=96", "sizes": "96x96" }]
     },
     {
       "name": "Suivre mon colis",
       "short_name": "Suivi",
-      "description": "Suivez votre expédition",
+      "description": "Suivez votre expédition en temps réel",
       "url": "/suivi",
-      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/api/icon?size=96", "sizes": "96x96" }]
     }
   ]
 }

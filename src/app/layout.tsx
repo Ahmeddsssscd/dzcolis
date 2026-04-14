@@ -7,6 +7,7 @@ import Footer from "@/components/Footer";
 import ToastContainer from "@/components/Toast";
 import ThemeProvider from "@/components/ThemeProvider";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,6 +48,7 @@ export default function RootLayout({
             <Footer />
             <ToastContainer />
             <WhatsAppButton />
+            <PWAInstallPrompt />
           </AppProvider>
         </ThemeProvider>
       </body>
