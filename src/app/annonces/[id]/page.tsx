@@ -45,9 +45,9 @@ export default function ListingDetailPage() {
     router.push(`/reserver/${id}`);
   };
 
-  const handleSendMessage = async () => {
+  const sendMsg = async (text: string) => {
     if (!user) { router.push("/connexion"); return; }
-    if (!message.trim() || !transporter || sendingMsg) return;
+    if (!text.trim() || !transporter || sendingMsg) return;
     setSendingMsg(true);
     try {
       const res = await fetch("/api/messages", {
@@ -56,7 +56,7 @@ export default function ListingDetailPage() {
         body: JSON.stringify({
           other_user_id: transporter.id,
           listing_id: id,
-          text: message.trim(),
+          text: text.trim(),
         }),
       });
       if (res.ok) {
@@ -71,6 +71,14 @@ export default function ListingDetailPage() {
     } finally {
       setSendingMsg(false);
     }
+  };
+
+  const handleSendMessage = () => sendMsg(message);
+
+  const handleProposeTrajet = () => {
+    if (!user) { router.push("/connexion"); return; }
+    const proposal = `Bonjour, je fais le trajet ${listing?.from_city} → ${listing?.to_city} et je peux transporter votre colis. Dites-moi quand vous êtes disponible pour qu'on s'organise.`;
+    sendMsg(proposal);
   };
 
   if (loading) {
@@ -222,15 +230,12 @@ export default function ListingDetailPage() {
 
               {isDemande ? (
                 <div className="space-y-2">
-                  <p className="text-xs text-dz-gray-500 mb-3">Vous faites ce trajet ? Envoyez un message à l&apos;expéditeur pour lui proposer votre service.</p>
+                  <p className="text-xs text-dz-gray-500 mb-3">Vous faites ce trajet ? Cliquez pour envoyer votre proposition directement à l&apos;expéditeur.</p>
                   <button
-                    onClick={() => {
-                      if (!user) { router.push("/connexion"); return; }
-                      setMessage(`Bonjour, je fais régulièrement le trajet ${listing.from_city} → ${listing.to_city} et je peux transporter votre colis. Contactez-moi pour qu'on s'organise.`);
-                      document.getElementById("msg-box")?.scrollIntoView({ behavior: "smooth" });
-                    }}
-                    className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-xl font-semibold transition-colors">
-                    Je propose mon trajet
+                    onClick={handleProposeTrajet}
+                    disabled={sendingMsg}
+                    className="w-full bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-white py-3 rounded-xl font-semibold transition-colors">
+                    {sendingMsg ? "Envoi en cours..." : "Je propose mon trajet"}
                   </button>
                 </div>
               ) : (
