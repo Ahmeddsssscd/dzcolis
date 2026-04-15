@@ -29,7 +29,7 @@ const HOW_IT_WORKS = [
 ];
 
 export default function ParrainagePage() {
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
   const { addToast } = useToast();
   const router = useRouter();
   const [data, setData] = useState<ReferralData | null>(null);
@@ -37,14 +37,20 @@ export default function ParrainagePage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    if (authLoading) return;
     if (!user) { router.push("/connexion"); return; }
     fetch("/api/referral")
       .then(r => r.json())
       .then(d => setData(d))
       .catch(() => setData({ referrals: [], earned: 0, wallet: 0 }))
       .finally(() => setLoading(false));
-  }, [user, router]);
+  }, [user, authLoading, router]);
 
+  if (authLoading) return (
+    <div className="min-h-screen bg-dz-gray-50 flex items-center justify-center">
+      <div className="w-8 h-8 border-4 border-dz-green border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
   if (!user) return null;
 
   const referralLink = `${typeof window !== "undefined" ? window.location.origin : "https://dzcolis.vercel.app"}/inscription?ref=${user.referralCode}`;

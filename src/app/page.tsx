@@ -152,6 +152,12 @@ export default function Home() {
               DZColis connecte les expéditeurs avec des transporteurs qui font déjà le trajet. Économique, écologique et sécurisé.
             </p>
             <HeroSearch />
+            <p className="mt-6 text-sm text-green-200/80">
+              Vous êtes transporteur ?{" "}
+              <Link href="/transporter" className="text-white font-semibold underline underline-offset-2 hover:text-green-300 transition-colors">
+                Proposez votre trajet et gagnez de l&apos;argent →
+              </Link>
+            </p>
           </div>
         </div>
       </section>

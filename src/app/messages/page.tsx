@@ -29,7 +29,7 @@ interface MsgItem {
 const supabase = createClient();
 
 export default function MessagesPage() {
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
   const router = useRouter();
 
   const [conversations, setConversations] = useState<ConvItem[]>([]);
@@ -57,9 +57,10 @@ export default function MessagesPage() {
   }, []);
 
   useEffect(() => {
+    if (authLoading) return;
     if (!user) { router.push("/connexion"); return; }
     fetchConversations();
-  }, [user, router, fetchConversations]);
+  }, [user, authLoading, router, fetchConversations]);
 
   // ── Fetch messages for selected conversation ──────────────────────────────
   const fetchMessages = useCallback(async (convId: string) => {
@@ -160,7 +161,11 @@ export default function MessagesPage() {
   const selectedConv = conversations.find((c) => c.id === selectedConvId);
 
   // ── Empty / error states ──────────────────────────────────────────────────
-  if (!user) return null;
+  if (authLoading || !user) return (
+    <div className="bg-dz-gray-50 min-h-screen flex items-center justify-center">
+      <div className="w-8 h-8 border-4 border-dz-green border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
 
   if (loading) {
     return (
