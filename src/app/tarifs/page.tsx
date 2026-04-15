@@ -8,11 +8,11 @@ const domesticRoutes = [
 ];
 
 const internationalRoutes = [
-  { country: "France", flag: "🇫🇷", small: "3 500–5 000 DA", medium: "6 000–9 000 DA", large: "12 000–20 000 DA", delay: "4–8 jours" },
-  { country: "Espagne", flag: "🇪🇸", small: "3 000–4 500 DA", medium: "5 500–8 000 DA", large: "10 000–18 000 DA", delay: "5–9 jours" },
-  { country: "Belgique", flag: "🇧🇪", small: "3 200–4 800 DA", medium: "5 800–8 500 DA", large: "11 000–19 000 DA", delay: "5–8 jours" },
-  { country: "Allemagne", flag: "🇩🇪", small: "5 000–7 000 DA", medium: "8 000–12 000 DA", large: "15 000–25 000 DA", delay: "7–12 jours" },
-  { country: "Italie", flag: "🇮🇹", small: "2 800–4 200 DA", medium: "5 000–7 500 DA", large: "9 000–16 000 DA", delay: "4–7 jours" },
+  { country: "France", flag: "🇫🇷", small: "20–30 €", medium: "35–55 €", large: "70–120 €", delay: "4–8 jours" },
+  { country: "Espagne", flag: "🇪🇸", small: "18–28 €", medium: "30–50 €", large: "60–100 €", delay: "5–9 jours" },
+  { country: "Belgique", flag: "🇧🇪", small: "20–30 €", medium: "33–52 €", large: "65–110 €", delay: "5–8 jours" },
+  { country: "Allemagne", flag: "🇩🇪", small: "28–40 €", medium: "45–70 €", large: "85–140 €", delay: "7–12 jours" },
+  { country: "Italie", flag: "🇮🇹", small: "16–25 €", medium: "28–45 €", large: "55–90 €", delay: "4–7 jours" },
 ];
 
 const trustItems = [
@@ -283,7 +283,7 @@ export default function TarifsPage() {
                   <span className="text-xs bg-dz-green text-white px-2 py-0.5 rounded-full">Recommandé</span>
                 </div>
               </div>
-              <div className="text-3xl font-bold text-dz-green mb-2">100 000 DA</div>
+              <div className="text-3xl font-bold text-dz-green mb-2">1 500 €</div>
               <p className="text-sm text-dz-gray-500">Couverture étendue pour les envois Europe–Algérie. Idéal pour les objets de valeur, appareils électroniques et cadeaux familiaux.</p>
             </div>
           </div>

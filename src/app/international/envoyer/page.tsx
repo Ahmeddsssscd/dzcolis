@@ -22,7 +22,7 @@ const INSURANCE_TIERS = [
     name: "Formule Basique",
     price: "Gratuit",
     priceMin: undefined,
-    coverage: "50 000 DA",
+    coverage: "500 €",
     badge: null,
     features: [
       "Couverture perte totale",
@@ -34,8 +34,8 @@ const INSURANCE_TIERS = [
     id: "standard" as InsuranceTier,
     name: "Formule Standard",
     price: "1.5% valeur déclarée",
-    priceMin: "min 300 DA",
-    coverage: "150 000 DA",
+    priceMin: "min 2 €",
+    coverage: "1 500 €",
     badge: null,
     features: [
       "Couverture casse et perte",
@@ -47,8 +47,8 @@ const INSURANCE_TIERS = [
     id: "premium" as InsuranceTier,
     name: "Formule Premium",
     price: "3% valeur déclarée",
-    priceMin: "min 600 DA",
-    coverage: "300 000 DA",
+    priceMin: "min 5 €",
+    coverage: "3 000 €",
     badge: "Recommandé",
     features: [
       "Couverture tous risques internationale",
@@ -245,7 +245,7 @@ export default function InternationalEnvoyerPage() {
               {/* Declared value */}
               <div>
                 <label className="block text-sm font-medium text-dz-gray-700 mb-1">
-                  Valeur déclarée (DA) *
+                  Valeur déclarée (€) *
                 </label>
                 <div className="relative">
                   <input
@@ -253,10 +253,10 @@ export default function InternationalEnvoyerPage() {
                     min="0"
                     value={form.declaredValue}
                     onChange={(e) => update("declaredValue", e.target.value)}
-                    placeholder="Ex: 50000"
+                    placeholder="Ex: 300"
                     className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green pr-12"
                   />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-dz-gray-400 font-medium pointer-events-none">DA</span>
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-dz-gray-400 font-medium pointer-events-none">€</span>
                 </div>
                 <p className="text-xs text-dz-gray-400 mt-1.5 flex items-start gap-1.5">
                   <svg className="w-3.5 h-3.5 mt-0.5 flex-shrink-0 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -502,7 +502,7 @@ export default function InternationalEnvoyerPage() {
                           <div className="mt-1">
                             {form.declaredValue ? (
                               <span className="text-xs font-semibold text-dz-green bg-dz-green/10 px-2 py-0.5 rounded-lg">
-                                Prime: {Math.round(premium)} DA
+                                Prime: {Math.round(premium * 100) / 100} €
                               </span>
                             ) : (
                               <span className="text-xs text-dz-gray-400">Entrez la valeur déclarée</span>
@@ -525,7 +525,7 @@ export default function InternationalEnvoyerPage() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M12 7h.01M9 7h.01" />
                 </svg>
                 {form.declaredValue
-                  ? <span>Prime calculée: <strong>{Math.round(insurancePremium)} DA</strong></span>
+                  ? <span>Prime calculée: <strong>{Math.round(insurancePremium * 100) / 100} €</strong></span>
                   : <span>Entrez la valeur déclarée pour voir le prix</span>
                 }
               </div>
@@ -573,7 +573,7 @@ export default function InternationalEnvoyerPage() {
                 <span className="font-medium text-dz-gray-800">
                   {INSURANCE_TIERS.find((t) => t.id === form.insuranceTier)?.name} —{" "}
                   <span className="text-dz-green">
-                    {form.insuranceTier === "basique" ? "Gratuit" : form.declaredValue ? `${Math.round(insurancePremium)} DA` : "à calculer"}
+                    {form.insuranceTier === "basique" ? "Gratuit" : form.declaredValue ? `${Math.round(insurancePremium * 100) / 100} €` : "à calculer"}
                   </span>
                 </span>
               </div>

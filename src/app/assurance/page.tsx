@@ -5,7 +5,7 @@ const tiers = [
     name: "Basique",
     price: "Gratuit",
     coverage: "20 000 DA",
-    coverageInt: "50 000 DA",
+    coverageInt: "500 €",
     color: "border-dz-gray-200",
     badge: null,
     scoreRequired: "0",
@@ -20,9 +20,9 @@ const tiers = [
   {
     name: "Standard",
     price: "1% valeur déclarée",
-    priceMin: "min 150 DA",
+    priceMin: "min 150 DA / 1 €",
     coverage: "50 000 DA",
-    coverageInt: "150 000 DA",
+    coverageInt: "1 500 €",
     color: "border-blue-200",
     badge: null,
     scoreRequired: "31",
@@ -37,9 +37,9 @@ const tiers = [
   {
     name: "Premium",
     price: "2% valeur déclarée",
-    priceMin: "min 300 DA",
+    priceMin: "min 300 DA / 2 €",
     coverage: "150 000 DA",
-    coverageInt: "300 000 DA",
+    coverageInt: "3 000 €",
     color: "border-dz-green",
     badge: "Recommandé",
     scoreRequired: "61",
@@ -70,10 +70,10 @@ const notCovered = [
 ];
 
 const trustLevels = [
-  { label: "Débutant", range: "0 – 30", textColor: "text-red-700", bg: "bg-red-50", access: "Formule Basique uniquement — couverture 20 000 DA" },
-  { label: "Confirmé", range: "31 – 60", textColor: "text-orange-700", bg: "bg-orange-50", access: "Formules Basique + Standard — couverture jusqu'à 50 000 DA" },
-  { label: "Expert", range: "61 – 80", textColor: "text-blue-700", bg: "bg-blue-50", access: "Toutes formules — couverture jusqu'à 150 000 DA" },
-  { label: "Elite ✓", range: "81 – 100", textColor: "text-dz-green", bg: "bg-dz-green/5", access: "Toutes formules + accès prioritaire support + couverture 150 000 DA max" },
+  { label: "Débutant", range: "0 – 30", textColor: "text-red-700", bg: "bg-red-50", access: "Formule Basique uniquement — couverture 20 000 DA / 500 €" },
+  { label: "Confirmé", range: "31 – 60", textColor: "text-orange-700", bg: "bg-orange-50", access: "Formules Basique + Standard — couverture jusqu'à 50 000 DA / 1 500 €" },
+  { label: "Expert", range: "61 – 80", textColor: "text-blue-700", bg: "bg-blue-50", access: "Toutes formules — couverture jusqu'à 150 000 DA / 3 000 €" },
+  { label: "Elite ✓", range: "81 – 100", textColor: "text-dz-green", bg: "bg-dz-green/5", access: "Toutes formules + accès prioritaire support + couverture 150 000 DA / 3 000 € max" },
 ];
 
 const scoreFactors = [
@@ -196,7 +196,7 @@ export default function AssurancePage() {
               <div className="text-3xl">✈️</div>
               <div>
                 <div className="font-bold text-lg">International Premium</div>
-                <div className="text-dz-gray-300 text-sm">3% valeur déclarée — min 600 DA — Couverture 300 000 DA</div>
+                <div className="text-dz-gray-300 text-sm">3% valeur déclarée — min 25 € — Couverture 5 000 €</div>
               </div>
             </div>
             <ul className="flex flex-col gap-1.5 text-sm text-dz-gray-300">
@@ -313,7 +313,7 @@ export default function AssurancePage() {
                   ))}
                 </ul>
                 <p className="text-sm text-dz-gray-500 italic">
-                  Disponible dans les formules Standard et Premium. Requis pour toute réclamation supérieure à 10 000 DA.
+                  Disponible dans les formules Standard et Premium. Requis pour toute réclamation supérieure à 10 000 DA (ou 70 €).
                 </p>
               </div>
               {/* Mock report card */}
@@ -357,7 +357,7 @@ export default function AssurancePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { step: "1", icon: "📱", title: "Déclarez dans l'app", desc: "Signalez le problème dans votre tableau de bord sous 48h après la livraison prévue. Décrivez le sinistre et joignez les photos.", note: "Délai: 48h max" },
-              { step: "2", icon: "📋", title: "Rapport automatique", desc: "Pour les réclamations > 10 000 DA, DZColis génère automatiquement le rapport de police pré-rempli. Déposez-le au commissariat le plus proche.", note: "Formules Standard & Premium" },
+              { step: "2", icon: "📋", title: "Rapport automatique", desc: "Pour les réclamations > 10 000 DA (70 €), DZColis génère automatiquement le rapport de police pré-rempli. Déposez-le au commissariat le plus proche.", note: "Formules Standard & Premium" },
               { step: "3", icon: "💳", title: "Remboursement", desc: "Après vérification, le remboursement est effectué selon votre formule : 48h (Premium), 7 jours (Standard), ou 15 jours (Basique).", note: "Selon formule choisie" },
             ].map((s) => (
               <div key={s.step} className="bg-white rounded-2xl border border-dz-gray-200 p-6">
