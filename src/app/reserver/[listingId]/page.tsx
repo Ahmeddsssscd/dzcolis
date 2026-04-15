@@ -7,10 +7,14 @@ import { useAuth, useListings, useBookings, useToast } from "@/lib/context";
 const STEPS = ["Résumé", "Détails colis", "Paiement"];
 
 const PAYMENT_METHODS = [
-  { id: "cib", label: "Carte CIB / Dahabia", desc: "Carte bancaire algérienne", flag: "🇩🇿" },
   { id: "edahabia", label: "Edahabia (Algérie Poste)", desc: "Paiement via votre compte Edahabia", flag: "🇩🇿" },
-  { id: "virement", label: "Virement bancaire", desc: "Virement vers notre compte sécurisé", flag: "🏦" },
-  { id: "stripe", label: "Carte bancaire européenne", desc: "Visa / Mastercard — pour les envois depuis l'Europe", flag: "🇪🇺" },
+  { id: "cib", label: "Carte CIB", desc: "Carte bancaire algérienne CIB", flag: "🇩🇿" },
+];
+
+const INTERNATIONAL_PAYMENT_METHODS = [
+  { id: "skrill_card", label: "Visa / Mastercard", desc: "Paiement sécurisé par carte bancaire internationale", flag: "💳" },
+  { id: "skrill_wallet", label: "Skrill Wallet", desc: "Paiement via votre compte Skrill", flag: "💜" },
+  { id: "skrill_paypal", label: "PayPal", desc: "Paiement via votre compte PayPal", flag: "🅿️" },
 ];
 
 function StepBar({ current }: { current: number }) {
@@ -85,10 +89,18 @@ export default function ReserverPage() {
     );
   }
 
+  const isIntl      = listing.is_international ?? false;
   const weightKg    = parseFloat(parcel.weight) || 0;
-  const transport   = Math.round(listing.price_per_kg * weightKg);
-  const commission  = Math.round(transport * 0.1);
-  const total       = transport + commission;
+  const transport   = isIntl
+    ? Math.round(listing.price_per_kg * weightKg * 100) / 100
+    : Math.round(listing.price_per_kg * weightKg);
+  const commission  = isIntl
+    ? Math.round(transport * 0.1 * 100) / 100
+    : Math.round(transport * 0.1);
+  const total       = isIntl
+    ? Math.round((transport + commission) * 100) / 100
+    : transport + commission;
+  const currency    = isIntl ? "€" : "DA";
 
   function updateParcel(field: string, value: string | boolean) {
     setParcel(prev => ({ ...prev, [field]: value }));
@@ -125,29 +137,21 @@ export default function ReserverPage() {
       return;
     }
 
-    // Step 2: If payment method is online (cib/edahabia), go through Chargily
-    if (paymentMethod === "cib" || paymentMethod === "edahabia") {
-      const res = await fetch("/api/payment/create", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bookingId: booking.id, paymentMethod }),
-      });
-      const json = await res.json();
-      if (json.checkout_url) {
-        window.location.href = json.checkout_url;
-        return; // will redirect, no need to unset submitting
-      } else {
-        setSubmitting(false);
-        addToast("Erreur de paiement. Réessayez ou choisissez un autre mode.", "error");
-        return;
-      }
+    // Step 2: Route to Skrill (international) or Chargily (domestic)
+    const paymentEndpoint = isIntl ? "/api/payment/skrill/create" : "/api/payment/create";
+    const res = await fetch(paymentEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ bookingId: booking.id, paymentMethod }),
+    });
+    const json = await res.json();
+    if (json.checkout_url) {
+      window.location.href = json.checkout_url;
+      return;
+    } else {
+      setSubmitting(false);
+      addToast("Erreur de paiement. Réessayez ou contactez le support.", "error");
     }
-
-    // Step 3: For virement / EU card — go to confirmation page directly
-    setSubmitting(false);
-    sessionStorage.setItem("dzcolis_booking_ref", booking.booking_ref);
-    sessionStorage.setItem("dzcolis_booking_listing", JSON.stringify(listing));
-    router.push("/reserver/confirmation");
   }
 
   return (
@@ -227,12 +231,12 @@ export default function ReserverPage() {
               <h2 className="text-base font-bold text-dz-gray-800 mb-4">Résumé du prix</h2>
               <div className="space-y-2.5 text-sm">
                 <div className="flex justify-between text-dz-gray-600">
-                  <span>Transport ({listing.price_per_kg.toLocaleString()} DA × {weightKg || "?"} kg)</span>
-                  <span className="font-medium">{transport.toLocaleString()} DA</span>
+                  <span>Transport ({listing.price_per_kg.toLocaleString("fr-FR")} {currency} × {weightKg || "?"} kg)</span>
+                  <span className="font-medium">{transport.toLocaleString("fr-FR")} {currency}</span>
                 </div>
                 <div className="flex justify-between text-dz-gray-600">
                   <span>Commission DZColis (10%)</span>
-                  <span className="font-medium">{commission.toLocaleString()} DA</span>
+                  <span className="font-medium">{commission.toLocaleString("fr-FR")} {currency}</span>
                 </div>
                 <div className="flex justify-between text-dz-green text-sm">
                   <span>Assurance DZColis Protect</span>
@@ -240,7 +244,7 @@ export default function ReserverPage() {
                 </div>
                 <div className="border-t border-dz-gray-200 pt-2.5 flex justify-between font-bold text-dz-gray-800 text-base">
                   <span>Total</span>
-                  <span>{total.toLocaleString()} DA</span>
+                  <span>{total.toLocaleString("fr-FR")} {currency}</span>
                 </div>
               </div>
             </div>
@@ -390,20 +394,26 @@ export default function ReserverPage() {
                 </div>
               </div>
               <div className="space-y-2 text-sm">
-                <div className="flex justify-between text-dz-gray-600"><span>Transport ({parcel.weight || "?"} kg × {listing.price_per_kg} DA)</span><span>{transport.toLocaleString()} DA</span></div>
-                <div className="flex justify-between text-dz-gray-600"><span>Commission (10%)</span><span>{commission.toLocaleString()} DA</span></div>
+                <div className="flex justify-between text-dz-gray-600"><span>Transport ({parcel.weight || "?"} kg × {listing.price_per_kg} {currency})</span><span>{transport.toLocaleString("fr-FR")} {currency}</span></div>
+                <div className="flex justify-between text-dz-gray-600"><span>Commission (10%)</span><span>{commission.toLocaleString("fr-FR")} {currency}</span></div>
                 <div className="flex justify-between text-green-600"><span>Assurance</span><span>Gratuit</span></div>
                 <div className="flex justify-between font-bold text-dz-gray-800 text-base border-t border-dz-gray-100 pt-2.5">
-                  <span>Total à payer</span><span>{total.toLocaleString()} DA</span>
+                  <span>Total à payer</span><span>{total.toLocaleString("fr-FR")} {currency}</span>
                 </div>
               </div>
             </div>
 
             {/* Payment method */}
             <div className="bg-white border border-dz-gray-200 rounded-2xl p-6">
-              <h2 className="text-base font-bold text-dz-gray-800 mb-4">Mode de paiement</h2>
+              <h2 className="text-base font-bold text-dz-gray-800 mb-1">Mode de paiement</h2>
+              {isIntl && (
+                <p className="text-xs text-dz-gray-500 mb-4 flex items-center gap-1.5">
+                  <span>💳</span> Paiement international sécurisé via Skrill — montant en euros (€)
+                </p>
+              )}
+              {!isIntl && <div className="mb-4" />}
               <div className="space-y-2.5">
-                {PAYMENT_METHODS.map(m => (
+                {(isIntl ? INTERNATIONAL_PAYMENT_METHODS : PAYMENT_METHODS).map(m => (
                   <label key={m.id} className={`flex items-center gap-3 p-3.5 rounded-xl border-2 cursor-pointer transition-all ${
                     paymentMethod === m.id ? "border-dz-green bg-green-50" : "border-dz-gray-200 hover:border-dz-gray-300"
                   }`}>

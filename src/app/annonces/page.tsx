@@ -7,15 +7,19 @@ import type { Listing } from "@/lib/supabase/types";
 import { ALGERIAN_CITIES } from "@/lib/data";
 
 function ListingCard({ listing }: { listing: Listing }) {
-  const priceTotal = Math.round(listing.price_per_kg * listing.available_weight);
+  const isIntl     = listing.is_international ?? false;
+  const currency   = isIntl ? "€" : "DA";
+  const priceTotal = isIntl
+    ? Math.round(listing.price_per_kg * listing.available_weight * 100) / 100
+    : Math.round(listing.price_per_kg * listing.available_weight);
   return (
     <Link href={`/annonces/${listing.id}`} className="block bg-white rounded-2xl border border-dz-gray-200 hover:border-dz-green/30 hover:shadow-lg transition-all overflow-hidden">
       <div className="p-5">
         <div className="flex items-start justify-between mb-3">
-          <span className={`text-xs font-semibold px-3 py-1 rounded-full ${listing.is_international ? "bg-purple-50 text-purple-600" : "bg-blue-50 text-blue-600"}`}>
-            {listing.is_international ? "✈️ International" : "🇩🇿 National"}
+          <span className={`text-xs font-semibold px-3 py-1 rounded-full ${isIntl ? "bg-purple-50 text-purple-600" : "bg-blue-50 text-blue-600"}`}>
+            {isIntl ? "✈️ International" : "🇩🇿 National"}
           </span>
-          <span className="text-lg font-bold text-dz-green">{listing.price_per_kg.toLocaleString()} DA/kg</span>
+          <span className="text-lg font-bold text-dz-green">{listing.price_per_kg.toLocaleString("fr-FR")} {currency}/kg</span>
         </div>
 
         <div className="flex items-center gap-2 mb-3">
@@ -51,7 +55,7 @@ function ListingCard({ listing }: { listing: Listing }) {
 
         <div className="flex items-center justify-between pt-4 border-t border-dz-gray-100">
           <div className="text-xs text-dz-gray-400">
-            Total estimé : <span className="font-semibold text-dz-gray-700">{priceTotal.toLocaleString()} DA</span>
+            Total estimé : <span className="font-semibold text-dz-gray-700">{priceTotal.toLocaleString("fr-FR")} {currency}</span>
           </div>
           <span className="bg-dz-green hover:bg-dz-green-light text-white text-sm px-4 py-2 rounded-xl font-medium transition-colors">
             Voir

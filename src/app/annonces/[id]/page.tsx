@@ -101,7 +101,11 @@ export default function ListingDetailPage() {
     );
   }
 
-  const priceTotal   = Math.round(listing.price_per_kg * listing.available_weight);
+  const isIntl       = listing.is_international ?? false;
+  const currency     = isIntl ? "€" : "DA";
+  const priceTotal   = isIntl
+    ? Math.round(listing.price_per_kg * listing.available_weight * 100) / 100
+    : Math.round(listing.price_per_kg * listing.available_weight);
   const transporterInitials = transporter
     ? (transporter.first_name[0] ?? "") + (transporter.last_name[0] ?? "")
     : "?";
@@ -112,11 +116,11 @@ export default function ListingDetailPage() {
   return (
     <div className="bg-dz-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Link href="/annonces" className="inline-flex items-center gap-1 text-sm text-dz-gray-500 hover:text-dz-green mb-6">
+        <Link href={isIntl ? "/international" : "/annonces"} className="inline-flex items-center gap-1 text-sm text-dz-gray-500 hover:text-dz-green mb-6">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Retour aux annonces
+          {isIntl ? "Retour à l'international" : "Retour aux annonces"}
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -127,7 +131,7 @@ export default function ListingDetailPage() {
                 <span className={`text-xs font-semibold px-3 py-1 rounded-full ${listing.is_international ? "bg-purple-50 text-purple-600" : "bg-blue-50 text-blue-600"}`}>
                   {listing.is_international ? "✈️ International" : "🇩🇿 National"}
                 </span>
-                <span className="text-2xl font-bold text-dz-green">{listing.price_per_kg.toLocaleString()} DA/kg</span>
+                <span className="text-2xl font-bold text-dz-green">{listing.price_per_kg.toLocaleString("fr-FR")} {currency}/kg</span>
               </div>
 
               {/* Route */}
@@ -159,7 +163,7 @@ export default function ListingDetailPage() {
                 </div>
                 <div className="p-3 bg-dz-gray-50 rounded-xl">
                   <p className="text-xs text-dz-gray-500 mb-1">Prix au kg</p>
-                  <p className="font-medium text-dz-green text-sm">{listing.price_per_kg.toLocaleString()} DA</p>
+                  <p className="font-medium text-dz-green text-sm">{listing.price_per_kg.toLocaleString("fr-FR")} {currency}</p>
                 </div>
               </div>
 
@@ -174,7 +178,7 @@ export default function ListingDetailPage() {
               </svg>
               <div>
                 <p className="font-medium text-dz-gray-800 text-sm">Assurance DZColis incluse</p>
-                <p className="text-xs text-dz-gray-600 mt-1">Cet envoi est protégé jusqu&apos;à 50 000 DA contre la casse et le vol.</p>
+                <p className="text-xs text-dz-gray-600 mt-1">{isIntl ? "Cet envoi est protégé jusqu'à 500 € contre la casse et le vol." : "Cet envoi est protégé jusqu'à 50 000 DA contre la casse et le vol."}</p>
               </div>
             </div>
           </div>
@@ -229,12 +233,12 @@ export default function ListingDetailPage() {
               <h3 className="font-semibold text-dz-gray-800 mb-3 text-sm">Détail du prix</h3>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between text-dz-gray-600">
-                  <span>{listing.price_per_kg.toLocaleString()} DA × {listing.available_weight} kg</span>
-                  <span>{priceTotal.toLocaleString()} DA</span>
+                  <span>{listing.price_per_kg.toLocaleString("fr-FR")} {currency} × {listing.available_weight} kg</span>
+                  <span>{priceTotal.toLocaleString("fr-FR")} {currency}</span>
                 </div>
                 <div className="flex justify-between text-dz-gray-600">
                   <span>Commission DZColis (10%)</span>
-                  <span>{Math.round(priceTotal * 0.1).toLocaleString()} DA</span>
+                  <span>{(Math.round(priceTotal * 0.1 * 100) / 100).toLocaleString("fr-FR")} {currency}</span>
                 </div>
                 <div className="flex justify-between text-dz-gray-600">
                   <span>Assurance</span>
@@ -242,7 +246,7 @@ export default function ListingDetailPage() {
                 </div>
                 <div className="border-t border-dz-gray-200 pt-2 flex justify-between font-semibold text-dz-gray-800">
                   <span>Total estimé</span>
-                  <span>{Math.round(priceTotal * 1.1).toLocaleString()} DA</span>
+                  <span>{(Math.round(priceTotal * 1.1 * 100) / 100).toLocaleString("fr-FR")} {currency}</span>
                 </div>
               </div>
             </div>

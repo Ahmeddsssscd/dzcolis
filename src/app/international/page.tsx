@@ -198,7 +198,7 @@ export default function InternationalPage() {
                 >
                   <div className="flex items-start justify-between mb-3">
                     <span className="text-xs bg-dz-green/10 text-dz-green px-2.5 py-1 rounded-full font-medium">✈️ International</span>
-                    <span className="text-lg font-bold text-dz-green">{listing.price_per_kg.toLocaleString()} DA/kg</span>
+                    <span className="text-lg font-bold text-dz-green">{listing.price_per_kg.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} €/kg</span>
                   </div>
 
                   <div className="flex items-center gap-2 text-sm text-dz-gray-500 mb-3">

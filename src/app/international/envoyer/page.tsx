@@ -420,16 +420,16 @@ export default function InternationalEnvoyerPage() {
               Budget
             </h2>
             <div>
-              <label className="block text-sm font-medium text-dz-gray-700 mb-1">Prix proposé (DA) *</label>
+              <label className="block text-sm font-medium text-dz-gray-700 mb-1">Prix proposé (€) *</label>
               <div className="relative">
                 <input
                   type="number"
                   value={form.price}
                   onChange={(e) => update("price", e.target.value)}
-                  placeholder="Ex: 5000"
+                  placeholder="Ex: 15"
                   className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green pr-12"
                 />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-dz-gray-400 font-medium pointer-events-none">DA</span>
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-dz-gray-400 font-medium pointer-events-none">€</span>
               </div>
               <p className="text-xs text-dz-gray-400 mt-2">Commission DZColis: 10% — Le transporteur recevra 90% du montant</p>
             </div>
@@ -560,7 +560,7 @@ export default function InternationalEnvoyerPage() {
                   Valeur déclarée
                 </span>
                 <span className="font-medium text-dz-gray-800">
-                  {form.declaredValue ? `${parseInt(form.declaredValue).toLocaleString("fr-DZ")} DA` : "—"}
+                  {form.declaredValue ? `${parseInt(form.declaredValue).toLocaleString("fr-FR")} €` : "—"}
                 </span>
               </div>
               <div className="flex items-center justify-between text-sm">
@@ -581,7 +581,7 @@ export default function InternationalEnvoyerPage() {
                 <span className="font-semibold text-dz-gray-800">Total payé</span>
                 <span className="font-bold text-dz-green text-base">
                   {form.price
-                    ? `${Math.round(totalPrice).toLocaleString("fr-DZ")} DA`
+                    ? `${totalPrice.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
                     : "—"}
                 </span>
               </div>
