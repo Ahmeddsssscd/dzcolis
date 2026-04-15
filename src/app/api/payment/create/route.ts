@@ -27,13 +27,7 @@ export async function POST(req: NextRequest) {
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
 
-    // Map our payment methods to Chargily payment methods
-    const chargilyMethod =
-      paymentMethod === "edahabia" ? "edahabia"
-      : paymentMethod === "cib"   ? "cib"
-      : "edahabia"; // fallback
-
-    // Create Chargily checkout
+    // Create Chargily checkout (no payment_method — Chargily shows edahabia/CIB at their page)
     const chargilyRes = await fetch(`${CHARGILY_BASE}/checkouts`, {
       method: "POST",
       headers: {
@@ -43,7 +37,6 @@ export async function POST(req: NextRequest) {
       body: JSON.stringify({
         amount: booking.total_amount,
         currency: "dzd",
-        payment_method: chargilyMethod,
         success_url: `${appUrl}/paiement/succes?booking=${bookingId}`,
         failure_url: `${appUrl}/paiement/echec?booking=${bookingId}`,
         webhook_endpoint: `${appUrl}/api/payment/webhook`,

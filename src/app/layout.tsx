@@ -23,6 +23,11 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "default",
     title: "DZColis",
+    startupImage: "/icons/icon-512.png",
+  },
+  icons: {
+    icon: "/icons/icon-512.png",
+    apple: "/icons/icon-512.png",
   },
   openGraph: {
     title: "DZColis — Livraison collaborative Algérie ↔ Europe",

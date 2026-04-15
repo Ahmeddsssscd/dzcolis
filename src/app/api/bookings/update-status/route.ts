@@ -24,9 +24,17 @@ export async function PATCH(req: NextRequest) {
   const isSender = booking.sender_id === user.id;
   if (!isTransporter && !isSender) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
-  // Update booking status
+  // Update booking status + timestamp for this specific status
+  const now = new Date().toISOString();
+  const timestampField: Record<string, string> = {
+    accepted:   "accepted_at",
+    in_transit: "in_transit_at",
+    delivered:  "delivered_at",
+  };
+  const updatePayload: Record<string, string> = { status };
+  if (timestampField[status]) updatePayload[timestampField[status]] = now;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (supabase as any).from("bookings").update({ status }).eq("id", bookingId);
+  await (supabase as any).from("bookings").update(updatePayload).eq("id", bookingId);
 
   // Send notification to the OTHER party
   const route = `${booking.listing?.from_city ?? ""} → ${booking.listing?.to_city ?? ""}`;
@@ -56,8 +64,7 @@ export async function PATCH(req: NextRequest) {
   if (status === "delivered") {
     // Get sender email from auth
     try {
-      const { createClient: createAdmin } = await import("@/lib/supabase/admin");
-      const adminSb = createAdmin();
+      const { adminClient: adminSb } = await import("@/lib/supabase/admin");
       const { data: senderAuth } = await adminSb.auth.admin.getUserById(booking.sender_id);
       const senderEmail = senderAuth?.user?.email;
       if (senderEmail) {

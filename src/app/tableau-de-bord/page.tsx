@@ -542,9 +542,9 @@ export default function DashboardPage() {
                             {" · "}{Number(b.weight ?? 0)}kg · {String(b.content ?? "")}
                           </p>
                           <p className="text-xs text-dz-gray-400 mt-0.5">
-                            Réf : {String(b.booking_ref ?? "—")} · {b.created_at ? new Date(String(b.created_at)).toLocaleDateString("fr-FR") : "—"}
+                            Réf : <Link href={`/suivi?ref=${encodeURIComponent(String(b.booking_ref ?? ""))}`} className="font-mono text-dz-green hover:underline">{String(b.booking_ref ?? "—")}</Link> · {b.created_at ? new Date(String(b.created_at)).toLocaleDateString("fr-FR") : "—"}
                           </p>
-                          {b.pickup_address && (
+                          {(b.pickup_address as string | null) && (
                             <p className="text-xs text-dz-gray-400 mt-0.5">Adresse : {String(b.pickup_address)}</p>
                           )}
                         </div>

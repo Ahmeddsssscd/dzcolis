@@ -13,35 +13,44 @@ export default function PWAInstallPrompt() {
   const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
-    // Check if already dismissed
-    if (localStorage.getItem("pwa_dismissed")) return;
-
     // Check if already installed (standalone mode)
     if (window.matchMedia("(display-mode: standalone)").matches) return;
+
+    // Check if dismissed recently (within 3 days)
+    const dismissedAt = localStorage.getItem("pwa_dismissed_at");
+    if (dismissedAt) {
+      const daysSince = (Date.now() - parseInt(dismissedAt)) / (1000 * 60 * 60 * 24);
+      if (daysSince < 3) return;
+    }
 
     // Detect iOS
     const ios = /iphone|ipad|ipod/i.test(navigator.userAgent) && !(window as Window & { MSStream?: unknown }).MSStream;
     if (ios) {
       setIsIOS(true);
-      // Show iOS instructions after 5 seconds
-      setTimeout(() => setShow(true), 5000);
+      setTimeout(() => setShow(true), 2000);
       return;
     }
 
-    // Android / Chrome — listen for the install prompt
+    // Capture native install prompt if browser supports it
     const handler = (e: Event) => {
       e.preventDefault();
       setPrompt(e as BeforeInstallPromptEvent);
-      setTimeout(() => setShow(true), 3000);
     };
     window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
+
+    // Always show after 2s regardless — if no native prompt, show manual instructions
+    const timer = setTimeout(() => setShow(true), 2000);
+
+    return () => {
+      window.removeEventListener("beforeinstallprompt", handler);
+      clearTimeout(timer);
+    };
   }, []);
 
   const dismiss = () => {
     setShow(false);
     setDismissed(true);
-    localStorage.setItem("pwa_dismissed", "1");
+    localStorage.setItem("pwa_dismissed_at", Date.now().toString());
   };
 
   const install = async () => {
@@ -86,7 +95,7 @@ export default function PWAInstallPrompt() {
             </svg>
             puis <strong>« Sur l&apos;écran d&apos;accueil »</strong>
           </div>
-        ) : (
+        ) : prompt ? (
           <div className="mt-4 flex gap-2">
             <button
               onClick={install}
@@ -99,6 +108,18 @@ export default function PWAInstallPrompt() {
               className="px-4 py-2.5 border border-dz-gray-200 rounded-xl text-sm text-dz-gray-600 hover:bg-dz-gray-50 transition-colors"
             >
               Plus tard
+            </button>
+          </div>
+        ) : (
+          <div className="mt-4 space-y-2">
+            <div className="bg-dz-gray-50 rounded-xl p-3 text-xs text-dz-gray-600">
+              Sur Chrome : Menu <strong>⋮</strong> → <strong>« Ajouter à l&apos;écran d&apos;accueil »</strong>
+            </div>
+            <button
+              onClick={dismiss}
+              className="w-full px-4 py-2.5 border border-dz-gray-200 rounded-xl text-sm text-dz-gray-600 hover:bg-dz-gray-50 transition-colors"
+            >
+              Fermer
             </button>
           </div>
         )}

@@ -9,29 +9,35 @@ export default function ThemeToggle() {
   return (
     <button
       onClick={toggle}
-      title={isDark ? "Livraison de jour" : "Livraison de nuit"}
-      className="relative flex items-center gap-1.5 rounded-full px-2 py-1 border transition-all duration-300 select-none"
+      title={isDark ? "Passer en mode clair" : "Passer en mode sombre"}
+      className="flex items-center gap-1 rounded-full px-1.5 py-1 border transition-all duration-300 select-none"
       style={{
         backgroundColor: isDark ? "#1a2420" : "#f0f4f1",
         borderColor: isDark ? "#2d3b32" : "#dce5de",
-        minWidth: 72,
+        width: 72,
+        position: "relative",
+        overflow: "hidden",
       }}
     >
-      {/* Track icons */}
-      <span className="text-xs transition-opacity duration-200" style={{ opacity: isDark ? 0.4 : 1 }}>☀️</span>
+      {/* Sun */}
+      <span className="text-xs z-10 transition-opacity duration-200" style={{ opacity: isDark ? 0.35 : 1 }}>☀️</span>
 
-      {/* Sliding truck/package pill */}
+      {/* Spacer */}
+      <span className="flex-1" />
+
+      {/* Moon */}
+      <span className="text-xs z-10 transition-opacity duration-200" style={{ opacity: isDark ? 1 : 0.35 }}>🌙</span>
+
+      {/* Sliding truck pill */}
       <span
-        className="absolute flex items-center justify-center text-base transition-all duration-300"
+        className="absolute top-1/2 text-base leading-none pointer-events-none"
         style={{
-          left: isDark ? "calc(100% - 30px)" : "22px",
-          transform: isDark ? "scaleX(-1)" : "scaleX(1)",
+          transform: `translateY(-50%) translateX(${isDark ? "38px" : "4px"}) scaleX(${isDark ? -1 : 1})`,
+          transition: "transform 0.3s cubic-bezier(.4,0,.2,1)",
         }}
       >
         🚚
       </span>
-
-      <span className="text-xs ml-auto transition-opacity duration-200" style={{ opacity: isDark ? 1 : 0.4 }}>🌙</span>
     </button>
   );
 }

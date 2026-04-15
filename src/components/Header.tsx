@@ -28,21 +28,24 @@ export default function Header() {
         <div className="flex items-center justify-between h-16">
           <DzColisLogo size="sm" href="/" />
 
-          <nav className="hidden md:flex items-center gap-8">
-            <Link href="/international" className="text-dz-gray-600 hover:text-dz-green font-medium transition-colors">
-              International
-            </Link>
-            <Link href="/envoyer" className="text-dz-gray-600 hover:text-dz-green font-medium transition-colors">
-              Envoyer un colis
-            </Link>
-            <Link href="/transporter" className="text-dz-gray-600 hover:text-dz-green font-medium transition-colors">
-              Transporter
-            </Link>
-            <Link href="/annonces" className="text-dz-gray-600 hover:text-dz-green font-medium transition-colors">
+          <nav className="hidden md:flex items-center gap-6">
+            <Link href="/annonces" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
               Annonces
             </Link>
-            <Link href="/comment-ca-marche" className="text-dz-gray-600 hover:text-dz-green font-medium transition-colors">
-              Comment ça marche
+            <Link href="/envoyer" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
+              Envoyer
+            </Link>
+            <Link href="/transporter" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
+              Transporter
+            </Link>
+            <Link href="/suivi" className="flex items-center gap-1.5 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+              </svg>
+              Suivi
+            </Link>
+            <Link href="/international" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
+              International
             </Link>
           </nav>
 
@@ -55,9 +58,14 @@ export default function Header() {
                   onClick={() => setDropdownOpen(!dropdownOpen)}
                   className="flex items-center gap-2 hover:bg-dz-gray-50 px-3 py-2 rounded-xl transition-colors"
                 >
-                  <div className="w-8 h-8 bg-dz-green text-white rounded-full flex items-center justify-center text-xs font-bold">
-                    {user.avatar}
-                  </div>
+                  {user.avatarUrl ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={user.avatarUrl} alt={user.firstName} className="w-8 h-8 rounded-full object-cover border-2 border-dz-green/30" />
+                  ) : (
+                    <div className="w-8 h-8 bg-dz-green text-white rounded-full flex items-center justify-center text-xs font-bold">
+                      {user.avatar}
+                    </div>
+                  )}
                   <span className="text-sm font-medium text-dz-gray-700">{user.firstName}</span>
                   <svg className="w-4 h-4 text-dz-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
@@ -70,13 +78,16 @@ export default function Header() {
                       <p className="text-xs text-dz-gray-500">{user.email}</p>
                     </div>
                     <Link href="/tableau-de-bord" className="block px-4 py-2.5 text-sm text-dz-gray-700 hover:bg-dz-gray-50" onClick={() => setDropdownOpen(false)}>
-                      Tableau de bord
+                      📊 Tableau de bord
+                    </Link>
+                    <Link href="/suivi" className="block px-4 py-2.5 text-sm text-dz-gray-700 hover:bg-dz-gray-50" onClick={() => setDropdownOpen(false)}>
+                      📦 Suivi de colis
                     </Link>
                     <Link href="/messages" className="block px-4 py-2.5 text-sm text-dz-gray-700 hover:bg-dz-gray-50" onClick={() => setDropdownOpen(false)}>
-                      Messages
+                      💬 Messages
                     </Link>
                     <Link href="/profil" className="block px-4 py-2.5 text-sm text-dz-gray-700 hover:bg-dz-gray-50" onClick={() => setDropdownOpen(false)}>
-                      Mon profil
+                      👤 Mon profil
                     </Link>
                     <div className="border-t border-dz-gray-100 mt-1 pt-1">
                       <button
@@ -115,16 +126,17 @@ export default function Header() {
         {mobileOpen && (
           <div className="md:hidden pb-4 border-t border-dz-gray-200 pt-4 space-y-2 dark:bg-dz-gray-800">
             <div className="py-1"><ThemeToggle /></div>
-            <Link href="/international" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>International</Link>
-            <Link href="/envoyer" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Envoyer un colis</Link>
-            <Link href="/transporter" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Transporter</Link>
-            <Link href="/annonces" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Annonces</Link>
-            <Link href="/comment-ca-marche" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Comment ça marche</Link>
+            <Link href="/annonces" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Annonces</Link>
+            <Link href="/envoyer" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Envoyer un colis</Link>
+            <Link href="/transporter" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Transporter</Link>
+            <Link href="/suivi" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>📦 Suivi de colis</Link>
+            <Link href="/international" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>International</Link>
+            <Link href="/comment-ca-marche" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Comment ça marche</Link>
             {user ? (
               <>
-                <Link href="/tableau-de-bord" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Tableau de bord</Link>
-                <Link href="/messages" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Messages</Link>
-                <Link href="/profil" className="block py-2 text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Mon profil</Link>
+                <Link href="/tableau-de-bord" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Tableau de bord</Link>
+                <Link href="/messages" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Messages</Link>
+                <Link href="/profil" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Mon profil</Link>
                 <button onClick={() => { logout(); setMobileOpen(false); }} className="block py-2 text-dz-red font-medium">Déconnexion</button>
               </>
             ) : (

@@ -20,7 +20,8 @@ export interface User {
   email: string;
   phone: string;
   wilaya: string;
-  avatar: string;
+  avatar: string;       // initials fallback
+  avatarUrl: string | null; // real photo URL
   rating: number;
   reviews: number;
   createdAt: string;
@@ -53,7 +54,7 @@ export interface Toast {
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────
-function profileToUser(profile: Profile, email: string): User {
+function profileToUser(profile: Profile & { avatar_url?: string | null }, email: string): User {
   return {
     id: profile.id,
     firstName: profile.first_name,
@@ -62,6 +63,7 @@ function profileToUser(profile: Profile, email: string): User {
     phone: profile.phone,
     wilaya: profile.wilaya,
     avatar: (profile.first_name[0] ?? "?") + (profile.last_name[0] ?? ""),
+    avatarUrl: profile.avatar_url ?? null,
     rating: profile.rating,
     reviews: profile.review_count,
     createdAt: profile.created_at,
@@ -87,7 +89,7 @@ interface AuthContextType {
     password: string; phone: string; wilaya: string; referredBy?: string;
   }) => Promise<{ error: string | null }>;
   logout: () => Promise<void>;
-  updateUser: (data: Partial<Pick<User, "firstName" | "lastName" | "phone" | "wilaya">>) => Promise<void>;
+  updateUser: (data: Partial<Pick<User, "firstName" | "lastName" | "phone" | "wilaya" | "avatarUrl">>) => Promise<void>;
   refreshUser: () => Promise<void>;
 }
 
@@ -267,13 +269,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setSupabaseUser(null);
   };
 
-  const updateUser = async (data: Partial<Pick<User, "firstName" | "lastName" | "phone" | "wilaya">>) => {
+  const updateUser = async (data: Partial<Pick<User, "firstName" | "lastName" | "phone" | "wilaya" | "avatarUrl">>) => {
     if (!user) return;
     const updates: Record<string, string> = {};
-    if (data.firstName) updates.first_name = data.firstName;
-    if (data.lastName)  updates.last_name  = data.lastName;
-    if (data.phone)     updates.phone      = data.phone;
-    if (data.wilaya)    updates.wilaya     = data.wilaya;
+    if (data.firstName !== undefined) updates.first_name = data.firstName;
+    if (data.lastName  !== undefined) updates.last_name  = data.lastName;
+    if (data.phone     !== undefined) updates.phone      = data.phone;
+    if (data.wilaya    !== undefined) updates.wilaya     = data.wilaya;
+    if (data.avatarUrl !== undefined) updates.avatar_url = data.avatarUrl ?? "";
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await (supabase as any).from("profiles").update(updates).eq("id", user.id);
     await refreshUser();

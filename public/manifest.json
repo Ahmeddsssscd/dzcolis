@@ -11,13 +11,13 @@
   "lang": "fr",
   "icons": [
     {
-      "src": "/api/icon?size=192",
+      "src": "/icons/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/api/icon?size=512",
+      "src": "/icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
@@ -29,21 +29,21 @@
       "short_name": "Envoyer",
       "description": "Publiez une annonce d'envoi",
       "url": "/envoyer",
-      "icons": [{ "src": "/api/icon?size=96", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Proposer un trajet",
       "short_name": "Trajet",
       "description": "Proposez votre trajet en tant que transporteur",
       "url": "/transporter",
-      "icons": [{ "src": "/api/icon?size=96", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "Suivre mon colis",
       "short_name": "Suivi",
       "description": "Suivez votre expédition en temps réel",
       "url": "/suivi",
-      "icons": [{ "src": "/api/icon?size=96", "sizes": "96x96" }]
+      "icons": [{ "src": "/icons/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

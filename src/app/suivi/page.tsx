@@ -1,5 +1,6 @@
 "use client";
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 const STEPS = [
@@ -42,6 +43,9 @@ interface TrackingResult {
   recipient_name: string;
   created_at: string;
   updated_at: string;
+  accepted_at: string | null;
+  in_transit_at: string | null;
+  delivered_at: string | null;
   from_city: string;
   to_city: string;
   departure_date: string;
@@ -53,34 +57,55 @@ interface TrackingResult {
   } | null;
 }
 
+function fmt(date: string | null) {
+  if (!date) return "—";
+  return new Date(date).toLocaleDateString("fr-DZ", {
+    day: "numeric", month: "long", year: "numeric",
+    hour: "2-digit", minute: "2-digit",
+  });
+}
+
 export default function SuiviPage() {
-  const [inputValue, setInputValue] = useState("");
+  const searchParams = useSearchParams();
+  const [inputValue, setInputValue] = useState(searchParams.get("ref") ?? "");
   const [result, setResult] = useState<TrackingResult | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
-    const val = inputValue.trim();
-    if (!val) { setError("Veuillez entrer un numéro de suivi."); return; }
+  // Auto-search if ref is in URL
+  useEffect(() => {
+    const ref = searchParams.get("ref");
+    if (ref) {
+      setInputValue(ref);
+      fetchTracking(ref);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const fetchTracking = async (ref: string) => {
+    if (!ref.trim()) { setError("Veuillez entrer un numéro de suivi."); return; }
     setError("");
     setLoading(true);
     setResult(null);
     try {
-      const res = await fetch(`/api/tracking?ref=${encodeURIComponent(val)}`);
+      const res = await fetch(`/api/tracking?ref=${encodeURIComponent(ref.trim())}`);
       if (res.status === 404) {
         setError("Numéro de suivi introuvable. Vérifiez votre email de confirmation.");
       } else if (!res.ok) {
         setError("Erreur lors de la recherche. Réessayez.");
       } else {
-        const data = await res.json();
-        setResult(data);
+        setResult(await res.json());
       }
     } catch {
       setError("Erreur réseau. Réessayez.");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    await fetchTracking(inputValue);
   };
 
   const statusIdx = result ? (STATUS_INDEX[result.status] ?? 0) : 0;
@@ -108,7 +133,7 @@ export default function SuiviPage() {
       </section>
 
       {/* Search */}
-      <section className="bg-dz-gray-50 border-b border-dz-gray-200 py-10">
+      <section className="bg-dz-gray-50 dark:bg-dz-gray-900 border-b border-dz-gray-200 dark:border-dz-gray-700 py-10">
         <div className="max-w-2xl mx-auto px-4">
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
             <div className="flex-1 relative">
@@ -122,7 +147,7 @@ export default function SuiviPage() {
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Ex: DZ-2026-XXXX"
-                className="w-full pl-11 pr-4 py-4 text-base border-2 border-dz-gray-200 rounded-xl focus:outline-none focus:border-dz-green bg-white text-dz-gray-800 placeholder-dz-gray-400 transition-colors"
+                className="w-full pl-11 pr-4 py-4 text-base border-2 border-dz-gray-200 dark:border-dz-gray-600 rounded-xl focus:outline-none focus:border-dz-green bg-white dark:bg-dz-gray-800 text-dz-gray-800 dark:text-white placeholder-dz-gray-400 transition-colors"
               />
             </div>
             <button
@@ -151,15 +176,15 @@ export default function SuiviPage() {
 
       {/* Result */}
       {result && (
-        <section className="py-10 bg-white">
+        <section className="py-10 bg-dz-gray-50 dark:bg-dz-gray-900">
           <div className="max-w-3xl mx-auto px-4 space-y-6">
 
             {/* Header */}
-            <div className="bg-white border border-dz-gray-200 rounded-2xl p-6 shadow-sm">
+            <div className="bg-white dark:bg-dz-gray-800 border border-dz-gray-200 dark:border-dz-gray-700 rounded-2xl p-6 shadow-sm">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5">
                 <div>
-                  <p className="text-xs text-dz-gray-500 uppercase tracking-wider font-medium mb-1">Numéro de suivi</p>
-                  <p className="text-xl font-bold text-dz-gray-800 font-mono tracking-wide">{result.booking_ref}</p>
+                  <p className="text-xs text-dz-gray-500 dark:text-dz-gray-400 uppercase tracking-wider font-medium mb-1">Numéro de suivi</p>
+                  <p className="text-xl font-bold text-dz-gray-800 dark:text-white font-mono tracking-wide">{result.booking_ref}</p>
                 </div>
                 <span className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold self-start sm:self-auto ${STATUS_COLOR[result.status] ?? "bg-gray-100 text-gray-600"}`}>
                   <span className="w-2 h-2 rounded-full bg-current opacity-70 animate-pulse" />
@@ -173,27 +198,27 @@ export default function SuiviPage() {
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
-                  <div className="flex items-center gap-2 text-dz-gray-600">
+                  <div className="flex items-center gap-2 text-dz-gray-600 dark:text-dz-gray-300">
                     <svg className="w-4 h-4 text-dz-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z" />
                     </svg>
                     <span>
-                      <span className="font-medium text-dz-gray-800">{result.from_city}</span>
+                      <span className="font-medium text-dz-gray-800 dark:text-white">{result.from_city}</span>
                       <span className="mx-1 text-dz-gray-400">→</span>
-                      <span className="font-medium text-dz-gray-800">{result.to_city}</span>
+                      <span className="font-medium text-dz-gray-800 dark:text-white">{result.to_city}</span>
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 text-dz-gray-600">
+                  <div className="flex items-center gap-2 text-dz-gray-600 dark:text-dz-gray-300">
                     <svg className="w-4 h-4 text-dz-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                     <span>{result.content} · {result.weight} kg</span>
                   </div>
-                  <div className="flex items-center gap-2 text-dz-gray-600">
+                  <div className="flex items-center gap-2 text-dz-gray-600 dark:text-dz-gray-300">
                     <svg className="w-4 h-4 text-dz-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
-                    <span>Destinataire : <span className="font-medium text-dz-gray-800">{result.recipient_name}</span></span>
+                    <span>Destinataire : <span className="font-medium text-dz-gray-800 dark:text-white">{result.recipient_name}</span></span>
                   </div>
                 </div>
               )}
@@ -201,10 +226,10 @@ export default function SuiviPage() {
 
             {/* Progress */}
             {result.status !== "cancelled" && (
-              <div className="bg-white border border-dz-gray-200 rounded-2xl p-6 shadow-sm">
-                <h2 className="text-sm font-semibold text-dz-gray-700 uppercase tracking-wider mb-6">Progression</h2>
+              <div className="bg-white dark:bg-dz-gray-800 border border-dz-gray-200 dark:border-dz-gray-700 rounded-2xl p-6 shadow-sm">
+                <h2 className="text-sm font-semibold text-dz-gray-700 dark:text-dz-gray-300 uppercase tracking-wider mb-6">Progression</h2>
                 <div className="relative">
-                  <div className="absolute top-5 left-5 right-5 h-0.5 bg-dz-gray-200 z-0" />
+                  <div className="absolute top-5 left-5 right-5 h-0.5 bg-dz-gray-200 dark:bg-dz-gray-600 z-0" />
                   <div
                     className="absolute top-5 left-5 h-0.5 bg-dz-green z-0 transition-all duration-700"
                     style={{ width: statusIdx === 0 ? "0px" : `calc(${(statusIdx / 3) * 100}% - 10px)` }}
@@ -218,8 +243,8 @@ export default function SuiviPage() {
                         <div key={step.label} className="flex flex-col items-center gap-2" style={{ width: "25%" }}>
                           <div className={`w-10 h-10 rounded-full flex items-center justify-center text-base transition-all border-2
                             ${done ? "bg-dz-green border-dz-green text-white" : ""}
-                            ${active ? "bg-white border-dz-green text-dz-green shadow-md shadow-dz-green/20 ring-4 ring-dz-green/10" : ""}
-                            ${future ? "bg-white border-dz-gray-200 text-dz-gray-400" : ""}
+                            ${active ? "bg-white dark:bg-dz-gray-700 border-dz-green text-dz-green shadow-md shadow-dz-green/20 ring-4 ring-dz-green/10" : ""}
+                            ${future ? "bg-white dark:bg-dz-gray-700 border-dz-gray-200 dark:border-dz-gray-600 text-dz-gray-400" : ""}
                           `}>
                             {done ? (
                               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -240,27 +265,27 @@ export default function SuiviPage() {
             )}
 
             {/* Timeline */}
-            <div className="bg-white border border-dz-gray-200 rounded-2xl p-6 shadow-sm">
-              <h2 className="text-sm font-semibold text-dz-gray-700 uppercase tracking-wider mb-5">Historique</h2>
+            <div className="bg-white dark:bg-dz-gray-800 border border-dz-gray-200 dark:border-dz-gray-700 rounded-2xl p-6 shadow-sm">
+              <h2 className="text-sm font-semibold text-dz-gray-700 dark:text-dz-gray-300 uppercase tracking-wider mb-5">Historique</h2>
               <div className="space-y-0">
                 {[
-                  { label: "Réservation créée", date: result.created_at, show: true },
-                  { label: "Accepté par le transporteur", date: result.updated_at, show: ["accepted","in_transit","delivered"].includes(result.status) },
-                  { label: `Colis en transit vers ${result.to_city}`, date: result.updated_at, show: ["in_transit","delivered"].includes(result.status) },
-                  { label: `Livré avec succès à ${result.to_city} 🎉`, date: result.updated_at, show: result.status === "delivered" },
+                  { label: "Réservation créée", date: result.created_at, icon: "📦", show: true },
+                  { label: "Accepté par le transporteur", date: result.accepted_at, icon: "✅", show: ["accepted","in_transit","delivered"].includes(result.status) },
+                  { label: `Colis en transit vers ${result.to_city}`, date: result.in_transit_at, icon: "🚗", show: ["in_transit","delivered"].includes(result.status) },
+                  { label: `Livré avec succès à ${result.to_city} 🎉`, date: result.delivered_at, icon: "🎉", show: result.status === "delivered" },
                 ].filter(e => e.show).reverse().map((event, i, arr) => {
                   const isFirst = i === 0;
                   return (
                     <div key={event.label} className="flex gap-4">
                       <div className="flex flex-col items-center">
-                        <div className={`w-3 h-3 rounded-full mt-1 shrink-0 ${isFirst ? "bg-dz-green ring-4 ring-dz-green/20" : "bg-dz-gray-300"}`} />
-                        {i < arr.length - 1 && <div className="w-0.5 bg-dz-gray-200 flex-1 my-1" style={{ minHeight: "2rem" }} />}
+                        <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm shrink-0 ${isFirst ? "bg-dz-green text-white shadow-md shadow-dz-green/30" : "bg-dz-gray-100 dark:bg-dz-gray-700 text-dz-gray-400"}`}>
+                          {event.icon}
+                        </div>
+                        {i < arr.length - 1 && <div className="w-0.5 bg-dz-gray-200 dark:bg-dz-gray-600 flex-1 my-1" style={{ minHeight: "2rem" }} />}
                       </div>
-                      <div className="pb-5">
-                        <p className={`text-sm font-semibold ${isFirst ? "text-dz-green" : "text-dz-gray-800"}`}>{event.label}</p>
-                        <p className="text-xs text-dz-gray-400 mt-0.5">
-                          {new Date(event.date).toLocaleDateString("fr-DZ", { day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" })}
-                        </p>
+                      <div className="pb-5 pt-1">
+                        <p className={`text-sm font-semibold ${isFirst ? "text-dz-green" : "text-dz-gray-800 dark:text-white"}`}>{event.label}</p>
+                        <p className="text-xs text-dz-gray-400 mt-0.5">{fmt(event.date)}</p>
                       </div>
                     </div>
                   );
@@ -270,17 +295,17 @@ export default function SuiviPage() {
 
             {/* Transporter */}
             {result.transporter && (
-              <div className="bg-white border border-dz-gray-200 rounded-2xl p-6 shadow-sm">
-                <h2 className="text-sm font-semibold text-dz-gray-700 uppercase tracking-wider mb-4">Transporteur</h2>
+              <div className="bg-white dark:bg-dz-gray-800 border border-dz-gray-200 dark:border-dz-gray-700 rounded-2xl p-6 shadow-sm">
+                <h2 className="text-sm font-semibold text-dz-gray-700 dark:text-dz-gray-300 uppercase tracking-wider mb-4">Transporteur</h2>
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-dz-green/10 rounded-full flex items-center justify-center text-dz-green font-bold text-lg shrink-0">
                     {result.transporter.name.charAt(0)}
                   </div>
                   <div className="flex-1">
-                    <p className="font-semibold text-dz-gray-800">{result.transporter.name}</p>
+                    <p className="font-semibold text-dz-gray-800 dark:text-white">{result.transporter.name}</p>
                     <div className="flex items-center gap-2 mt-0.5">
                       <span className="text-yellow-400 text-sm">★</span>
-                      <span className="text-sm text-dz-gray-600">{result.transporter.rating?.toFixed(1)} ({result.transporter.review_count} avis)</span>
+                      <span className="text-sm text-dz-gray-600 dark:text-dz-gray-300">{result.transporter.rating?.toFixed(1)} ({result.transporter.review_count} avis)</span>
                     </div>
                   </div>
                   {result.transporter.verified && (
@@ -291,14 +316,14 @@ export default function SuiviPage() {
             )}
 
             {/* Amount */}
-            <div className="bg-dz-green/5 border border-dz-green/20 rounded-2xl p-5 flex items-center justify-between">
+            <div className="bg-dz-green/5 dark:bg-dz-green/10 border border-dz-green/20 rounded-2xl p-5 flex items-center justify-between">
               <div>
-                <p className="text-sm text-dz-gray-600">Montant total</p>
+                <p className="text-sm text-dz-gray-600 dark:text-dz-gray-300">Montant total</p>
                 <p className="text-2xl font-bold text-dz-green">{result.total_amount.toLocaleString()} DA</p>
               </div>
               <div className="text-right">
-                <p className="text-xs text-dz-gray-500">Paiement séquestre</p>
-                <p className="text-sm font-medium text-dz-gray-700">
+                <p className="text-xs text-dz-gray-500 dark:text-dz-gray-400">Paiement séquestre</p>
+                <p className="text-sm font-medium text-dz-gray-700 dark:text-dz-gray-200">
                   {result.status === "delivered" ? "✅ Libéré au transporteur" : "🔒 Sécurisé par DZColis"}
                 </p>
               </div>
@@ -309,17 +334,17 @@ export default function SuiviPage() {
       )}
 
       {/* Info section */}
-      <section className={`py-14 ${result ? "bg-dz-gray-50" : "bg-white"}`}>
+      <section className="py-14 bg-white dark:bg-dz-gray-900">
         <div className="max-w-3xl mx-auto px-4 space-y-4">
-          <div className="bg-white border border-dz-gray-200 rounded-2xl p-7 flex flex-col sm:flex-row gap-5 items-start">
+          <div className="bg-dz-gray-50 dark:bg-dz-gray-800 border border-dz-gray-200 dark:border-dz-gray-700 rounded-2xl p-7 flex flex-col sm:flex-row gap-5 items-start">
             <div className="w-12 h-12 bg-dz-green/10 text-dz-green rounded-xl flex items-center justify-center shrink-0">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
             <div>
-              <h3 className="font-semibold text-dz-gray-800 text-base mb-1">Pas de numéro de suivi ?</h3>
-              <p className="text-sm text-dz-gray-500 leading-relaxed mb-3">
+              <h3 className="font-semibold text-dz-gray-800 dark:text-white text-base mb-1">Pas de numéro de suivi ?</h3>
+              <p className="text-sm text-dz-gray-500 dark:text-dz-gray-400 leading-relaxed mb-3">
                 Votre numéro est envoyé par email dès la confirmation de votre réservation. Vérifiez vos spams.
               </p>
               <Link href="/annonces" className="inline-flex items-center gap-1.5 text-sm font-medium text-dz-green hover:text-dz-green-light transition-colors">
