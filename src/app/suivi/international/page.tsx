@@ -453,7 +453,7 @@ export default function InternationalSuiviPage() {
               <div>
                 <p className="font-semibold text-dz-gray-800 text-sm">Protection internationale incluse</p>
                 <p className="text-xs text-dz-gray-500 mt-1 leading-relaxed">
-                  Couverture jusqu&apos;à 300 000 DA sur tous les envois internationaux. Paiement séquestre libéré uniquement à la livraison confirmée.
+                  Couverture jusqu&apos;à 500 € sur tous les envois internationaux. Paiement séquestre libéré uniquement à la livraison confirmée.
                 </p>
                 <Link href="/assurance" className="text-xs text-dz-green font-semibold hover:underline mt-2 inline-block">
                   En savoir plus →

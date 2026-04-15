@@ -321,7 +321,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     setBookingsLoading(true);
     const { data } = await db
       .from("bookings")
-      .select("*")
+      .select("*, listings(is_international)")
       .eq("sender_id", user.id)
       .order("created_at", { ascending: false });
     setBookings(data ?? []);

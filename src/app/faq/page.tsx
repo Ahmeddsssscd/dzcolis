@@ -83,7 +83,7 @@ const categories: FaqCategory[] = [
       },
       {
         q: "Que se passe-t-il si mon colis arrive endommagé ou ne arrive pas ?",
-        a: "En cas de dommage ou de perte, vous bénéficiez de l'assurance DZColis (incluse gratuitement) couvrant jusqu'à 50 000 DA pour les trajets domestiques et 100 000 DA pour l'international. Signalez le problème dans les 48 heures suivant la livraison via votre tableau de bord. Notre équipe traite les réclamations sous 5 jours ouvrables.",
+        a: "En cas de dommage ou de perte, vous bénéficiez de l'assurance DZColis (incluse gratuitement) couvrant jusqu'à 50 000 DA pour les trajets domestiques et 500 € pour l'international. Signalez le problème dans les 48 heures suivant la livraison via votre tableau de bord. Notre équipe traite les réclamations sous 5 jours ouvrables.",
       },
     ],
   },
@@ -133,7 +133,7 @@ const categories: FaqCategory[] = [
       },
       {
         q: "Les délais de livraison internationale sont-ils garantis ?",
-        a: "Les délais ne sont pas garantis au sens contractuel, mais chaque transporteur indique une fourchette de dates estimées lors de sa proposition. En moyenne, les délais constatés sont : France 4–8 jours, Espagne 5–9 jours, Belgique 5–8 jours, Allemagne 7–12 jours, Italie 4–7 jours. L'assurance internationale couvre jusqu'à 100 000 DA en cas de perte ou de dommage.",
+        a: "Les délais ne sont pas garantis au sens contractuel, mais chaque transporteur indique une fourchette de dates estimées lors de sa proposition. En moyenne, les délais constatés sont : France 4–8 jours, Espagne 5–9 jours, Belgique 5–8 jours, Allemagne 7–12 jours, Italie 4–7 jours. L'assurance internationale couvre jusqu'à 500 € en cas de perte ou de dommage.",
       },
     ],
   },

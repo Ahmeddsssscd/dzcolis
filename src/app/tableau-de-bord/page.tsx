@@ -337,7 +337,7 @@ export default function DashboardPage() {
                               <h3 className="font-medium text-dz-gray-800 mt-1 text-sm">{l.description.substring(0,40)}</h3>
                               <p className="text-xs text-dz-gray-500 mt-1">{l.from_city} → {l.to_city}</p>
                             </div>
-                            <span className="font-bold text-dz-green text-sm">{l.price_per_kg.toLocaleString()} DA</span>
+                            <span className="font-bold text-dz-green text-sm">{l.price_per_kg.toLocaleString("fr-FR")} {l.is_international ? "€" : "DA"}</span>
                           </div>
                         </Link>
 
@@ -549,7 +549,7 @@ export default function DashboardPage() {
                           )}
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
-                          <span className="text-sm font-bold text-dz-gray-800">{Number(b.total_amount ?? 0).toLocaleString("fr-FR")} DA</span>
+                          <span className="text-sm font-bold text-dz-gray-800">{Number(b.total_amount ?? 0).toLocaleString("fr-FR")} {(b as any).listings?.is_international ? "€" : "DA"}</span>
                           {bStatus === "pending" && (
                             <>
                               <button disabled={updatingBooking === String(b.id)}

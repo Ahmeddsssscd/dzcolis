@@ -12,9 +12,7 @@ const PAYMENT_METHODS = [
 ];
 
 const INTERNATIONAL_PAYMENT_METHODS = [
-  { id: "skrill_card", label: "Visa / Mastercard", desc: "Paiement sécurisé par carte bancaire internationale", flag: "💳" },
-  { id: "skrill_wallet", label: "Skrill Wallet", desc: "Paiement via votre compte Skrill", flag: "💜" },
-  { id: "skrill_paypal", label: "PayPal", desc: "Paiement via votre compte PayPal", flag: "🅿️" },
+  { id: "stripe_card", label: "Visa / Mastercard", desc: "Paiement sécurisé par carte bancaire internationale via Stripe", flag: "💳" },
 ];
 
 function StepBar({ current }: { current: number }) {
@@ -137,8 +135,8 @@ export default function ReserverPage() {
       return;
     }
 
-    // Step 2: Route to Skrill (international) or Chargily (domestic)
-    const paymentEndpoint = isIntl ? "/api/payment/skrill/create" : "/api/payment/create";
+    // Step 2: Route to Stripe (international) or Chargily (domestic)
+    const paymentEndpoint = isIntl ? "/api/payment/stripe/create" : "/api/payment/create";
     const res = await fetch(paymentEndpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -390,7 +388,7 @@ export default function ReserverPage() {
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-dz-gray-800 text-sm truncate">{listing.from_city} → {listing.to_city}</p>
-                  <p className="text-xs text-dz-gray-500">{new Date(listing.departure_date).toLocaleDateString("fr-DZ")} · {listing.price_per_kg.toLocaleString()} DA/kg</p>
+                  <p className="text-xs text-dz-gray-500">{new Date(listing.departure_date).toLocaleDateString("fr-DZ")} · {listing.price_per_kg.toLocaleString("fr-FR")} {currency}/kg</p>
                 </div>
               </div>
               <div className="space-y-2 text-sm">
@@ -408,7 +406,7 @@ export default function ReserverPage() {
               <h2 className="text-base font-bold text-dz-gray-800 mb-1">Mode de paiement</h2>
               {isIntl && (
                 <p className="text-xs text-dz-gray-500 mb-4 flex items-center gap-1.5">
-                  <span>💳</span> Paiement international sécurisé via Skrill — montant en euros (€)
+                  <span>💳</span> Paiement international sécurisé via Stripe — montant en euros (€)
                 </p>
               )}
               {!isIntl && <div className="mb-4" />}
