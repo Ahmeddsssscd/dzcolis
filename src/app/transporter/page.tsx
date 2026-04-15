@@ -51,6 +51,7 @@ export default function TransporterPage() {
       available_weight: parseFloat(form.maxWeight) || 0,
       description: form.description || `${form.vehicle} disponible. ${form.recurring ? "Trajet régulier." : ""}`,
       is_international: false,
+      listing_type: "trajet",
     });
 
     if (result) {

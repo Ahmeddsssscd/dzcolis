@@ -38,6 +38,7 @@ export interface Database {
           description: string;
           status: "active" | "full" | "cancelled" | "completed";
           is_international: boolean;
+          listing_type: "trajet" | "demande";
           created_at: string;
         };
         Insert: Omit<Database["public"]["Tables"]["listings"]["Row"], "id" | "created_at">;

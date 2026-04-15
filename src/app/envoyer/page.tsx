@@ -137,11 +137,12 @@ export default function EnvoyerPage() {
       available_weight: parseFloat(form.weight) || 0,
       description: `${form.title}${form.description ? " — " + form.description : ""}`,
       is_international: false,
+      listing_type: "demande",
     });
 
     if (result) {
-      addToast("Annonce publiée avec succès !");
-      router.push("/annonces");
+      addToast("Demande publiée ! Les transporteurs peuvent maintenant vous contacter.");
+      router.push("/annonces?tab=demandes");
     } else {
       addToast("Erreur lors de la publication. Veuillez réessayer.", "error");
     }

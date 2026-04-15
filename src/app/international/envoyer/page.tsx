@@ -133,6 +133,7 @@ export default function InternationalEnvoyerPage() {
       available_weight: parseFloat(form.weight) || 0,
       description: form.description || `${form.title} — Colis international ${fromCity} → ${toCity}`,
       is_international: true,
+      listing_type: "demande",
     });
 
     if (result) {

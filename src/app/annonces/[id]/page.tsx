@@ -101,26 +101,27 @@ export default function ListingDetailPage() {
     );
   }
 
-  const isIntl       = listing.is_international ?? false;
-  const currency     = isIntl ? "€" : "DA";
-  const priceTotal   = isIntl
+  const isIntl        = listing.is_international ?? false;
+  const isDemande     = (listing as any).listing_type === "demande";
+  const currency      = isIntl ? "€" : "DA";
+  const priceTotal    = isIntl
     ? Math.round(listing.price_per_kg * listing.available_weight * 100) / 100
     : Math.round(listing.price_per_kg * listing.available_weight);
-  const transporterInitials = transporter
+  const ownerInitials = transporter
     ? (transporter.first_name[0] ?? "") + (transporter.last_name[0] ?? "")
     : "?";
-  const transporterName = transporter
+  const ownerName = transporter
     ? `${transporter.first_name} ${transporter.last_name}`
-    : "Transporteur";
+    : isDemande ? "Expéditeur" : "Transporteur";
 
   return (
     <div className="bg-dz-gray-50 min-h-screen">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <Link href={isIntl ? "/international" : "/annonces"} className="inline-flex items-center gap-1 text-sm text-dz-gray-500 hover:text-dz-green mb-6">
+        <Link href={isIntl ? "/international" : isDemande ? "/annonces?tab=demandes" : "/annonces"} className="inline-flex items-center gap-1 text-sm text-dz-gray-500 hover:text-dz-green mb-6">
           <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          {isIntl ? "Retour à l'international" : "Retour aux annonces"}
+          {isIntl ? "Retour à l'international" : isDemande ? "Retour aux demandes" : "Retour aux annonces"}
         </Link>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -128,10 +129,18 @@ export default function ListingDetailPage() {
           <div className="lg:col-span-2 space-y-6">
             <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
               <div className="flex items-start justify-between mb-4">
-                <span className={`text-xs font-semibold px-3 py-1 rounded-full ${listing.is_international ? "bg-purple-50 text-purple-600" : "bg-blue-50 text-blue-600"}`}>
-                  {listing.is_international ? "✈️ International" : "🇩🇿 National"}
+                <div className="flex items-center gap-2">
+                  {isDemande ? (
+                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-amber-50 text-amber-700">📦 Demande d&apos;envoi</span>
+                  ) : (
+                    <span className={`text-xs font-semibold px-3 py-1 rounded-full ${listing.is_international ? "bg-purple-50 text-purple-600" : "bg-blue-50 text-blue-600"}`}>
+                      {listing.is_international ? "✈️ International" : "🇩🇿 National"}
+                    </span>
+                  )}
+                </div>
+                <span className={`text-2xl font-bold ${isDemande ? "text-amber-600" : "text-dz-green"}`}>
+                  {listing.price_per_kg.toLocaleString("fr-FR")} {currency}/kg
                 </span>
-                <span className="text-2xl font-bold text-dz-green">{listing.price_per_kg.toLocaleString("fr-FR")} {currency}/kg</span>
               </div>
 
               {/* Route */}
@@ -188,11 +197,12 @@ export default function ListingDetailPage() {
             {/* Transporter card */}
             <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-14 h-14 bg-dz-green/10 text-dz-green rounded-full flex items-center justify-center text-lg font-bold shrink-0">
-                  {transporterInitials}
+                <div className={`w-14 h-14 rounded-full flex items-center justify-center text-lg font-bold shrink-0 ${isDemande ? "bg-amber-50 text-amber-600" : "bg-dz-green/10 text-dz-green"}`}>
+                  {ownerInitials}
                 </div>
                 <div>
-                  <p className="font-semibold text-dz-gray-800">{transporterName}</p>
+                  <p className="text-xs text-dz-gray-400 mb-0.5">{isDemande ? "Expéditeur" : "Transporteur"}</p>
+                  <p className="font-semibold text-dz-gray-800">{ownerName}</p>
                   <div className="flex items-center gap-1 text-sm text-dz-gray-500">
                     <svg className="w-4 h-4 text-yellow-400 fill-yellow-400" viewBox="0 0 24 24">
                       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
@@ -210,17 +220,34 @@ export default function ListingDetailPage() {
                 </div>
               </div>
 
-              <button onClick={handleBook}
-                className="w-full bg-dz-green hover:bg-dz-green-light text-white py-3 rounded-xl font-semibold transition-colors">
-                Réserver ce trajet
-              </button>
+              {isDemande ? (
+                <div className="space-y-2">
+                  <p className="text-xs text-dz-gray-500 mb-3">Vous faites ce trajet ? Envoyez un message à l&apos;expéditeur pour lui proposer votre service.</p>
+                  <button
+                    onClick={() => {
+                      if (!user) { router.push("/connexion"); return; }
+                      setMessage(`Bonjour, je fais régulièrement le trajet ${listing.from_city} → ${listing.to_city} et je peux transporter votre colis. Contactez-moi pour qu'on s'organise.`);
+                      document.getElementById("msg-box")?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="w-full bg-amber-500 hover:bg-amber-600 text-white py-3 rounded-xl font-semibold transition-colors">
+                    Je propose mon trajet
+                  </button>
+                </div>
+              ) : (
+                <button onClick={handleBook}
+                  className="w-full bg-dz-green hover:bg-dz-green-light text-white py-3 rounded-xl font-semibold transition-colors">
+                  Réserver ce trajet
+                </button>
+              )}
             </div>
 
             {/* Message */}
-            <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
-              <h3 className="font-semibold text-dz-gray-800 mb-3 text-sm">Envoyer un message</h3>
+            <div id="msg-box" className="bg-white rounded-2xl border border-dz-gray-200 p-6">
+              <h3 className="font-semibold text-dz-gray-800 mb-3 text-sm">
+                {isDemande ? "Proposer votre trajet" : "Envoyer un message"}
+              </h3>
               <textarea rows={3} value={message} onChange={(e) => setMessage(e.target.value)}
-                placeholder="Bonjour, je suis intéressé par votre trajet..."
+                placeholder={isDemande ? "Bonjour, je fais ce trajet et je peux transporter votre colis..." : "Bonjour, je suis intéressé par votre trajet..."}
                 className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green resize-none text-sm" />
               <button onClick={handleSendMessage} disabled={sendingMsg}
                 className="w-full mt-3 border border-dz-green text-dz-green hover:bg-dz-green hover:text-white disabled:opacity-50 py-2.5 rounded-xl font-medium transition-colors text-sm">
