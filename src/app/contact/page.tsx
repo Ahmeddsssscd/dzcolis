@@ -35,7 +35,7 @@ const contactInfo = [
 ];
 
 const WHATSAPP_URL =
-  "https://wa.me/213XXXXXXXXXX?text=Bonjour%20DZColis%2C%20j%27ai%20besoin%20d%27aide.";
+  "https://wa.me/40725028189?text=Bonjour%20DZColis%2C%20j%27ai%20besoin%20d%27aide.";
 
 export default function ContactPage() {
   const [name, setName] = useState("");

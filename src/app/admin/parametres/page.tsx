@@ -78,7 +78,7 @@ export default function ParametresPage() {
 
   // Contact
   const [emailContact, setEmailContact] = useState("contact@dzcolis.com");
-  const [whatsapp, setWhatsapp] = useState("+213XXXXXXXXXX");
+  const [whatsapp, setWhatsapp] = useState("+40725028189");
   const [adresse, setAdresse] = useState("Alger, Algérie");
 
   // Notifications

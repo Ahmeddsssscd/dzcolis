@@ -50,7 +50,7 @@ export default function Footer() {
             </ul>
             {/* WhatsApp support button */}
             <a
-              href="https://wa.me/213XXXXXXXXXX?text=Bonjour%20DZColis%2C%20j%27ai%20besoin%20d%27aide."
+              href="https://wa.me/40725028189?text=Bonjour%20DZColis%2C%20j%27ai%20besoin%20d%27aide."
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 mt-4 bg-[#25D366] hover:bg-[#20B954] text-white text-sm font-medium px-4 py-2.5 rounded-xl transition-colors"

@@ -1,6 +1,6 @@
 "use client";
 
-const WHATSAPP_NUMBER = "213XXXXXXXXXX";
+const WHATSAPP_NUMBER = "40725028189";
 const WHATSAPP_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Bonjour%20DZColis%2C%20j%27ai%20besoin%20d%27aide.`;
 
 export default function WhatsAppButton() {
