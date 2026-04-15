@@ -8,7 +8,7 @@ import { ALGERIAN_CITIES } from "@/lib/data";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ProfilPage() {
-  const { user, updateUser, logout } = useAuth();
+  const { user, authLoading, updateUser, logout } = useAuth();
   const { addToast } = useToast();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -23,14 +23,20 @@ export default function ProfilPage() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
+    if (authLoading) return;
     if (!user) { router.push("/connexion"); return; }
     setFirstName(user.firstName);
     setLastName(user.lastName);
     setPhone(user.phone);
     setWilaya(user.wilaya);
     setPreviewUrl(user.avatarUrl);
-  }, [user, router]);
+  }, [user, authLoading, router]);
 
+  if (authLoading) return (
+    <div className="min-h-screen bg-dz-gray-50 flex items-center justify-center">
+      <div className="w-8 h-8 border-4 border-dz-green border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
   if (!user) return null;
 
   // ── Avatar upload ──────────────────────────────────────────────────────────

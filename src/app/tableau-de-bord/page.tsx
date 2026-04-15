@@ -47,7 +47,7 @@ interface ConfirmState {
 // ─── Main page ─────────────────────────────────────────────────────────────
 
 export default function DashboardPage() {
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
   const { listings } = useListings();
   const { bookings, getBookingsForUser, updateBookingStatus } = useBookings();
   const router = useRouter();
@@ -74,10 +74,17 @@ export default function DashboardPage() {
   const pickupInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
   const deliveryInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
-  if (!user) {
-    router.push("/connexion");
-    return null;
-  }
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) { router.push("/connexion"); return; }
+  }, [user, authLoading, router]);
+
+  if (authLoading) return (
+    <div className="min-h-screen bg-dz-gray-50 flex items-center justify-center">
+      <div className="w-8 h-8 border-4 border-dz-green border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
+  if (!user) return null;
 
   const myListings = listings.filter((l) => l.user_id === user.id);
   const myBookings = getBookingsForUser(user.id);
@@ -156,6 +163,7 @@ export default function DashboardPage() {
   function stepIndex(status: string): number {
     const map: Record<string, number> = {
       pending: 0, accepted: 1, in_transit: 2, delivered: 3,
+      cancelled: -1, rejected: -1,
     };
     return map[status] ?? 0;
   }
@@ -423,11 +431,17 @@ export default function DashboardPage() {
                                   const bId = relatedBooking!.id;
                                   const cs = confirmState[bId] ?? { asking: false, confirmed: false };
                                   const currentStep = cs.confirmed ? 4 : stepIndex(relatedBooking!.status);
+                                  const isCancelledOrRejected = relatedBooking!.status === "cancelled" || (relatedBooking!.status as string) === "rejected";
 
                                   return (
                                     <div className="pt-3 space-y-4">
-                                      {/* Step tracker */}
-                                      <div className="flex items-center gap-0">
+                                      {/* Step tracker — hidden for cancelled/rejected */}
+                                      {isCancelledOrRejected && (
+                                        <p className="text-xs text-red-500 font-medium italic">
+                                          {relatedBooking!.status === "cancelled" ? "Réservation annulée" : "Réservation rejetée"}
+                                        </p>
+                                      )}
+                                      {!isCancelledOrRejected && <div className="flex items-center gap-0">
                                         {shipmentSteps.map((step, idx) => (
                                           <div key={step} className="flex items-center flex-1 last:flex-none">
                                             <div className="flex flex-col items-center">
@@ -449,7 +463,7 @@ export default function DashboardPage() {
                                             )}
                                           </div>
                                         ))}
-                                      </div>
+                                      </div>}
 
                                       {/* Confirm reception */}
                                       {!cs.confirmed && (

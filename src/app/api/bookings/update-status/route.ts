@@ -24,6 +24,28 @@ export async function PATCH(req: NextRequest) {
   const isSender = booking.sender_id === user.id;
   if (!isTransporter && !isSender) return NextResponse.json({ error: "Forbidden" }, { status: 403 });
 
+  // Validate status transition
+  const currentStatus: string = booking.status;
+  const VALID_TRANSITIONS: Record<string, string[]> = {
+    pending:    ["accepted", "rejected", "cancelled"],
+    accepted:   ["in_transit", "cancelled"],
+    in_transit: ["delivered", "cancelled"],
+    delivered:  ["cancelled"],
+    rejected:   ["cancelled"],
+    cancelled:  [],
+  };
+  const allowed = VALID_TRANSITIONS[currentStatus] ?? [];
+  if (!allowed.includes(status)) {
+    return NextResponse.json(
+      { error: `Invalid status transition: cannot move from '${currentStatus}' to '${status}'` },
+      { status: 400 }
+    );
+  }
+  // Only the sender can cancel
+  if (status === "cancelled" && !isSender) {
+    return NextResponse.json({ error: "Only the sender can cancel a booking" }, { status: 403 });
+  }
+
   // Update booking status + timestamp for this specific status
   const now = new Date().toISOString();
   const timestampField: Record<string, string> = {

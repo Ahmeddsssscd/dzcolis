@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminSupabase } from "@/lib/supabase/admin";
+import { adminClient, adminSupabase } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 // We persist litige resolutions in the notifications table
 // using type "litige_resolution" and user_id "admin"
 // so they survive page refreshes without needing a new table.
 
 export async function GET() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { data: profile } = await (adminClient as any).from("profiles").select("role").eq("id", user.id).single();
+  if (profile?.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   try {
     const { data, error } = await adminSupabase
       .from("notifications")
@@ -29,6 +36,12 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const { data: profile } = await (adminClient as any).from("profiles").select("role").eq("id", user.id).single();
+  if (profile?.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+
   try {
     const { litige_id, decision } = await req.json();
     if (!litige_id || !decision) {

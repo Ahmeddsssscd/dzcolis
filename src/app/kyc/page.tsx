@@ -8,7 +8,7 @@ import { createClient } from "@/lib/supabase/client";
 interface UploadedFile { name: string; size: string; file: File; }
 
 export default function KycPage() {
-  const { user, refreshUser } = useAuth();
+  const { user, authLoading, refreshUser } = useAuth();
   const { addToast } = useToast();
   const router = useRouter();
 
@@ -22,9 +22,15 @@ export default function KycPage() {
   const selfieRef   = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!user) router.push("/connexion");
-  }, [user, router]);
+    if (authLoading) return;
+    if (!user) { router.push("/connexion"); return; }
+  }, [user, authLoading, router]);
 
+  if (authLoading) return (
+    <div className="min-h-screen bg-dz-gray-50 flex items-center justify-center">
+      <div className="w-8 h-8 border-4 border-dz-green border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
   if (!user) return null;
 
   const kycStatus = user.kycStatus ?? "none";

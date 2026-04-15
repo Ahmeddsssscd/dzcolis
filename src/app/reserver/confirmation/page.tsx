@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 const NEXT_STEPS = [
@@ -38,13 +39,16 @@ const NEXT_STEPS = [
 export default function ConfirmationPage() {
   const [ref, setRef] = useState("");
   const [listing, setListing] = useState<{ title: string; from: string; to: string } | null>(null);
+  const searchParams = useSearchParams();
 
   useEffect(() => {
-    const r = sessionStorage.getItem("dzcolis_booking_ref") || "DZC-XXXXXX";
+    const urlRef = searchParams.get("ref");
+    const sessionRef = sessionStorage.getItem("dzcolis_booking_ref");
+    const r = urlRef || sessionRef || "DZC-XXXXXX";
     const l = sessionStorage.getItem("dzcolis_booking_listing");
     setRef(r);
     if (l) setListing(JSON.parse(l));
-  }, []);
+  }, [searchParams]);
 
   return (
     <div className="bg-dz-gray-50 min-h-screen flex items-start justify-center py-12 px-4">

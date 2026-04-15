@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth, useListings, useToast } from "@/lib/context";
 import { ALGERIAN_CITIES, CATEGORIES } from "@/lib/data";
@@ -66,7 +66,7 @@ const INSURANCE_TIERS = [
 ];
 
 export default function EnvoyerPage() {
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
   const { addListing } = useListings();
   const { addToast } = useToast();
   const router = useRouter();
@@ -98,6 +98,17 @@ export default function EnvoyerPage() {
 
   const fromDisplay = form.from || "—";
   const toDisplay = form.to || "—";
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (!user) { router.push("/connexion"); return; }
+  }, [user, authLoading, router]);
+
+  if (authLoading) return (
+    <div className="min-h-screen bg-dz-gray-50 flex items-center justify-center">
+      <div className="w-8 h-8 border-4 border-dz-green border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
 
   if (!user) {
     return (

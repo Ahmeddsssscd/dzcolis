@@ -141,7 +141,7 @@ export default function KYCPage() {
                         )}
                         <span>{doc.label}</span>
                         {doc.url && (
-                          <a href={`https://itbcazlejwattexuctur.supabase.co/storage/v1/object/public/kyc-documents/${doc.url}`}
+                          <a href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/kyc-documents/${doc.url}`}
                             target="_blank" rel="noreferrer"
                             className="ml-auto text-blue-500 hover:underline font-normal">Voir</a>
                         )}
