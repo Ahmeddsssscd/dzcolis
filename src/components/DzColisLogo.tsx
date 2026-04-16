@@ -33,9 +33,9 @@ export default function WaselliLogo({
     >
       <defs>
         <linearGradient id="wBrand" x1="0" y1="0" x2="265" y2="0" gradientUnits="userSpaceOnUse">
-          <stop offset="0%"   stopColor="#005229" />
-          <stop offset="55%"  stopColor="#00a651" />
-          <stop offset="100%" stopColor="#00c85d" />
+          <stop offset="0%"   stopColor="#1e3a8a" />
+          <stop offset="55%"  stopColor="#1d4ed8" />
+          <stop offset="100%" stopColor="#3b82f6" />
         </linearGradient>
         <linearGradient id="wSheen" x1="0" y1="0" x2="0" y2="72" gradientUnits="userSpaceOnUse">
           <stop offset="0%"   stopColor="#ffffff" stopOpacity="0.20" />
@@ -43,7 +43,7 @@ export default function WaselliLogo({
           <stop offset="100%" stopColor="#000000" stopOpacity="0.04" />
         </linearGradient>
         <filter id="wDrop" x="-2%" y="-5%" width="110%" height="130%">
-          <feDropShadow dx="0" dy="1.5" stdDeviation="2" floodColor="#003d1f" floodOpacity="0.18" />
+          <feDropShadow dx="0" dy="1.5" stdDeviation="2" floodColor="#0f2460" floodOpacity="0.18" />
         </filter>
       </defs>
 
@@ -84,7 +84,7 @@ export default function WaselliLogo({
       </text>
 
       {/* Green dot accent after text */}
-      <circle cx="259" cy="57" r="5" fill="#00a651" opacity="0.8" />
+      <circle cx="259" cy="57" r="5" fill="#1d4ed8" opacity="0.8" />
     </svg>
   );
 

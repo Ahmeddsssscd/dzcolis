@@ -45,7 +45,7 @@ export default function ConfirmationPage() {
     const urlRef = searchParams.get("ref");
     const sessionRef = sessionStorage.getItem("waselli_booking_ref");
     const r = urlRef || sessionRef || "WSL-XXXXXX";
-    const l = sessionStorage.getItem("dzcolis_booking_listing");
+    const l = sessionStorage.getItem("waselli_booking_listing");
     setRef(r);
     if (l) setListing(JSON.parse(l));
   }, [searchParams]);

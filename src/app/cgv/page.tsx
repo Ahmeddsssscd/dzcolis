@@ -34,7 +34,7 @@ export default function CGVPage() {
               <span className="text-dz-green mr-2">1.</span>Objet et champ d&apos;application
             </h2>
             <p className="text-dz-gray-600 text-sm leading-relaxed mb-3">
-              Les présentes Conditions Générales de Vente et d&apos;Utilisation (ci-après « CGV ») régissent l&apos;utilisation de la plateforme Waselli, accessible à l&apos;adresse <span className="text-dz-green font-medium">www.dzcolis.dz</span>, et l&apos;ensemble des services proposés par Waselli. Elles constituent le socle contractuel unique régissant les relations entre Waselli et tout utilisateur de la plateforme, qu&apos;il soit expéditeur, transporteur ou simple visiteur.
+              Les présentes Conditions Générales de Vente et d&apos;Utilisation (ci-après « CGV ») régissent l&apos;utilisation de la plateforme Waselli, accessible à l&apos;adresse <span className="text-dz-green font-medium">www.waselli.com</span>, et l&apos;ensemble des services proposés par Waselli. Elles constituent le socle contractuel unique régissant les relations entre Waselli et tout utilisateur de la plateforme, qu&apos;il soit expéditeur, transporteur ou simple visiteur.
             </p>
             <p className="text-dz-gray-600 text-sm leading-relaxed mb-3">
               Waselli est une place de marché collaborative qui met en relation des <strong className="text-dz-gray-700">expéditeurs</strong> souhaitant envoyer des colis avec des <strong className="text-dz-gray-700">transporteurs particuliers ou professionnels</strong> effectuant des trajets correspondants sur le territoire algérien et à l&apos;international.
@@ -270,7 +270,7 @@ export default function CGVPage() {
               <div>
                 <h3 className="font-semibold text-dz-gray-700 mb-1">10.1 Médiation préalable obligatoire</h3>
                 <p>
-                  En cas de litige entre utilisateurs ou entre un utilisateur et Waselli, les parties s&apos;engagent à tenter de résoudre le différend à l&apos;amiable avant tout recours judiciaire. À cette fin, Waselli propose un service de <strong className="text-dz-gray-700">médiation interne</strong> accessible depuis la plateforme ou via l&apos;adresse <a href="mailto:litiges@dzcolis.dz" className="text-dz-green hover:underline">litiges@dzcolis.dz</a>.
+                  En cas de litige entre utilisateurs ou entre un utilisateur et Waselli, les parties s&apos;engagent à tenter de résoudre le différend à l&apos;amiable avant tout recours judiciaire. À cette fin, Waselli propose un service de <strong className="text-dz-gray-700">médiation interne</strong> accessible depuis la plateforme ou via l&apos;adresse <a href="mailto:litiges@waselli.com" className="text-dz-green hover:underline">litiges@waselli.com</a>.
                 </p>
               </div>
               <div>
@@ -354,16 +354,16 @@ export default function CGVPage() {
             </p>
             <div className="bg-dz-gray-50 rounded-xl p-4 text-sm space-y-2 text-dz-gray-600 mb-3">
               <p><strong className="text-dz-gray-700">Email :</strong>{" "}
-                <a href="mailto:contact@dzcolis.dz" className="text-dz-green hover:underline">contact@dzcolis.dz</a>
+                <a href="mailto:contact@waselli.com" className="text-dz-green hover:underline">contact@waselli.com</a>
               </p>
               <p><strong className="text-dz-gray-700">Litiges :</strong>{" "}
-                <a href="mailto:litiges@dzcolis.dz" className="text-dz-green hover:underline">litiges@dzcolis.dz</a>
+                <a href="mailto:litiges@waselli.com" className="text-dz-green hover:underline">litiges@waselli.com</a>
               </p>
               <p><strong className="text-dz-gray-700">Données personnelles (DPO) :</strong>{" "}
-                <a href="mailto:dpo@dzcolis.dz" className="text-dz-green hover:underline">dpo@dzcolis.dz</a>
+                <a href="mailto:dpo@waselli.com" className="text-dz-green hover:underline">dpo@waselli.com</a>
               </p>
               <p><strong className="text-dz-gray-700">Support WhatsApp :</strong>{" "}
-                <a href="mailto:contact@dzcolis.dz" className="text-dz-green hover:underline">contact@dzcolis.dz</a>
+                <a href="mailto:contact@waselli.com" className="text-dz-green hover:underline">contact@waselli.com</a>
               </p>
             </div>
             <p className="text-dz-gray-600 text-sm leading-relaxed">
@@ -378,10 +378,10 @@ export default function CGVPage() {
               Notre équipe juridique est disponible pour répondre à toutes vos questions relatives aux présentes conditions générales de vente.
             </p>
             <a
-              href="mailto:contact@dzcolis.dz"
+              href="mailto:contact@waselli.com"
               className="inline-flex items-center gap-2 bg-dz-green text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-dz-green-dark transition-colors"
             >
-              contact@dzcolis.dz
+              contact@waselli.com
             </a>
           </div>
 

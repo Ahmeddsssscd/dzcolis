@@ -17,7 +17,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
-    const stored = localStorage.getItem("dzcolis_theme") as Theme | null;
+    const stored = localStorage.getItem("waselli_theme") as Theme | null;
     const preferred = stored ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
     setTheme(preferred);
     document.documentElement.classList.toggle("dark", preferred === "dark");
@@ -27,7 +27,7 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
     const next: Theme = theme === "light" ? "dark" : "light";
     setTheme(next);
     document.documentElement.classList.toggle("dark", next === "dark");
-    localStorage.setItem("dzcolis_theme", next);
+    localStorage.setItem("waselli_theme", next);
   }
 
   return (

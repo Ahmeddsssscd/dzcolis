@@ -36,8 +36,8 @@ export default function MentionsLegalesPage() {
               <p><span className="font-semibold text-dz-gray-700">Forme juridique :</span> SARL (Société à Responsabilité Limitée)</p>
               <p><span className="font-semibold text-dz-gray-700">Siège social :</span> Alger, Algérie</p>
               <p><span className="font-semibold text-dz-gray-700">Adresse e-mail :</span>{" "}
-                <a href="mailto:contact@dzcolis.dz" className="text-dz-green hover:underline">
-                  contact@dzcolis.dz
+                <a href="mailto:contact@waselli.com" className="text-dz-green hover:underline">
+                  contact@waselli.com
                 </a>
               </p>
               <p><span className="font-semibold text-dz-gray-700">Directeur de publication :</span> Le représentant légal de Waselli</p>
@@ -105,8 +105,8 @@ export default function MentionsLegalesPage() {
             <p className="text-dz-gray-600 text-sm leading-relaxed">
               Tout lien hypertexte pointant vers le site Waselli doit faire l&apos;objet d&apos;une autorisation préalable et écrite de Waselli.
               Les demandes d&apos;autorisation peuvent être adressées à{" "}
-              <a href="mailto:contact@dzcolis.dz" className="text-dz-green hover:underline">
-                contact@dzcolis.dz
+              <a href="mailto:contact@waselli.com" className="text-dz-green hover:underline">
+                contact@waselli.com
               </a>.
             </p>
           </div>
@@ -144,7 +144,7 @@ export default function MentionsLegalesPage() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-dz-gray-700 mb-0.5">Email général</p>
-                  <a href="mailto:contact@dzcolis.dz" className="text-sm text-dz-green hover:underline">contact@dzcolis.dz</a>
+                  <a href="mailto:contact@waselli.com" className="text-sm text-dz-green hover:underline">contact@waselli.com</a>
                 </div>
               </div>
               <div className="flex items-start gap-3 p-3 bg-dz-gray-50 rounded-xl">
@@ -156,7 +156,7 @@ export default function MentionsLegalesPage() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-dz-gray-700 mb-0.5">Support WhatsApp</p>
-                  <a href="mailto:contact@dzcolis.dz" className="text-sm text-dz-green hover:underline">contact@dzcolis.dz</a>
+                  <a href="mailto:contact@waselli.com" className="text-sm text-dz-green hover:underline">contact@waselli.com</a>
                   <p className="text-xs text-dz-gray-400 mt-0.5">Disponible du lundi au vendredi, 9h–18h (heure d&apos;Alger)</p>
                 </div>
               </div>
@@ -168,7 +168,7 @@ export default function MentionsLegalesPage() {
                 </div>
                 <div>
                   <p className="text-xs font-semibold text-dz-gray-700 mb-0.5">Litiges et réclamations</p>
-                  <a href="mailto:litiges@dzcolis.dz" className="text-sm text-dz-green hover:underline">litiges@dzcolis.dz</a>
+                  <a href="mailto:litiges@waselli.com" className="text-sm text-dz-green hover:underline">litiges@waselli.com</a>
                 </div>
               </div>
             </div>

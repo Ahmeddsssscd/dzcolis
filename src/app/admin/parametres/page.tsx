@@ -77,7 +77,7 @@ export default function ParametresPage() {
   const [montantMin, setMontantMin] = useState("500");
 
   // Contact
-  const [emailContact, setEmailContact] = useState("contact@dzcolis.com");
+  const [emailContact, setEmailContact] = useState("contact@waselli.com");
   const [whatsapp, setWhatsapp] = useState("+40725028189");
   const [adresse, setAdresse] = useState("Alger, Algérie");
 

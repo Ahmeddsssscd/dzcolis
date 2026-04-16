@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: "Waselli — Livraison collaborative Algérie ↔ Europe",
   description: "Envoyez vos colis entre l'Algérie et l'Europe grâce à des voyageurs vérifiés. 5× moins cher que DHL. Paiement sécurisé, assurance incluse.",
   manifest: "/manifest.json",
-  themeColor: "#16a34a",
+  themeColor: "#1d4ed8",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",

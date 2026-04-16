@@ -38,11 +38,11 @@ export default function ConfidentialitePage() {
                 <p><span className="font-semibold text-dz-gray-700">Adresse :</span> Alger, Algérie</p>
                 <p>
                   <span className="font-semibold text-dz-gray-700">DPO (Délégué à la Protection des Données) :</span>{" "}
-                  <a href="mailto:dpo@dzcolis.dz" className="text-dz-green hover:underline">dpo@dzcolis.dz</a>
+                  <a href="mailto:dpo@waselli.com" className="text-dz-green hover:underline">dpo@waselli.com</a>
                 </p>
                 <p>
                   <span className="font-semibold text-dz-gray-700">Contact général :</span>{" "}
-                  <a href="mailto:contact@dzcolis.dz" className="text-dz-green hover:underline">contact@dzcolis.dz</a>
+                  <a href="mailto:contact@waselli.com" className="text-dz-green hover:underline">contact@waselli.com</a>
                 </p>
               </div>
             </div>
@@ -213,7 +213,7 @@ export default function ConfidentialitePage() {
             </div>
             <p className="text-dz-gray-600 text-sm leading-relaxed mt-4">
               Pour exercer l&apos;un de ces droits, contactez notre DPO à{" "}
-              <a href="mailto:dpo@dzcolis.dz" className="text-dz-green hover:underline font-medium">dpo@dzcolis.dz</a>.
+              <a href="mailto:dpo@waselli.com" className="text-dz-green hover:underline font-medium">dpo@waselli.com</a>.
               Nous nous engageons à répondre dans un délai de <strong className="text-dz-gray-700">30 jours</strong> à compter de la réception de votre demande.
             </p>
           </div>
@@ -299,7 +299,7 @@ export default function ConfidentialitePage() {
               Les services de Waselli sont réservés aux personnes majeures (18 ans ou plus). Waselli ne collecte pas
               sciemment de données personnelles relatives à des mineurs. Si vous êtes parent ou tuteur et que vous
               pensez que votre enfant nous a fourni des données, contactez-nous immédiatement à{" "}
-              <a href="mailto:dpo@dzcolis.dz" className="text-dz-green hover:underline">dpo@dzcolis.dz</a> afin
+              <a href="mailto:dpo@waselli.com" className="text-dz-green hover:underline">dpo@waselli.com</a> afin
               que nous procédions à leur suppression.
             </p>
           </div>
@@ -324,16 +324,16 @@ export default function ConfidentialitePage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <a
-                href="mailto:dpo@dzcolis.dz"
+                href="mailto:dpo@waselli.com"
                 className="inline-flex items-center gap-2 bg-dz-green text-white px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-dz-green-dark transition-colors"
               >
-                dpo@dzcolis.dz
+                dpo@waselli.com
               </a>
               <a
-                href="mailto:contact@dzcolis.dz"
+                href="mailto:contact@waselli.com"
                 className="inline-flex items-center gap-2 bg-white border border-dz-gray-200 text-dz-gray-700 px-5 py-2.5 rounded-xl text-sm font-medium hover:bg-dz-gray-50 transition-colors"
               >
-                contact@dzcolis.dz
+                contact@waselli.com
               </a>
             </div>
             <p className="text-dz-gray-400 text-xs mt-4">

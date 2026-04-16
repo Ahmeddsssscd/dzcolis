@@ -130,8 +130,8 @@ export default function Home() {
   return (
     <>
       <style>{`
-        .hero-bg{background:linear-gradient(155deg,#00a651 0%,#006233 45%,#003d20 100%)}
-        .blend{background:linear-gradient(180deg,#003d20 0%,var(--dz-gray-50) 100%)}
+        .hero-bg{background:linear-gradient(155deg,#1d4ed8 0%,#1e3a8a 50%,#0f2460 100%)}
+        .blend{background:linear-gradient(180deg,#0f2460 0%,var(--dz-gray-50) 100%)}
       `}</style>
 
       {/* ── Hero ─────────────────────────── */}

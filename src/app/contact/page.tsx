@@ -23,7 +23,7 @@ const contactInfo = [
   {
     icon: "📧",
     title: "Email",
-    value: "contact@dzcolis.dz",
+    value: "contact@waselli.com",
     sub: "Réponse sous 24h",
   },
   {
