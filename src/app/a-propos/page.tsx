@@ -1,49 +1,53 @@
+"use client";
 import Link from "next/link";
 import WaselliLogo from "@/components/WaselliLogo";
-
-const values = [
-  {
-    icon: "🤝",
-    title: "Confiance",
-    desc: "Chaque transporteur est évalué par la communauté. Les avis, le score de confiance et la vérification d'identité garantissent la sécurité de vos échanges.",
-  },
-  {
-    icon: "💚",
-    title: "Écologie",
-    desc: "En optimisant les trajets existants, Waselli réduit le nombre de camions vides sur les routes algériennes. Moins d'émissions, plus de sens.",
-  },
-  {
-    icon: "💰",
-    title: "Accessibilité",
-    desc: "Jusqu'à 60% moins cher que les transporteurs traditionnels. Notre modèle collaboratif rend la livraison accessible à tous, partout en Algérie.",
-  },
-  {
-    icon: "🛡️",
-    title: "Sécurité",
-    desc: "Paiement séquestre, assurance Waselli Protect, photo de prise en charge et de livraison. Votre colis est protégé à chaque étape.",
-  },
-];
-
-const team = [
-  { avatar: "DZ", name: "À assigner ultérieurement", role: "Fondateur & CEO", bio: "Les informations sur l'équipe fondatrice seront communiquées prochainement." },
-  { avatar: "DZ", name: "À assigner ultérieurement", role: "Direction Générale", bio: "Les informations sur l'équipe dirigeante seront communiquées prochainement." },
-];
-
-const milestones = [
-  { year: "2026", event: "Idée fondatrice — connecter les expéditeurs aux transporteurs qui font déjà le trajet." },
-  { year: "2026", event: "Lancement de Waselli avec couverture nationale des 69 wilayas." },
-  { year: "2026", event: "Lancement du service international Algérie ↔ Europe (France, Espagne, Belgique, Allemagne, Italie)." },
-  { year: "2026", event: "Lancement de Waselli Protect — assurance, score de confiance, photo de livraison." },
-];
-
-const stats = [
-  { value: "50 000+", label: "Utilisateurs inscrits" },
-  { value: "69", label: "Wilayas couvertes" },
-  { value: "120 000+", label: "Colis livrés" },
-  { value: "60%", label: "D'économies en moyenne" },
-];
+import { useI18n } from "@/lib/i18n";
 
 export default function AProposPage() {
+  const { t } = useI18n();
+
+  const values = [
+    {
+      icon: "🤝",
+      title: t("about_val1_title"),
+      desc: t("about_val1_desc"),
+    },
+    {
+      icon: "💚",
+      title: t("about_val2_title"),
+      desc: t("about_val2_desc"),
+    },
+    {
+      icon: "💰",
+      title: t("about_val3_title"),
+      desc: t("about_val3_desc"),
+    },
+    {
+      icon: "🛡️",
+      title: t("about_val4_title"),
+      desc: t("about_val4_desc"),
+    },
+  ];
+
+  const team = [
+    { avatar: "DZ", name: "À assigner ultérieurement", role: t("about_team_role1"), bio: t("about_team_bio") },
+    { avatar: "DZ", name: "À assigner ultérieurement", role: t("about_team_role2"), bio: t("about_team_bio") },
+  ];
+
+  const milestones = [
+    { year: "2026", event: t("about_ms1") },
+    { year: "2026", event: t("about_ms2") },
+    { year: "2026", event: t("about_ms3") },
+    { year: "2026", event: t("about_ms4") },
+  ];
+
+  const stats = [
+    { value: "50 000+", label: t("about_stat_users") },
+    { value: "69", label: t("about_stat_wilayas") },
+    { value: "120 000+", label: t("about_stat_parcels") },
+    { value: "60%", label: t("about_stat_savings") },
+  ];
+
   return (
     <div className="min-h-screen bg-dz-gray-50">
       {/* Hero */}
@@ -53,12 +57,11 @@ export default function AProposPage() {
             <WaselliLogo size="xl" href="/" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
-            La livraison collaborative,<br />
-            <span className="text-dz-green">made in Algeria</span>
+            {t("about_hero_title")}<br />
+            <span className="text-dz-green">{t("about_hero_title2")}</span>
           </h1>
           <p className="text-dz-gray-300 text-lg max-w-2xl mx-auto">
-            Waselli connecte les personnes qui ont des colis à envoyer avec des transporteurs qui font déjà le trajet.
-            Simple, économique, et pensé pour l'Algérie.
+            {t("about_hero_subtitle")}
           </p>
         </div>
       </div>
@@ -78,18 +81,18 @@ export default function AProposPage() {
       {/* Story */}
       <div className="max-w-3xl mx-auto px-4 py-16">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-dz-gray-900 mb-3">Notre histoire</h2>
-          <p className="text-dz-gray-500">Comment tout a commencé</p>
+          <h2 className="text-3xl font-bold text-dz-gray-900 mb-3">{t("about_story_title")}</h2>
+          <p className="text-dz-gray-500">{t("about_story_subtitle")}</p>
         </div>
         <div className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-8">
           <p className="text-dz-gray-700 leading-relaxed mb-4">
-            Waselli est né d'un constat simple : chaque jour, des centaines de camions et fourgons parcourent les routes algériennes avec de l'espace vide. En parallèle, des millions d'Algériens cherchent des solutions pour envoyer des colis entre wilayas — souvent à des prix exorbitants ou sans garantie de sécurité.
+            {t("about_story_p1")}
           </p>
           <p className="text-dz-gray-700 leading-relaxed mb-4">
-            Inspirés par le modèle collaboratif qui a révolutionné le transport de personnes, nous avons créé Waselli en 2026 pour mettre en relation expéditeurs et transporteurs qui font déjà le trajet. Le résultat : des livraisons jusqu'à 60% moins chères, plus écologiques, et sécurisées par notre système Waselli Protect.
+            {t("about_story_p2")}
           </p>
           <p className="text-dz-gray-700 leading-relaxed">
-            Aujourd'hui, Waselli couvre les 69 wilayas d'Algérie et s'étend à l'international vers 5 pays européens. Notre mission reste la même : rendre la livraison accessible, fiable et juste pour tous les Algériens.
+            {t("about_story_p3")}
           </p>
         </div>
 
@@ -115,8 +118,8 @@ export default function AProposPage() {
       <div className="bg-white py-16">
         <div className="max-w-4xl mx-auto px-4">
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-dz-gray-900 mb-3">Nos valeurs</h2>
-            <p className="text-dz-gray-500">Ce qui nous guide chaque jour</p>
+            <h2 className="text-3xl font-bold text-dz-gray-900 mb-3">{t("about_values_title")}</h2>
+            <p className="text-dz-gray-500">{t("about_values_subtitle")}</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {values.map((v) => (
@@ -135,12 +138,12 @@ export default function AProposPage() {
       {/* Team */}
       <div className="py-16 max-w-4xl mx-auto px-4">
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold text-dz-gray-900 mb-3">L'équipe</h2>
-          <p className="text-dz-gray-500">Des Algériens qui construisent pour l'Algérie</p>
+          <h2 className="text-3xl font-bold text-dz-gray-900 mb-3">{t("about_team_title")}</h2>
+          <p className="text-dz-gray-500">{t("about_team_subtitle")}</p>
         </div>
         <div className="flex flex-wrap justify-center gap-6">
-          {team.map((member) => (
-            <div key={member.name} className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-8 text-center max-w-xs w-full">
+          {team.map((member, i) => (
+            <div key={i} className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-8 text-center max-w-xs w-full">
               <div className="w-20 h-20 rounded-2xl bg-dz-green text-white font-black text-3xl flex items-center justify-center mx-auto mb-4">
                 {member.avatar}
               </div>
@@ -155,22 +158,22 @@ export default function AProposPage() {
       {/* CTA */}
       <div className="bg-gradient-to-br from-dz-green to-green-700 text-white py-16">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-3">Rejoignez la communauté Waselli</h2>
+          <h2 className="text-3xl font-bold mb-3">{t("about_cta_title")}</h2>
           <p className="text-green-100 mb-8">
-            Expéditeurs ou transporteurs, faites partie du mouvement qui révolutionne la livraison en Algérie.
+            {t("about_cta_subtitle")}
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link
               href="/inscription"
               className="bg-white text-dz-green font-bold px-8 py-3 rounded-xl hover:bg-green-50 transition-colors"
             >
-              Créer un compte
+              {t("about_cta_register")}
             </Link>
             <Link
               href="/contact"
               className="border-2 border-white text-white font-bold px-8 py-3 rounded-xl hover:bg-white/10 transition-colors"
             >
-              Nous contacter
+              {t("about_cta_contact")}
             </Link>
           </div>
         </div>

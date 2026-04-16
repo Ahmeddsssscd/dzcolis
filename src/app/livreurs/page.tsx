@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { ALGERIAN_CITIES } from "@/lib/data";
+import { useI18n } from "@/lib/i18n";
 
 interface Livreur {
   id: string;
@@ -26,6 +27,7 @@ const TRANSPORT_ICONS: Record<string, string> = {
 };
 
 function StarRating({ rating, count }: { rating: number; count: number }) {
+  const { t } = useI18n();
   return (
     <div className="flex items-center gap-1">
       {[1, 2, 3, 4, 5].map((s) => (
@@ -38,18 +40,19 @@ function StarRating({ rating, count }: { rating: number; count: number }) {
         </svg>
       ))}
       <span className="text-xs text-dz-gray-500 ml-1">
-        {count > 0 ? `${rating.toFixed(1)} (${count} avis)` : "Nouveau"}
+        {count > 0 ? `${rating.toFixed(1)} (${count} ${t("livreurs_reviews")})` : t("livreurs_new")}
       </span>
     </div>
   );
 }
 
 function Badge({ type }: { type: string }) {
+  const { t } = useI18n();
   const badges: Record<string, { label: string; cls: string }> = {
-    verified: { label: "✓ Vérifié", cls: "bg-green-100 text-green-700 border-green-200" },
-    top: { label: "⭐ Top Livreur", cls: "bg-yellow-100 text-yellow-700 border-yellow-200" },
-    fast: { label: "⚡ Rapide", cls: "bg-blue-100 text-blue-700 border-blue-200" },
-    international: { label: "✈️ International", cls: "bg-purple-100 text-purple-700 border-purple-200" },
+    verified: { label: t("livreurs_badge_verified"), cls: "bg-green-100 text-green-700 border-green-200" },
+    top: { label: t("livreurs_badge_top"), cls: "bg-yellow-100 text-yellow-700 border-yellow-200" },
+    fast: { label: t("livreurs_badge_fast"), cls: "bg-blue-100 text-blue-700 border-blue-200" },
+    international: { label: t("livreurs_badge_intl"), cls: "bg-purple-100 text-purple-700 border-purple-200" },
   };
   const b = badges[type];
   if (!b) return null;
@@ -76,6 +79,7 @@ function getTransportType(livreur: Livreur): string {
 }
 
 export default function LivreursPage() {
+  const { t } = useI18n();
   const [livreurs, setLivreurs] = useState<Livreur[]>([]);
   const [loading, setLoading] = useState(true);
   const [wilaya, setWilaya] = useState("");
@@ -105,10 +109,10 @@ export default function LivreursPage() {
       {/* ── Hero ── */}
       <div className="bg-gradient-to-br from-dz-green to-green-700 text-white py-14">
         <div className="max-w-5xl mx-auto px-4 text-center">
-          <p className="text-green-200 text-sm font-medium mb-3 uppercase tracking-widest">Annuaire</p>
-          <h1 className="text-3xl md:text-5xl font-bold mb-4">Trouvez votre livreur</h1>
+          <p className="text-green-200 text-sm font-medium mb-3 uppercase tracking-widest">{t("livreurs_directory")}</p>
+          <h1 className="text-3xl md:text-5xl font-bold mb-4">{t("livreurs_hero_title")}</h1>
           <p className="text-green-100 text-lg max-w-xl mx-auto mb-8">
-            Des centaines de transporteurs vérifiés partout en Algérie et vers l&apos;Europe.
+            {t("livreurs_hero_subtitle")}
           </p>
 
           {/* Search + filter */}
@@ -119,7 +123,7 @@ export default function LivreursPage() {
               </svg>
               <input
                 type="text"
-                placeholder="Rechercher un livreur..."
+                placeholder={t("livreurs_search_placeholder")}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-3 rounded-xl text-dz-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white/50"
@@ -130,7 +134,7 @@ export default function LivreursPage() {
               onChange={(e) => setWilaya(e.target.value)}
               className="px-4 py-3 rounded-xl text-dz-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white/50 bg-white min-w-[160px]"
             >
-              <option value="">Toutes les wilayas</option>
+              <option value="">{t("livreurs_all_wilayas")}</option>
               {ALGERIAN_CITIES.map((c) => (
                 <option key={c} value={c}>{c}</option>
               ))}
@@ -145,12 +149,14 @@ export default function LivreursPage() {
         {/* Stats bar */}
         <div className="flex items-center justify-between mb-6">
           <p className="text-sm text-dz-gray-500">
-            {loading ? "Chargement…" : `${filtered.length} livreur${filtered.length !== 1 ? "s" : ""} trouvé${filtered.length !== 1 ? "s" : ""}`}
-            {wilaya ? ` à ${wilaya}` : ""}
+            {loading
+              ? t("livreurs_loading")
+              : `${filtered.length} ${filtered.length !== 1 ? t("livreurs_found_plural") : t("livreurs_found_singular")}`}
+            {wilaya ? ` ${t("livreurs_at")} ${wilaya}` : ""}
           </p>
           <div className="flex items-center gap-2 text-xs text-dz-gray-400">
             <span className="w-2 h-2 bg-dz-green rounded-full" />
-            Triés par note
+            {t("livreurs_sorted_by_rating")}
           </div>
         </div>
 
@@ -173,10 +179,10 @@ export default function LivreursPage() {
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
             <div className="text-5xl mb-4">🔍</div>
-            <h3 className="text-lg font-semibold text-dz-gray-700 mb-2">Aucun livreur trouvé</h3>
-            <p className="text-dz-gray-400 text-sm">Essayez une autre wilaya ou supprimez le filtre.</p>
+            <h3 className="text-lg font-semibold text-dz-gray-700 mb-2">{t("livreurs_none_title")}</h3>
+            <p className="text-dz-gray-400 text-sm">{t("livreurs_none_desc")}</p>
             <button onClick={() => { setWilaya(""); setSearch(""); }} className="mt-4 text-dz-green font-medium text-sm hover:underline">
-              Voir tous les livreurs
+              {t("livreurs_see_all")}
             </button>
           </div>
         ) : (
@@ -236,9 +242,9 @@ export default function LivreursPage() {
 
                   {/* Footer */}
                   <div className="flex items-center justify-between pt-3 border-t border-dz-gray-50">
-                    <span className="text-xs text-dz-gray-400">Membre depuis {memberYear}</span>
+                    <span className="text-xs text-dz-gray-400">{t("livreurs_member_since")} {memberYear}</span>
                     <span className="text-xs font-semibold text-dz-green group-hover:underline">
-                      Voir le profil →
+                      {t("livreurs_view_profile")}
                     </span>
                   </div>
                 </Link>
@@ -249,10 +255,10 @@ export default function LivreursPage() {
 
         {/* CTA to become transporter */}
         <div className="mt-14 bg-gradient-to-br from-dz-green to-green-700 rounded-2xl p-8 text-center text-white">
-          <h3 className="text-xl font-bold mb-2">Vous êtes transporteur ?</h3>
-          <p className="text-green-100 text-sm mb-5">Créez votre profil gratuit et recevez des demandes de livraison directement.</p>
+          <h3 className="text-xl font-bold mb-2">{t("livreurs_cta_title")}</h3>
+          <p className="text-green-100 text-sm mb-5">{t("livreurs_cta_subtitle")}</p>
           <Link href="/transporter" className="inline-block bg-white text-dz-green font-bold px-6 py-2.5 rounded-xl hover:bg-green-50 transition-colors text-sm">
-            Créer mon profil de livreur
+            {t("livreurs_cta_btn")}
           </Link>
         </div>
       </div>

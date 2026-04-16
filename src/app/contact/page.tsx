@@ -2,48 +2,50 @@
 
 import { useState } from "react";
 import Link from "next/link";
-
-const subjects = [
-  "Question générale",
-  "Problème avec une livraison",
-  "Signaler un utilisateur",
-  "Assurance & réclamation",
-  "Solutions Business",
-  "Presse & partenariats",
-  "Autre",
-];
-
-const contactInfo = [
-  {
-    icon: "👤",
-    title: "Support",
-    value: "Équipe Waselli",
-    sub: "Disponible pour toute question",
-  },
-  {
-    icon: "📧",
-    title: "Email",
-    value: "contact@waselli.com",
-    sub: "Réponse sous 24h",
-  },
-  {
-    icon: "📍",
-    title: "Adresse",
-    value: "Alger, Algérie",
-    sub: "Siège social",
-  },
-];
+import { useI18n } from "@/lib/i18n";
 
 const WHATSAPP_URL =
   "https://wa.me/40725028189?text=Bonjour%20Waselli%2C%20j%27ai%20besoin%20d%27aide.";
 
 export default function ContactPage() {
+  const { t } = useI18n();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+
+  const subjects = [
+    t("contact_subj_general"),
+    t("contact_subj_delivery"),
+    t("contact_subj_report"),
+    t("contact_subj_insurance"),
+    t("contact_subj_business"),
+    t("contact_subj_press"),
+    t("contact_subj_other"),
+  ];
+
+  const contactInfo = [
+    {
+      icon: "👤",
+      title: t("contact_support_title"),
+      value: t("contact_support_value"),
+      sub: t("contact_support_sub"),
+    },
+    {
+      icon: "📧",
+      title: t("contact_email_title"),
+      value: "contact@waselli.com",
+      sub: t("contact_email_sub"),
+    },
+    {
+      icon: "📍",
+      title: t("contact_address_title"),
+      value: t("contact_address_value"),
+      sub: t("contact_address_sub"),
+    },
+  ];
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -60,9 +62,9 @@ export default function ContactPage() {
       <div className="bg-gradient-to-br from-dz-green to-green-700 text-white py-16">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <div className="text-5xl mb-4">💬</div>
-          <h1 className="text-4xl font-bold mb-3">Contactez-nous</h1>
+          <h1 className="text-4xl font-bold mb-3">{t("contact_hero_title")}</h1>
           <p className="text-green-100 text-lg">
-            Une question, un problème ou une idée ? Notre équipe est là pour vous.
+            {t("contact_hero_subtitle")}
           </p>
         </div>
       </div>
@@ -92,8 +94,8 @@ export default function ContactPage() {
               </svg>
             </div>
             <div>
-              <p className="font-semibold text-sm">Support WhatsApp</p>
-              <p className="text-xs text-white/80">Support Waselli — Réponse rapide</p>
+              <p className="font-semibold text-sm">{t("contact_whatsapp_title")}</p>
+              <p className="text-xs text-white/80">{t("contact_whatsapp_sub")}</p>
             </div>
             <svg className="w-4 h-4 ml-auto opacity-70 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -101,12 +103,12 @@ export default function ContactPage() {
           </a>
 
           <div className="bg-green-50 border border-green-100 rounded-2xl p-5">
-            <p className="text-sm font-semibold text-dz-gray-800 mb-1">Besoin d&apos;aide rapide ?</p>
+            <p className="text-sm font-semibold text-dz-gray-800 mb-1">{t("contact_quick_help_title")}</p>
             <p className="text-xs text-dz-gray-500 mb-3">
-              La plupart des questions sont déjà répondues dans notre FAQ.
+              {t("contact_quick_help_desc")}
             </p>
             <Link href="/faq" className="text-sm text-dz-green font-semibold hover:underline">
-              Consulter la FAQ →
+              {t("contact_faq_link")}
             </Link>
           </div>
         </div>
@@ -116,55 +118,55 @@ export default function ContactPage() {
           {sent ? (
             <div className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-10 text-center">
               <div className="text-5xl mb-4">✅</div>
-              <h2 className="text-xl font-bold text-dz-gray-900 mb-2">Message envoyé !</h2>
+              <h2 className="text-xl font-bold text-dz-gray-900 mb-2">{t("contact_sent_title")}</h2>
               <p className="text-dz-gray-500 mb-6">
-                Merci pour votre message. Notre équipe vous répondra dans les 24 heures.
+                {t("contact_sent_desc")}
               </p>
               <button
                 onClick={() => { setSent(false); setName(""); setEmail(""); setSubject(""); setMessage(""); }}
                 className="text-sm text-dz-green font-semibold hover:underline"
               >
-                Envoyer un autre message
+                {t("contact_send_another")}
               </button>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-6 space-y-4">
-              <h2 className="font-bold text-dz-gray-900 text-lg mb-2">Envoyer un message</h2>
+              <h2 className="font-bold text-dz-gray-900 text-lg mb-2">{t("contact_form_title")}</h2>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">Nom complet</label>
+                  <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("contact_fullname")}</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    placeholder="Prénom Nom"
+                    placeholder={t("contact_fullname_ph")}
                     className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">Email</label>
+                  <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("contact_email_label")}</label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    placeholder="votre@email.com"
+                    placeholder={t("contact_email_ph")}
                     className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">Sujet</label>
+                <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("contact_subject_label")}</label>
                 <select
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   required
                   className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green bg-white"
                 >
-                  <option value="">Choisir un sujet…</option>
+                  <option value="">{t("contact_subject_ph")}</option>
                   {subjects.map((s) => (
                     <option key={s} value={s}>{s}</option>
                   ))}
@@ -172,13 +174,13 @@ export default function ContactPage() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">Message</label>
+                <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("contact_message_label")}</label>
                 <textarea
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   required
                   rows={6}
-                  placeholder="Décrivez votre demande en détail…"
+                  placeholder={t("contact_message_ph")}
                   className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green resize-none"
                 />
               </div>
@@ -188,12 +190,12 @@ export default function ContactPage() {
                 disabled={sending}
                 className="w-full bg-dz-green text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors disabled:opacity-60"
               >
-                {sending ? "Envoi en cours…" : "Envoyer le message"}
+                {sending ? t("contact_sending") : t("contact_send_btn")}
               </button>
 
               <p className="text-xs text-dz-gray-400 text-center">
-                En soumettant ce formulaire, vous acceptez notre{" "}
-                <Link href="/confidentialite" className="underline">politique de confidentialité</Link>.
+                {t("contact_privacy_text")}{" "}
+                <Link href="/confidentialite" className="underline">{t("contact_privacy")}</Link>.
               </p>
             </form>
           )}
