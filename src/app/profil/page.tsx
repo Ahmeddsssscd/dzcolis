@@ -4,12 +4,14 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/context";
 import { useToast } from "@/lib/context";
+import { useI18n } from "@/lib/i18n";
 import { ALGERIAN_CITIES } from "@/lib/data";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ProfilPage() {
   const { user, authLoading, updateUser, logout } = useAuth();
   const { addToast } = useToast();
+  const { t } = useI18n();
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -44,17 +46,15 @@ export default function ProfilPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Validate
     if (!file.type.startsWith("image/")) {
-      addToast("Veuillez choisir une image (jpg, png, webp)", "error");
+      addToast(t("profil_image_type_error"), "error");
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      addToast("Image trop grande. Maximum 5 MB.", "error");
+      addToast(t("profil_image_size_error"), "error");
       return;
     }
 
-    // Local preview immediately
     const localUrl = URL.createObjectURL(file);
     setPreviewUrl(localUrl);
     setUploadingPhoto(true);
@@ -66,25 +66,22 @@ export default function ProfilPage() {
       if (!userId) return;
       const path = `${userId}.${ext}`;
 
-      // Upload (upsert — overwrites if exists)
       const { error: uploadError } = await supabase.storage
         .from("avatars")
         .upload(path, file, { upsert: true, contentType: file.type });
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
       const { data: urlData } = supabase.storage.from("avatars").getPublicUrl(path);
-      const publicUrl = urlData.publicUrl + `?t=${Date.now()}`; // bust cache
+      const publicUrl = urlData.publicUrl + `?t=${Date.now()}`;
 
-      // Save to profile
       await updateUser({ avatarUrl: publicUrl });
       setPreviewUrl(publicUrl);
-      addToast("Photo de profil mise à jour ✓", "success");
+      addToast(t("profil_photo_updated"), "success");
     } catch (err) {
       console.error("Avatar upload error:", err);
-      setPreviewUrl(user?.avatarUrl ?? null); // revert preview
-      addToast("Erreur lors de l'upload. Réessayez.", "error");
+      setPreviewUrl(user?.avatarUrl ?? null);
+      addToast(t("profil_photo_error"), "error");
     } finally {
       setUploadingPhoto(false);
     }
@@ -96,9 +93,9 @@ export default function ProfilPage() {
     try {
       await updateUser({ avatarUrl: null });
       setPreviewUrl(null);
-      addToast("Photo supprimée", "success");
+      addToast(t("profil_photo_deleted"), "success");
     } catch {
-      addToast("Erreur lors de la suppression", "error");
+      addToast(t("profil_photo_delete_error"), "error");
     } finally {
       setUploadingPhoto(false);
     }
@@ -110,9 +107,9 @@ export default function ProfilPage() {
     setSaving(true);
     try {
       await updateUser({ firstName, lastName, phone, wilaya });
-      addToast("Profil mis à jour avec succès ✓", "success");
+      addToast(t("profil_save_success"), "success");
     } catch {
-      addToast("Erreur lors de la sauvegarde", "error");
+      addToast(t("profil_save_error"), "error");
     } finally {
       setSaving(false);
     }
@@ -129,10 +126,16 @@ export default function ProfilPage() {
 
   const hasReviews = user.reviews > 0;
   const score = hasReviews ? Math.min(100, 20 + user.rating * 10 + Math.min(user.reviews, 30)) : 0;
-  const level = score >= 80 ? { label: "Elite ✓", color: "text-dz-green", bg: "bg-green-100" }
-    : score >= 60 ? { label: "Expert", color: "text-blue-600", bg: "bg-blue-100" }
-    : score >= 40 ? { label: "Confirmé", color: "text-orange-600", bg: "bg-orange-100" }
-    : { label: "Débutant", color: "text-dz-gray-500", bg: "bg-dz-gray-100" };
+  const level = score >= 80 ? { label: t("profil_level_elite"), color: "text-dz-green", bg: "bg-green-100" }
+    : score >= 60 ? { label: t("profil_level_expert"), color: "text-blue-600", bg: "bg-blue-100" }
+    : score >= 40 ? { label: t("profil_level_confirmed"), color: "text-orange-600", bg: "bg-orange-100" }
+    : { label: t("profil_level_beginner"), color: "text-dz-gray-500", bg: "bg-dz-gray-100" };
+
+  const kycLabel =
+    user.kycStatus === "approved" ? t("profil_kyc_approved") :
+    user.kycStatus === "submitted" || user.kycStatus === "reviewing" ? t("profil_kyc_reviewing") :
+    user.kycStatus === "rejected" ? t("profil_kyc_rejected") :
+    t("profil_kyc_pending");
 
   return (
     <div className="min-h-screen bg-dz-gray-50">
@@ -146,7 +149,7 @@ export default function ProfilPage() {
             <div className="w-24 h-24 rounded-2xl overflow-hidden bg-white/20 flex items-center justify-center">
               {previewUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={previewUrl} alt="Photo de profil" className="w-full h-full object-cover" />
+                <img src={previewUrl} alt={t("profil_change_photo")} className="w-full h-full object-cover" />
               ) : (
                 <span className="text-4xl font-black text-white">{user.avatar}</span>
               )}
@@ -165,7 +168,7 @@ export default function ProfilPage() {
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadingPhoto}
               className="absolute -bottom-2 -right-2 w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-dz-gray-50 transition-colors border border-dz-gray-200"
-              title="Changer la photo"
+              title={t("profil_change_photo")}
             >
               <svg className="w-4 h-4 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
@@ -187,9 +190,9 @@ export default function ProfilPage() {
             <p className="text-green-100 text-sm mt-0.5 truncate">{user.email}</p>
             <div className="flex items-center gap-3 mt-2 flex-wrap">
               <span className="flex items-center gap-1 text-sm bg-white/15 px-3 py-1 rounded-full">
-                {hasReviews ? `⭐ ${user.rating.toFixed(1)} · ${user.reviews} avis` : "Aucun avis pour l'instant"}
+                {hasReviews ? `⭐ ${user.rating.toFixed(1)} · ${user.reviews} ${t("profil_reviews_received")}` : t("profil_no_reviews")}
               </span>
-              <span className="text-green-100 text-xs">Membre depuis {memberSince}</span>
+              <span className="text-green-100 text-xs">{t("profil_member_since")} {memberSince}</span>
             </div>
             {/* Photo actions */}
             <div className="flex gap-3 mt-3">
@@ -198,14 +201,14 @@ export default function ProfilPage() {
                 disabled={uploadingPhoto}
                 className="text-xs bg-white/20 hover:bg-white/30 text-white px-3 py-1.5 rounded-lg transition-colors font-medium"
               >
-                {uploadingPhoto ? "Upload…" : "Changer la photo"}
+                {uploadingPhoto ? t("profil_uploading") : t("profil_change_photo")}
               </button>
               {previewUrl && !uploadingPhoto && (
                 <button
                   onClick={handleRemoveAvatar}
                   className="text-xs bg-white/10 hover:bg-red-500/40 text-white/80 hover:text-white px-3 py-1.5 rounded-lg transition-colors"
                 >
-                  Supprimer
+                  {t("profil_delete_photo")}
                 </button>
               )}
             </div>
@@ -218,12 +221,12 @@ export default function ProfilPage() {
         {/* ── Sidebar ── */}
         <div className="space-y-4">
           <div className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-5">
-            <h3 className="font-semibold text-dz-gray-900 mb-4 text-sm">Votre activité</h3>
+            <h3 className="font-semibold text-dz-gray-900 mb-4 text-sm">{t("profil_activity")}</h3>
             <div className="space-y-3">
               {[
-                { icon: "📦", label: "Colis envoyés", value: user.reviews > 0 ? user.reviews : "—" },
-                { icon: "⭐", label: "Note moyenne", value: hasReviews ? `${user.rating.toFixed(1)}/5` : "—" },
-                { icon: "✅", label: "Avis reçus", value: user.reviews > 0 ? user.reviews : "—" },
+                { icon: "📦", label: t("profil_packages_sent"), value: user.reviews > 0 ? user.reviews : "—" },
+                { icon: "⭐", label: t("profil_avg_rating"), value: hasReviews ? `${user.rating.toFixed(1)}/5` : "—" },
+                { icon: "✅", label: t("profil_reviews_received"), value: user.reviews > 0 ? user.reviews : "—" },
               ].map((s) => (
                 <div key={s.label} className="flex items-center justify-between">
                   <span className="text-xs text-dz-gray-500 flex items-center gap-2">
@@ -236,7 +239,7 @@ export default function ProfilPage() {
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-5">
-            <h3 className="font-semibold text-dz-gray-900 mb-3 text-sm">Score de confiance</h3>
+            <h3 className="font-semibold text-dz-gray-900 mb-3 text-sm">{t("profil_trust_score")}</h3>
             {hasReviews ? (
               <>
                 <div className="flex items-center justify-between mb-2">
@@ -249,7 +252,7 @@ export default function ProfilPage() {
               </>
             ) : (
               <p className="text-xs text-dz-gray-400 italic leading-relaxed">
-                Effectuez votre première livraison pour obtenir votre score de confiance.
+                {t("profil_trust_no_reviews")}
               </p>
             )}
           </div>
@@ -258,47 +261,47 @@ export default function ProfilPage() {
             onClick={() => setShowLogoutConfirm(true)}
             className="w-full text-sm text-red-500 hover:text-red-700 border border-red-200 hover:border-red-400 rounded-xl py-2.5 transition-colors"
           >
-            Se déconnecter
+            {t("profil_logout_btn")}
           </button>
         </div>
 
         {/* ── Edit form ── */}
         <div className="md:col-span-2 space-y-4">
           <form onSubmit={handleSave} className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-6">
-            <h2 className="font-bold text-dz-gray-900 mb-6">Modifier mes informations</h2>
+            <h2 className="font-bold text-dz-gray-900 mb-6">{t("profil_edit_title")}</h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
               <div>
-                <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">Prénom</label>
+                <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("profil_first_name")}</label>
                 <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} required
                   className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green" />
               </div>
               <div>
-                <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">Nom</label>
+                <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("profil_last_name")}</label>
                 <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} required
                   className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green" />
               </div>
             </div>
 
             <div className="mb-4">
-              <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">Email</label>
+              <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("profil_email")}</label>
               <input type="email" value={user.email} disabled
                 className="w-full border border-dz-gray-100 bg-dz-gray-50 rounded-xl px-3 py-2.5 text-sm text-dz-gray-400 cursor-not-allowed" />
-              <p className="text-xs text-dz-gray-400 mt-1">L&apos;email ne peut pas être modifié.</p>
+              <p className="text-xs text-dz-gray-400 mt-1">{t("profil_email_note")}</p>
             </div>
 
             <div className="mb-4">
-              <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">Téléphone</label>
+              <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("profil_phone")}</label>
               <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
                 placeholder="+213 5XX XXX XXX"
                 className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green" />
             </div>
 
             <div className="mb-6">
-              <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">Wilaya</label>
+              <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("profil_wilaya")}</label>
               <select value={wilaya} onChange={(e) => setWilaya(e.target.value)}
                 className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green bg-white">
-                <option value="">Sélectionner une wilaya</option>
+                <option value="">{t("profil_select_wilaya")}</option>
                 {ALGERIAN_CITIES.map((c) => (
                   <option key={c} value={c}>{c}</option>
                 ))}
@@ -307,34 +310,31 @@ export default function ProfilPage() {
 
             <button type="submit" disabled={saving}
               className="bg-dz-green text-white px-6 py-2.5 rounded-xl font-semibold text-sm hover:bg-green-700 transition-colors disabled:opacity-60">
-              {saving ? "Enregistrement…" : "Enregistrer les modifications"}
+              {saving ? t("profil_saving") : t("profil_save_btn")}
             </button>
           </form>
 
           {/* Security */}
           <div className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-6">
-            <h2 className="font-bold text-dz-gray-900 mb-4">Sécurité</h2>
+            <h2 className="font-bold text-dz-gray-900 mb-4">{t("profil_security")}</h2>
             <div className="flex items-center justify-between py-3 border-b border-dz-gray-100">
               <div>
-                <p className="text-sm font-medium text-dz-gray-900">Mot de passe</p>
-                <p className="text-xs text-dz-gray-400">Dernière modification inconnue</p>
+                <p className="text-sm font-medium text-dz-gray-900">{t("profil_password")}</p>
+                <p className="text-xs text-dz-gray-400">{t("profil_password_note")}</p>
               </div>
-              <button className="text-xs text-dz-green font-semibold hover:underline">Modifier</button>
+              <button className="text-xs text-dz-green font-semibold hover:underline">{t("profil_password_change")}</button>
             </div>
             <div className="flex items-center justify-between py-3">
               <div>
-                <p className="text-sm font-medium text-dz-gray-900">Vérification d&apos;identité</p>
-                <p className="text-xs text-dz-gray-400">Augmente votre score de confiance</p>
+                <p className="text-sm font-medium text-dz-gray-900">{t("profil_kyc_title")}</p>
+                <p className="text-xs text-dz-gray-400">{t("profil_kyc_note")}</p>
               </div>
               <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${
                 user.kycStatus === "approved" ? "bg-green-100 text-green-700" :
                 user.kycStatus === "submitted" || user.kycStatus === "reviewing" ? "bg-yellow-100 text-yellow-700" :
                 "bg-orange-100 text-orange-600"
               }`}>
-                {user.kycStatus === "approved" ? "✓ Vérifié" :
-                 user.kycStatus === "submitted" ? "En cours d'examen" :
-                 user.kycStatus === "reviewing" ? "En cours d'examen" :
-                 user.kycStatus === "rejected" ? "Rejeté" : "En attente"}
+                {kycLabel}
               </span>
             </div>
           </div>
@@ -345,16 +345,16 @@ export default function ProfilPage() {
       {showLogoutConfirm && (
         <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center px-4">
           <div className="bg-white rounded-2xl shadow-xl p-6 max-w-sm w-full">
-            <h3 className="font-bold text-dz-gray-900 mb-2">Se déconnecter ?</h3>
-            <p className="text-sm text-dz-gray-500 mb-5">Vous devrez vous reconnecter pour accéder à votre compte.</p>
+            <h3 className="font-bold text-dz-gray-900 mb-2">{t("profil_logout_modal_title")}</h3>
+            <p className="text-sm text-dz-gray-500 mb-5">{t("profil_logout_modal_desc")}</p>
             <div className="flex gap-3">
               <button onClick={() => setShowLogoutConfirm(false)}
                 className="flex-1 border border-dz-gray-200 rounded-xl py-2.5 text-sm font-semibold text-dz-gray-700 hover:bg-dz-gray-50">
-                Annuler
+                {t("profil_cancel")}
               </button>
               <button onClick={handleLogout}
                 className="flex-1 bg-red-500 text-white rounded-xl py-2.5 text-sm font-semibold hover:bg-red-600">
-                Se déconnecter
+                {t("profil_logout_btn")}
               </button>
             </div>
           </div>
