@@ -47,18 +47,24 @@ const NavIcons: Record<string, React.ReactNode> = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
   ),
+  livreurs: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  ),
 };
 
 // Nav items base — badges populated dynamically
 const NAV_ITEMS_BASE = [
-  { href: "/admin",               label: "Dashboard",   iconKey: "dashboard"    },
-  { href: "/admin/utilisateurs",  label: "Utilisateurs",iconKey: "utilisateurs" },
-  { href: "/admin/annonces",      label: "Annonces",    iconKey: "annonces"     },
-  { href: "/admin/expeditions",   label: "Expéditions", iconKey: "expeditions"  },
-  { href: "/admin/kyc",           label: "KYC",         iconKey: "kyc",         badgeKey: "kyc"     },
-  { href: "/admin/litiges",       label: "Litiges",     iconKey: "litiges",     badgeKey: "litiges" },
-  { href: "/admin/paiements",     label: "Paiements",   iconKey: "paiements"    },
-  { href: "/admin/parametres",    label: "Paramètres",  iconKey: "parametres"   },
+  { href: "/admin",               label: "Dashboard",    iconKey: "dashboard"    },
+  { href: "/admin/utilisateurs",  label: "Utilisateurs", iconKey: "utilisateurs" },
+  { href: "/admin/annonces",      label: "Annonces",     iconKey: "annonces"     },
+  { href: "/admin/expeditions",   label: "Expéditions",  iconKey: "expeditions"  },
+  { href: "/admin/kyc",           label: "KYC",          iconKey: "kyc",         badgeKey: "kyc"      },
+  { href: "/admin/litiges",       label: "Litiges",      iconKey: "litiges",     badgeKey: "litiges"  },
+  { href: "/admin/livreurs",      label: "Candidatures", iconKey: "livreurs",    badgeKey: "livreurs" },
+  { href: "/admin/paiements",     label: "Paiements",    iconKey: "paiements"    },
+  { href: "/admin/parametres",    label: "Paramètres",   iconKey: "parametres"   },
 ];
 
 function formatDate() {
@@ -75,16 +81,25 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [password, setPassword]           = useState("");
   const [error, setError]                 = useState("");
   const [sidebarOpen, setSidebarOpen]     = useState(false);
-  const [badges, setBadges]               = useState<{ kyc: number; litiges: number }>({ kyc: 0, litiges: 0 });
+  const [badges, setBadges]               = useState<{ kyc: number; litiges: number; livreurs: number }>({ kyc: 0, litiges: 0, livreurs: 0 });
   const pathname = usePathname();
 
   // Load real badge counts once authenticated
   useEffect(() => {
     if (!authenticated) return;
+    // Fetch admin stats (kyc, litiges)
     fetch("/api/admin/stats")
       .then(r => r.json())
       .then(d => {
-        setBadges({ kyc: d.kyc_pending ?? 0, litiges: 2 }); // litiges hardcoded until real table
+        setBadges(prev => ({ ...prev, kyc: d.kyc_pending ?? 0, litiges: 2 }));
+      })
+      .catch(() => {});
+    // Fetch courier applications to count pending
+    fetch("/api/courier-applications")
+      .then(r => r.json())
+      .then((data: Array<{ status: string }>) => {
+        const pending = Array.isArray(data) ? data.filter(a => a.status === "pending").length : 0;
+        setBadges(prev => ({ ...prev, livreurs: pending }));
       })
       .catch(() => {});
   }, [authenticated]);
@@ -202,7 +217,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <span className="flex-1">{item.label}</span>
                 {item.badgeKey && badgeCount > 0 && (
                   <span className={`${item.badgeKey === "kyc" ? "bg-red-500" : "bg-yellow-500"} text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center`}>
-                    {badgeCount}
+                    {badgeCount > 99 ? "99+" : badgeCount}
                   </span>
                 )}
               </Link>

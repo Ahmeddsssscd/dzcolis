@@ -92,6 +92,23 @@ export default function Home() {
   const { t } = useI18n();
   const { ref: stRef, visible: stVis } = useInView(0.3);
 
+  const [topCarriers, setTopCarriers] = useState<Array<{
+    id: string; first_name: string; last_name: string; wilaya: string;
+    rating: number; review_count: number; kyc_status: string;
+    listings?: { is_international: boolean }[];
+  }>>([]);
+  const [carriersLoading, setCarriersLoading] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/livreurs")
+      .then(r => r.json())
+      .then(data => {
+        setTopCarriers(Array.isArray(data) ? data.slice(0, 3) : []);
+        setCarriersLoading(false);
+      })
+      .catch(() => setCarriersLoading(false));
+  }, []);
+
   const steps = [
     { title: t("step1_title"), desc: t("step1_desc") },
     { title: t("step2_title"), desc: t("step2_desc") },
@@ -314,36 +331,69 @@ export default function Home() {
             ))}
           </Fade>
 
-          {/* Sample carrier cards */}
+          {/* Carrier cards — real data */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
-            {[
-              { name: t("carriers_card1_name"), loc: t("carriers_card1_loc"), avatar: "KB", rating: 4.9, reviews: 127, intl: false },
-              { name: t("carriers_card2_name"), loc: t("carriers_card2_loc"), avatar: "FM", rating: 4.8, reviews: 89,  intl: false },
-              { name: t("carriers_card3_name"), loc: t("carriers_card3_loc"), avatar: "YK", rating: 5.0, reviews: 214, intl: true  },
-            ].map((c, i) => (
-              <Fade key={c.name} delay={i * 80}>
-                <Link href="/livreurs"
-                  className="bg-dz-gray-50 rounded-2xl border border-dz-gray-100 p-5 flex items-center gap-4 hover:border-dz-green/40 hover:shadow-md transition-all duration-200 group">
-                  <div className="w-14 h-14 bg-dz-green text-white rounded-2xl flex items-center justify-center text-lg font-black shrink-0 group-hover:scale-105 transition-transform">
-                    {c.avatar}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-dz-gray-800">{c.name}</span>
-                      <span className="text-[10px] bg-green-100 text-green-700 border border-green-200 px-2 py-0.5 rounded-full font-semibold">
-                        ✓ {t("carriers_verified")}
-                      </span>
-                      {c.intl && <span className="text-[10px] bg-purple-100 text-purple-700 border border-purple-200 px-2 py-0.5 rounded-full font-semibold">Intl</span>}
-                    </div>
-                    <p className="text-xs text-dz-gray-500 mt-0.5 truncate">{c.loc}</p>
-                    <div className="flex items-center gap-1 mt-1.5">
-                      <span className="text-yellow-400 text-xs">{"★".repeat(Math.round(c.rating))}</span>
-                      <span className="text-xs text-dz-gray-500">{c.rating.toFixed(1)} · {c.reviews} {t("carriers_reviews_s")}</span>
+            {carriersLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <div key={i} className="bg-dz-gray-50 rounded-2xl border border-dz-gray-100 p-5 flex items-center gap-4 animate-pulse">
+                    <div className="w-14 h-14 bg-dz-gray-200 rounded-2xl shrink-0" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-4 bg-dz-gray-200 rounded w-3/4" />
+                      <div className="h-3 bg-dz-gray-200 rounded w-1/2" />
+                      <div className="h-3 bg-dz-gray-200 rounded w-2/3" />
                     </div>
                   </div>
-                </Link>
-              </Fade>
-            ))}
+                ))
+              : topCarriers.length === 0
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <Fade key={i} delay={i * 80}>
+                    <div className="bg-dz-gray-50 rounded-2xl border border-dz-gray-100 p-5 flex items-center gap-4">
+                      <div className="w-14 h-14 bg-dz-green/20 text-dz-green rounded-2xl flex items-center justify-center text-lg font-black shrink-0">
+                        —
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <span className="font-semibold text-dz-gray-400">—</span>
+                        <p className="text-xs text-dz-gray-300 mt-0.5">—</p>
+                        <div className="flex items-center gap-1 mt-1.5">
+                          <span className="text-dz-gray-200 text-xs">★★★★★</span>
+                        </div>
+                      </div>
+                    </div>
+                  </Fade>
+                ))
+              : topCarriers.map((c, i) => {
+                  const avatar = (c.first_name[0] ?? "?") + (c.last_name[0] ?? "");
+                  const isIntl = c.listings?.some(l => l.is_international) ?? false;
+                  const rating = c.rating ?? 0;
+                  const reviews = c.review_count ?? 0;
+                  return (
+                    <Fade key={c.id} delay={i * 80}>
+                      <Link href="/livreurs"
+                        className="bg-dz-gray-50 rounded-2xl border border-dz-gray-100 p-5 flex items-center gap-4 hover:border-dz-green/40 hover:shadow-md transition-all duration-200 group">
+                        <div className="w-14 h-14 bg-dz-green text-white rounded-2xl flex items-center justify-center text-lg font-black shrink-0 group-hover:scale-105 transition-transform">
+                          {avatar.toUpperCase()}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="font-semibold text-dz-gray-800">{c.first_name} {c.last_name[0]}.</span>
+                            {c.kyc_status === "approved" && (
+                              <span className="text-[10px] bg-green-100 text-green-700 border border-green-200 px-2 py-0.5 rounded-full font-semibold">
+                                ✓ {t("carriers_verified")}
+                              </span>
+                            )}
+                            {isIntl && <span className="text-[10px] bg-purple-100 text-purple-700 border border-purple-200 px-2 py-0.5 rounded-full font-semibold">Intl</span>}
+                          </div>
+                          <p className="text-xs text-dz-gray-500 mt-0.5 truncate">{c.wilaya || "Algérie"}</p>
+                          <div className="flex items-center gap-1 mt-1.5">
+                            <span className="text-yellow-400 text-xs">{"★".repeat(Math.min(5, Math.round(rating)))}</span>
+                            <span className="text-xs text-dz-gray-500">{rating.toFixed(1)} · {reviews} {t("carriers_reviews_s")}</span>
+                          </div>
+                        </div>
+                      </Link>
+                    </Fade>
+                  );
+                })
+            }
           </div>
 
           <Fade className="text-center">

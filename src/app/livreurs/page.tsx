@@ -252,14 +252,236 @@ export default function LivreursPage() {
           </div>
         )}
 
+        {/* ── Application form ── */}
+        <ApplicationForm />
+
         {/* CTA to become transporter */}
-        <div className="mt-14 bg-gradient-to-br from-dz-green to-green-700 rounded-2xl p-8 text-center text-white">
+        <div className="mt-8 bg-gradient-to-br from-dz-green to-green-700 rounded-2xl p-8 text-center text-white">
           <h3 className="text-xl font-bold mb-2">{t("livreurs_cta_title")}</h3>
           <p className="text-green-100 text-sm mb-5">{t("livreurs_cta_subtitle")}</p>
           <Link href="/transporter" className="inline-block bg-white text-dz-green font-bold px-6 py-2.5 rounded-xl hover:bg-green-50 transition-colors text-sm">
             {t("livreurs_cta_btn")}
           </Link>
         </div>
+      </div>
+    </div>
+  );
+}
+
+const TRANSPORT_TYPES = [
+  { value: "voiture", label: "Voiture" },
+  { value: "moto", label: "Moto" },
+  { value: "camionnette", label: "Camionnette" },
+  { value: "camion", label: "Camion" },
+  { value: "international", label: "International / Avion" },
+];
+
+function ApplicationForm() {
+  const [form, setForm] = useState({
+    first_name: "", last_name: "", email: "", phone: "",
+    wilaya: "", transport_type: "", message: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setSubmitting(true);
+    setError("");
+    try {
+      const res = await fetch("/api/courier-applications", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      if (res.ok) {
+        setSuccess(true);
+        setForm({ first_name: "", last_name: "", email: "", phone: "", wilaya: "", transport_type: "", message: "" });
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error || "Une erreur est survenue. Veuillez réessayer.");
+      }
+    } catch {
+      setError("Une erreur réseau est survenue. Veuillez réessayer.");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="mt-14">
+      {/* Section header */}
+      <div className="flex items-center gap-4 mb-8">
+        <div className="flex-1 h-px bg-dz-gray-200" />
+        <h2 className="text-lg font-bold text-dz-gray-700 whitespace-nowrap px-2">
+          Vous êtes transporteur ? Rejoignez notre réseau
+        </h2>
+        <div className="flex-1 h-px bg-dz-gray-200" />
+      </div>
+
+      <div className="bg-white rounded-2xl border border-dz-gray-100 p-8 shadow-sm max-w-2xl mx-auto">
+        {success ? (
+          <div className="text-center py-8">
+            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <svg className="w-8 h-8 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+              </svg>
+            </div>
+            <p className="text-green-700 font-semibold text-lg">
+              ✓ Candidature envoyée ! Nous vous contacterons sous 48h.
+            </p>
+            <button
+              onClick={() => setSuccess(false)}
+              className="mt-4 text-dz-green text-sm font-medium hover:underline"
+            >
+              Soumettre une autre candidature
+            </button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-dz-gray-700 mb-1.5">
+                  Prénom <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="first_name"
+                  value={form.first_name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Votre prénom"
+                  className="w-full px-4 py-2.5 border border-dz-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-dz-gray-700 mb-1.5">
+                  Nom <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="text"
+                  name="last_name"
+                  value={form.last_name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Votre nom"
+                  className="w-full px-4 py-2.5 border border-dz-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green transition-colors"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-dz-gray-700 mb-1.5">
+                  Email <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="votre@email.com"
+                  className="w-full px-4 py-2.5 border border-dz-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green transition-colors"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-dz-gray-700 mb-1.5">
+                  Téléphone <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={form.phone}
+                  onChange={handleChange}
+                  required
+                  placeholder="0555 000 000"
+                  className="w-full px-4 py-2.5 border border-dz-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green transition-colors"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-dz-gray-700 mb-1.5">
+                  Wilaya <span className="text-red-500">*</span>
+                </label>
+                <select
+                  name="wilaya"
+                  value={form.wilaya}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2.5 border border-dz-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green transition-colors bg-white"
+                >
+                  <option value="">Sélectionner une wilaya</option>
+                  {ALGERIAN_CITIES.map(c => (
+                    <option key={c} value={c}>{c}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-dz-gray-700 mb-1.5">
+                  Type de transport <span className="text-red-500">*</span>
+                </label>
+                <select
+                  name="transport_type"
+                  value={form.transport_type}
+                  onChange={handleChange}
+                  required
+                  className="w-full px-4 py-2.5 border border-dz-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green transition-colors bg-white"
+                >
+                  <option value="">Sélectionner un type</option>
+                  {TRANSPORT_TYPES.map(t => (
+                    <option key={t.value} value={t.value}>{t.label}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-dz-gray-700 mb-1.5">
+                Message / Description <span className="text-dz-gray-400 font-normal">(optionnel)</span>
+              </label>
+              <textarea
+                name="message"
+                value={form.message}
+                onChange={handleChange}
+                rows={3}
+                placeholder="Parlez-nous de votre expérience, vos zones de couverture, vos disponibilités..."
+                className="w-full px-4 py-2.5 border border-dz-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green transition-colors resize-none"
+              />
+            </div>
+
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">
+                {error}
+              </div>
+            )}
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full bg-dz-green hover:bg-dz-green-light disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-sm flex items-center justify-center gap-2"
+            >
+              {submitting ? (
+                <>
+                  <svg className="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                  Envoi en cours...
+                </>
+              ) : (
+                "Soumettre ma candidature"
+              )}
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );
