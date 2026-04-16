@@ -91,7 +91,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
   function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    if (password === "dzcolis2026") {
+    if (password === "waselli@2026!") {
       setAuthenticated(true);
       setError("");
     } else {
@@ -105,10 +105,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="bg-white rounded-2xl shadow-xl w-full max-w-sm p-8">
           <div className="text-center mb-8">
             <div className="inline-flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg" style={{ backgroundColor: "#16a34a" }}>
-                DZ
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center text-white font-bold text-lg" style={{ backgroundColor: "#1d4ed8" }}>
+                W
               </div>
-              <span className="text-xl font-bold text-gray-900">Colis <span className="text-green-600">Admin</span></span>
+              <span className="text-xl font-bold text-gray-900">Waselli <span className="text-blue-600">Admin</span></span>
             </div>
             <p className="text-gray-500 text-sm">Accès réservé aux administrateurs</p>
           </div>
@@ -130,7 +130,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <button
               type="submit"
               className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all hover:opacity-90"
-              style={{ backgroundColor: "#16a34a" }}
+              style={{ backgroundColor: "#1d4ed8" }}
             >
               Se connecter
             </button>
@@ -161,13 +161,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="flex items-center gap-3 px-6 py-5 border-b border-gray-700/50">
           <div
             className="w-9 h-9 rounded-lg flex items-center justify-center text-white font-bold text-sm flex-shrink-0"
-            style={{ backgroundColor: "#16a34a" }}
+            style={{ backgroundColor: "#1d4ed8" }}
           >
-            DZ
+            W
           </div>
           <div>
-            <span className="text-white font-bold text-base">Colis</span>
-            <span className="text-green-400 font-bold text-base"> Admin</span>
+            <span className="text-white font-bold text-base">Waselli</span>
+            <span className="text-blue-400 font-bold text-base"> Admin</span>
           </div>
           <button
             className="ml-auto text-gray-400 hover:text-white lg:hidden"
@@ -194,7 +194,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 onClick={() => setSidebarOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all group ${
                   isActive
-                    ? "bg-green-600 text-white"
+                    ? "bg-blue-600 text-white"
                     : "text-gray-400 hover:text-white hover:bg-gray-800"
                 }`}
               >
@@ -213,7 +213,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {/* Bottom user area */}
         <div className="px-4 py-4 border-t border-gray-700/50">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-full bg-green-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+            <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
               AD
             </div>
             <div className="flex-1 min-w-0">

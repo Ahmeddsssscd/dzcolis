@@ -18,13 +18,16 @@ export async function POST(req: NextRequest) {
     const signature = req.headers.get("signature") ?? "";
     const apiKey = process.env.CHARGILY_API_KEY ?? "";
 
-    // Verify webhook authenticity
-    if (signature && apiKey) {
-      const isValid = verifySignature(rawBody, signature, apiKey);
-      if (!isValid) {
-        console.error("Invalid Chargily webhook signature");
-        return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
-      }
+    // Verify webhook authenticity — mandatory, never optional
+    if (!apiKey) {
+      return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
+    }
+    if (!signature) {
+      return NextResponse.json({ error: "Missing signature" }, { status: 401 });
+    }
+    const isValid = verifySignature(rawBody, signature, apiKey);
+    if (!isValid) {
+      return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
     const event = JSON.parse(rawBody);

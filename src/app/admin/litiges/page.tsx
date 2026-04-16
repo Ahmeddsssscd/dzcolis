@@ -21,37 +21,9 @@ interface Litige {
   dateResolution?: string;
 }
 
-const BASE_LITIGES: Litige[] = [
-  {
-    id: "LIT-045",
-    dateOuverture: "11/04/2026",
-    expediteur:   { nom: "Fatima Bouali",  initials: "FB", avatarColor: "bg-rose-500" },
-    transporteur: { nom: "Rachid Bouzidi", initials: "RB", avatarColor: "bg-red-500" },
-    trajet: "Sétif → Alger",
-    montant: "5 600 DA",
-    description: "Le colis est arrivé endommagé. La boîte était écrasée et les articles à l'intérieur cassés. Le transporteur refuse d'assumer la responsabilité.",
-    statut: "ouvert",
-    notes: [],
-  },
-  {
-    id: "LIT-046",
-    dateOuverture: "07/04/2026",
-    expediteur:   { nom: "Fatima Bouali", initials: "FB", avatarColor: "bg-rose-500" },
-    transporteur: { nom: "Sara Meziani",  initials: "SM", avatarColor: "bg-pink-500" },
-    trajet: "Alger → Tlemcen",
-    montant: "6 200 DA",
-    description: "Le colis n'a pas été livré à l'adresse convenue. Le transporteur indique avoir livré mais l'expéditeur n'a pas reçu de confirmation.",
-    statut: "en_examen",
-    notes: [{ text: "Admin a contacté les deux parties le 09/04/2026", date: "09/04/2026" }],
-  },
-];
-
-const INITIAL_RESOLVED: Litige[] = [
-  { id: "LIT-040", dateOuverture: "28/03/2026", expediteur: { nom: "Karim Benali", initials: "KB", avatarColor: "bg-blue-500" }, transporteur: { nom: "Hamid Cherif", initials: "HC", avatarColor: "bg-amber-500" }, trajet: "Alger → Oran", montant: "3 200 DA", description: "Colis reçu avec 3 jours de retard sans justification.", statut: "resolu", decision: "rembourse_expediteur", notes: [], dateResolution: "01/04/2026" },
-  { id: "LIT-039", dateOuverture: "22/03/2026", expediteur: { nom: "Nadia Khelil", initials: "NK", avatarColor: "bg-teal-500" }, transporteur: { nom: "Leila Mansouri", initials: "LM", avatarColor: "bg-cyan-500" }, trajet: "Oran → Tizi Ouzou", montant: "1 800 DA", description: "Désaccord sur le poids du colis.", statut: "resolu", decision: "libere_transporteur", notes: [], dateResolution: "26/03/2026" },
-  { id: "LIT-038", dateOuverture: "15/03/2026", expediteur: { nom: "Youcef Hadj", initials: "YH", avatarColor: "bg-orange-500" }, transporteur: { nom: "Abdelkader Mimouni", initials: "AM", avatarColor: "bg-green-500" }, trajet: "Alger → Constantine", montant: "4 500 DA", description: "Colis partiellement livré, plusieurs articles manquants.", statut: "resolu", decision: "rembourse_expediteur", notes: [{ text: "Enquête conclue après vérification des preuves photos", date: "20/03/2026" }], dateResolution: "21/03/2026" },
-  { id: "LIT-037", dateOuverture: "10/03/2026", expediteur: { nom: "Amina Tabet", initials: "AT", avatarColor: "bg-purple-500" }, transporteur: { nom: "Sara Meziani", initials: "SM", avatarColor: "bg-pink-500" }, trajet: "Constantine → Annaba", montant: "900 DA", description: "Transporteur n'a pas respecté le créneau de livraison.", statut: "resolu", decision: "libere_transporteur", notes: [], dateResolution: "14/03/2026" },
-];
+// Real litiges are submitted by users — no fake seed data
+const BASE_LITIGES: Litige[] = [];
+const INITIAL_RESOLVED: Litige[] = [];
 
 const STATUS_STEPS: LitigeStatut[] = ["ouvert", "en_examen", "resolu"];
 const STATUS_LABELS: Record<LitigeStatut, string> = { ouvert: "Ouvert", en_examen: "En examen", resolu: "Résolu" };

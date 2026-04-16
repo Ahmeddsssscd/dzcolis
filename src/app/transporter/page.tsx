@@ -109,7 +109,7 @@ export default function TransporterPage() {
               <div className="text-3xl font-bold mt-0.5">{calcEarnings.toLocaleString("fr-DZ")} DA</div>
             </div>
             <div className="text-right text-xs text-green-200 space-y-1">
-              <div>48 wilayas couvertes</div>
+              <div>58 wilayas couvertes</div>
               <div>Disponible 7j/7</div>
             </div>
           </div>

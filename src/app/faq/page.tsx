@@ -52,7 +52,7 @@ const categories: FaqCategory[] = [
       },
       {
         q: "Waselli couvre-t-il toute l'Algérie ?",
-        a: "Oui, Waselli couvre les 48 wilayas d'Algérie. Grâce à notre réseau croissant de transporteurs, la plupart des trajets interwilayas sont disponibles. Les grandes villes comme Alger, Oran, Constantine, Annaba, Sétif et Béjaïa bénéficient du plus grand nombre d'offres.",
+        a: "Oui, Waselli couvre les 58 wilayas d'Algérie. Grâce à notre réseau croissant de transporteurs, la plupart des trajets interwilayas sont disponibles. Les grandes villes comme Alger, Oran, Constantine, Annaba, Sétif et Béjaïa bénéficient du plus grand nombre d'offres.",
       },
       {
         q: "Dois-je créer un compte pour utiliser Waselli ?",
