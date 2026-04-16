@@ -40,8 +40,9 @@ export default function Header() {
             <Link href="/annonces" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
               {t("nav_listings")}
             </Link>
-            <Link href="/livreurs" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
+            <Link href="/livreurs" className="flex items-center gap-1.5 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
               {t("nav_deliverers")}
+              <span className="text-[10px] bg-dz-green text-white px-1.5 py-0.5 rounded-full font-bold leading-none">NEW</span>
             </Link>
             <Link href="/envoyer" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
               {t("nav_send")}
@@ -155,7 +156,10 @@ export default function Header() {
             </div>
             <div className="py-1"><ThemeToggle /></div>
             <Link href="/annonces" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_listings")}</Link>
-            <Link href="/livreurs" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_deliverers")}</Link>
+            <Link href="/livreurs" className="flex items-center gap-2 py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>
+              {t("nav_deliverers")}
+              <span className="text-[10px] bg-dz-green text-white px-1.5 py-0.5 rounded-full font-bold leading-none">NEW</span>
+            </Link>
             <Link href="/envoyer" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_send")}</Link>
             <Link href="/transporter" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_transport")}</Link>
             <Link href="/suivi" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>📦 {t("nav_tracking")}</Link>

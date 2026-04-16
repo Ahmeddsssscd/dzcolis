@@ -152,12 +152,18 @@ export default function Home() {
               {t("hero_subtitle")}
             </p>
             <HeroSearch />
-            <p className="mt-6 text-sm text-white/60">
-              {t("hero_transporter")}{" "}
-              <Link href="/transporter" className="text-white font-semibold underline underline-offset-2 hover:text-blue-200 transition-colors">
-                {t("hero_transporter_cta")}
+            <div className="mt-6 flex flex-col sm:flex-row gap-3 text-sm text-white/60">
+              <p>
+                {t("hero_transporter")}{" "}
+                <Link href="/transporter" className="text-white font-semibold underline underline-offset-2 hover:text-blue-200 transition-colors">
+                  {t("hero_transporter_cta")}
+                </Link>
+              </p>
+              <span className="hidden sm:inline text-white/30">·</span>
+              <Link href="/livreurs" className="text-blue-300 font-semibold hover:text-white transition-colors flex items-center gap-1">
+                🚗 {t("hero_find_carrier")}
               </Link>
-            </p>
+            </div>
           </div>
         </div>
       </section>
@@ -280,6 +286,75 @@ export default function Home() {
               </Fade>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* ── Carriers spotlight ────────────── */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Fade className="text-center mb-12">
+            <span className="inline-block bg-dz-green/10 text-dz-green text-xs font-bold px-4 py-1.5 rounded-full mb-4 uppercase tracking-wide">
+              {t("carriers_badge")}
+            </span>
+            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">{t("carriers_title")}</h2>
+            <p className="text-dz-gray-500 mt-3 max-w-xl mx-auto">{t("carriers_subtitle")}</p>
+          </Fade>
+
+          {/* Stats row */}
+          <Fade className="grid grid-cols-3 gap-4 mb-10 max-w-lg mx-auto">
+            {[
+              { value: "2 400+", label: t("carriers_stat1_label") },
+              { value: "4.8 ⭐", label: t("carriers_stat2_label") },
+              { value: "98%",    label: t("carriers_stat3_label") },
+            ].map((s) => (
+              <div key={s.label} className="bg-dz-gray-50 rounded-2xl p-4 text-center border border-dz-gray-100">
+                <div className="text-xl font-bold text-dz-gray-800">{s.value}</div>
+                <div className="text-xs text-dz-gray-500 mt-1">{s.label}</div>
+              </div>
+            ))}
+          </Fade>
+
+          {/* Sample carrier cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+            {[
+              { name: t("carriers_card1_name"), loc: t("carriers_card1_loc"), avatar: "KB", rating: 4.9, reviews: 127, intl: false },
+              { name: t("carriers_card2_name"), loc: t("carriers_card2_loc"), avatar: "FM", rating: 4.8, reviews: 89,  intl: false },
+              { name: t("carriers_card3_name"), loc: t("carriers_card3_loc"), avatar: "YK", rating: 5.0, reviews: 214, intl: true  },
+            ].map((c, i) => (
+              <Fade key={c.name} delay={i * 80}>
+                <Link href="/livreurs"
+                  className="bg-dz-gray-50 rounded-2xl border border-dz-gray-100 p-5 flex items-center gap-4 hover:border-dz-green/40 hover:shadow-md transition-all duration-200 group">
+                  <div className="w-14 h-14 bg-dz-green text-white rounded-2xl flex items-center justify-center text-lg font-black shrink-0 group-hover:scale-105 transition-transform">
+                    {c.avatar}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold text-dz-gray-800">{c.name}</span>
+                      <span className="text-[10px] bg-green-100 text-green-700 border border-green-200 px-2 py-0.5 rounded-full font-semibold">
+                        ✓ {t("carriers_verified")}
+                      </span>
+                      {c.intl && <span className="text-[10px] bg-purple-100 text-purple-700 border border-purple-200 px-2 py-0.5 rounded-full font-semibold">Intl</span>}
+                    </div>
+                    <p className="text-xs text-dz-gray-500 mt-0.5 truncate">{c.loc}</p>
+                    <div className="flex items-center gap-1 mt-1.5">
+                      <span className="text-yellow-400 text-xs">{"★".repeat(Math.round(c.rating))}</span>
+                      <span className="text-xs text-dz-gray-500">{c.rating.toFixed(1)} · {c.reviews} {t("carriers_reviews_s")}</span>
+                    </div>
+                  </div>
+                </Link>
+              </Fade>
+            ))}
+          </div>
+
+          <Fade className="text-center">
+            <Link href="/livreurs"
+              className="inline-flex items-center gap-2 bg-dz-green hover:bg-dz-green-light text-white px-8 py-3.5 rounded-xl font-semibold transition-colors shadow-sm shadow-dz-green/20">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              {t("carriers_cta")}
+            </Link>
+          </Fade>
         </div>
       </section>
 
