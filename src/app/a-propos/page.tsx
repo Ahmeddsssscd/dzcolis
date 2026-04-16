@@ -1,5 +1,5 @@
 import Link from "next/link";
-import DzColisLogo from "@/components/DzColisLogo";
+import WaselliLogo from "@/components/WaselliLogo";
 
 const values = [
   {
@@ -10,7 +10,7 @@ const values = [
   {
     icon: "💚",
     title: "Écologie",
-    desc: "En optimisant les trajets existants, DZColis réduit le nombre de camions vides sur les routes algériennes. Moins d'émissions, plus de sens.",
+    desc: "En optimisant les trajets existants, Waselli réduit le nombre de camions vides sur les routes algériennes. Moins d'émissions, plus de sens.",
   },
   {
     icon: "💰",
@@ -20,7 +20,7 @@ const values = [
   {
     icon: "🛡️",
     title: "Sécurité",
-    desc: "Paiement séquestre, assurance DZColis Protect, photo de prise en charge et de livraison. Votre colis est protégé à chaque étape.",
+    desc: "Paiement séquestre, assurance Waselli Protect, photo de prise en charge et de livraison. Votre colis est protégé à chaque étape.",
   },
 ];
 
@@ -31,9 +31,9 @@ const team = [
 
 const milestones = [
   { year: "2026", event: "Idée fondatrice — connecter les expéditeurs aux transporteurs qui font déjà le trajet." },
-  { year: "2026", event: "Lancement de DZColis avec couverture nationale des 69 wilayas." },
+  { year: "2026", event: "Lancement de Waselli avec couverture nationale des 69 wilayas." },
   { year: "2026", event: "Lancement du service international Algérie ↔ Europe (France, Espagne, Belgique, Allemagne, Italie)." },
-  { year: "2026", event: "Lancement de DZColis Protect — assurance, score de confiance, photo de livraison." },
+  { year: "2026", event: "Lancement de Waselli Protect — assurance, score de confiance, photo de livraison." },
 ];
 
 const stats = [
@@ -50,14 +50,14 @@ export default function AProposPage() {
       <div className="bg-gradient-to-br from-dz-gray-800 to-dz-gray-900 text-white py-20">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="flex items-center justify-center mb-6">
-            <DzColisLogo size="xl" href="/" />
+            <WaselliLogo size="xl" href="/" />
           </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4 leading-tight">
             La livraison collaborative,<br />
             <span className="text-dz-green">made in Algeria</span>
           </h1>
           <p className="text-dz-gray-300 text-lg max-w-2xl mx-auto">
-            DZColis connecte les personnes qui ont des colis à envoyer avec des transporteurs qui font déjà le trajet.
+            Waselli connecte les personnes qui ont des colis à envoyer avec des transporteurs qui font déjà le trajet.
             Simple, économique, et pensé pour l'Algérie.
           </p>
         </div>
@@ -83,13 +83,13 @@ export default function AProposPage() {
         </div>
         <div className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-8">
           <p className="text-dz-gray-700 leading-relaxed mb-4">
-            DZColis est né d'un constat simple : chaque jour, des centaines de camions et fourgons parcourent les routes algériennes avec de l'espace vide. En parallèle, des millions d'Algériens cherchent des solutions pour envoyer des colis entre wilayas — souvent à des prix exorbitants ou sans garantie de sécurité.
+            Waselli est né d'un constat simple : chaque jour, des centaines de camions et fourgons parcourent les routes algériennes avec de l'espace vide. En parallèle, des millions d'Algériens cherchent des solutions pour envoyer des colis entre wilayas — souvent à des prix exorbitants ou sans garantie de sécurité.
           </p>
           <p className="text-dz-gray-700 leading-relaxed mb-4">
-            Inspirés par le modèle collaboratif qui a révolutionné le transport de personnes, nous avons créé DZColis en 2026 pour mettre en relation expéditeurs et transporteurs qui font déjà le trajet. Le résultat : des livraisons jusqu'à 60% moins chères, plus écologiques, et sécurisées par notre système DZColis Protect.
+            Inspirés par le modèle collaboratif qui a révolutionné le transport de personnes, nous avons créé Waselli en 2026 pour mettre en relation expéditeurs et transporteurs qui font déjà le trajet. Le résultat : des livraisons jusqu'à 60% moins chères, plus écologiques, et sécurisées par notre système Waselli Protect.
           </p>
           <p className="text-dz-gray-700 leading-relaxed">
-            Aujourd'hui, DZColis couvre les 69 wilayas d'Algérie et s'étend à l'international vers 5 pays européens. Notre mission reste la même : rendre la livraison accessible, fiable et juste pour tous les Algériens.
+            Aujourd'hui, Waselli couvre les 69 wilayas d'Algérie et s'étend à l'international vers 5 pays européens. Notre mission reste la même : rendre la livraison accessible, fiable et juste pour tous les Algériens.
           </p>
         </div>
 
@@ -155,7 +155,7 @@ export default function AProposPage() {
       {/* CTA */}
       <div className="bg-gradient-to-br from-dz-green to-green-700 text-white py-16">
         <div className="max-w-2xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold mb-3">Rejoignez la communauté DZColis</h2>
+          <h2 className="text-3xl font-bold mb-3">Rejoignez la communauté Waselli</h2>
           <p className="text-green-100 mb-8">
             Expéditeurs ou transporteurs, faites partie du mouvement qui révolutionne la livraison en Algérie.
           </p>

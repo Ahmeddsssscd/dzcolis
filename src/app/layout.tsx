@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "@/lib/context";
 import Header from "@/components/Header";
@@ -9,20 +9,22 @@ import ThemeProvider from "@/components/ThemeProvider";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "DZColis — Livraison collaborative Algérie ↔ Europe",
+  title: "Waselli — Livraison collaborative Algérie ↔ Europe",
   description: "Envoyez vos colis entre l'Algérie et l'Europe grâce à des voyageurs vérifiés. 5× moins cher que DHL. Paiement sécurisé, assurance incluse.",
   manifest: "/manifest.json",
   themeColor: "#16a34a",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "DZColis",
+    title: "Waselli",
     startupImage: "/icons/icon-512.png",
   },
   icons: {
@@ -30,11 +32,11 @@ export const metadata: Metadata = {
     apple: "/icons/icon-512.png",
   },
   openGraph: {
-    title: "DZColis — Livraison collaborative Algérie ↔ Europe",
+    title: "Waselli — Livraison collaborative Algérie ↔ Europe",
     description: "Envoyez vos colis entre l'Algérie et l'Europe grâce à des voyageurs vérifiés. 5× moins cher que DHL.",
     type: "website",
     locale: "fr_DZ",
-    siteName: "DZColis",
+    siteName: "Waselli",
   },
 };
 
@@ -44,7 +46,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="fr" className={`${geistSans.variable} h-full antialiased`}>
+    <html lang="fr" className={`${jakarta.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
           <AppProvider>

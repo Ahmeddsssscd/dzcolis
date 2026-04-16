@@ -324,7 +324,7 @@ export default function SuiviPage() {
               <div className="text-right">
                 <p className="text-xs text-dz-gray-500 dark:text-dz-gray-400">Paiement séquestre</p>
                 <p className="text-sm font-medium text-dz-gray-700 dark:text-dz-gray-200">
-                  {result.status === "delivered" ? "✅ Libéré au transporteur" : "🔒 Sécurisé par DZColis"}
+                  {result.status === "delivered" ? "✅ Libéré au transporteur" : "🔒 Sécurisé par Waselli"}
                 </p>
               </div>
             </div>

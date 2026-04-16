@@ -3,7 +3,7 @@ import Link from "next/link";
 const senderSteps = [
   { num: "1", title: "Publiez votre annonce", desc: "Décrivez votre colis (photo, dimensions, poids), indiquez le départ et la destination, et proposez un prix." },
   { num: "2", title: "Recevez des offres", desc: "Les transporteurs dont le trajet correspond vous envoient des propositions. Discutez avec eux via la messagerie." },
-  { num: "3", title: "Réservez en confiance", desc: "Choisissez le transporteur qui vous convient. Le paiement est sécurisé par DZColis (séquestre)." },
+  { num: "3", title: "Réservez en confiance", desc: "Choisissez le transporteur qui vous convient. Le paiement est sécurisé par Waselli (séquestre)." },
   { num: "4", title: "Confirmez la réception", desc: "Vérifiez votre colis à la livraison et confirmez. Le transporteur est payé automatiquement." },
 ];
 
@@ -15,12 +15,12 @@ const transporterSteps = [
 ];
 
 const faqs = [
-  { q: "Combien coûte l'envoi d'un colis ?", a: "Le prix dépend de la taille, du poids et du trajet. En moyenne, DZColis est 60% moins cher que les transporteurs traditionnels. Vous pouvez proposer votre prix." },
-  { q: "Comment fonctionne le paiement ?", a: "Le paiement est sécurisé par séquestre. L'argent est bloqué par DZColis et n'est libéré au transporteur qu'après confirmation de la bonne réception du colis." },
+  { q: "Combien coûte l'envoi d'un colis ?", a: "Le prix dépend de la taille, du poids et du trajet. En moyenne, Waselli est 60% moins cher que les transporteurs traditionnels. Vous pouvez proposer votre prix." },
+  { q: "Comment fonctionne le paiement ?", a: "Le paiement est sécurisé par séquestre. L'argent est bloqué par Waselli et n'est libéré au transporteur qu'après confirmation de la bonne réception du colis." },
   { q: "Mes colis sont-ils assurés ?", a: "Oui ! Tous les envois sont couverts par notre assurance gratuite jusqu'à 50 000 DA. Cette assurance couvre la casse et le vol pendant le transport." },
   { q: "Comment devenir transporteur ?", a: "Inscrivez-vous gratuitement, vérifiez votre identité, et publiez votre premier trajet. C'est simple et rapide." },
   { q: "Quels types de colis puis-je envoyer ?", a: "Tout type de colis : meubles, électroménager, cartons, électronique... Seuls les produits dangereux, illégaux ou périssables sont interdits." },
-  { q: "Quelle est la commission de DZColis ?", a: "DZColis prend une commission de 10% sur chaque transaction. Le transporteur reçoit 90% du montant convenu." },
+  { q: "Quelle est la commission de Waselli ?", a: "Waselli prend une commission de 10% sur chaque transaction. Le transporteur reçoit 90% du montant convenu." },
 ];
 
 export default function CommentCaMarchePage() {
@@ -31,7 +31,7 @@ export default function CommentCaMarchePage() {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h1 className="text-4xl font-bold mb-4">Comment ça marche ?</h1>
           <p className="text-green-100 text-lg">
-            DZColis connecte les expéditeurs avec des transporteurs qui font déjà le trajet.
+            Waselli connecte les expéditeurs avec des transporteurs qui font déjà le trajet.
             Simple, économique et sécurisé.
           </p>
         </div>

@@ -8,7 +8,7 @@ export default function ConfidentialitePage() {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h1 className="text-4xl font-bold mb-4">Politique de confidentialité</h1>
           <p className="text-green-100 text-lg">
-            Comment DZColis collecte, utilise et protège vos données personnelles.
+            Comment Waselli collecte, utilise et protège vos données personnelles.
           </p>
         </div>
       </section>
@@ -23,7 +23,7 @@ export default function ConfidentialitePage() {
         </div>
 
         <p className="text-dz-gray-500 text-sm mb-10">
-          Dernière mise à jour : avril 2026 — DZColis s&apos;engage à protéger votre vie privée conformément
+          Dernière mise à jour : avril 2026 — Waselli s&apos;engage à protéger votre vie privée conformément
           au Règlement Général sur la Protection des Données (RGPD) et à la législation algérienne en vigueur.
         </p>
 
@@ -34,7 +34,7 @@ export default function ConfidentialitePage() {
             <div className="space-y-2 text-dz-gray-600 text-sm leading-relaxed">
               <p>Le responsable du traitement de vos données personnelles est :</p>
               <div className="bg-dz-gray-50 rounded-xl p-4 mt-2 space-y-1 text-dz-gray-600 text-sm">
-                <p><span className="font-semibold text-dz-gray-700">Société :</span> DZColis</p>
+                <p><span className="font-semibold text-dz-gray-700">Société :</span> Waselli</p>
                 <p><span className="font-semibold text-dz-gray-700">Adresse :</span> Alger, Algérie</p>
                 <p>
                   <span className="font-semibold text-dz-gray-700">DPO (Délégué à la Protection des Données) :</span>{" "}
@@ -52,7 +52,7 @@ export default function ConfidentialitePage() {
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-xl font-bold text-dz-gray-800 mb-4">2. Données collectées</h2>
             <p className="text-dz-gray-600 text-sm leading-relaxed mb-4">
-              Dans le cadre de la fourniture de nos services, DZColis collecte les catégories de données suivantes :
+              Dans le cadre de la fourniture de nos services, Waselli collecte les catégories de données suivantes :
             </p>
             <div className="space-y-4">
               <div>
@@ -147,7 +147,7 @@ export default function ConfidentialitePage() {
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-xl font-bold text-dz-gray-800 mb-4">4. Partage des données</h2>
             <p className="text-dz-gray-600 text-sm leading-relaxed mb-3">
-              DZColis ne vend jamais vos données personnelles à des tiers. Nous pouvons partager certaines données dans les cas suivants :
+              Waselli ne vend jamais vos données personnelles à des tiers. Nous pouvons partager certaines données dans les cas suivants :
             </p>
             <div className="space-y-3 text-dz-gray-600 text-sm leading-relaxed">
               <div className="flex gap-3">
@@ -222,7 +222,7 @@ export default function ConfidentialitePage() {
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-xl font-bold text-dz-gray-800 mb-4">7. Sécurité des données</h2>
             <p className="text-dz-gray-600 text-sm leading-relaxed mb-3">
-              DZColis met en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données
+              Waselli met en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données
               personnelles contre tout accès non autorisé, perte, destruction ou divulgation accidentelle :
             </p>
             <ul className="list-disc pl-5 space-y-1 text-dz-gray-500 text-sm">
@@ -242,7 +242,7 @@ export default function ConfidentialitePage() {
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-xl font-bold text-dz-gray-800 mb-4">8. Cookies et technologies similaires</h2>
             <p className="text-dz-gray-600 text-sm leading-relaxed mb-4">
-              DZColis utilise des cookies et technologies similaires pour améliorer votre expérience sur la plateforme.
+              Waselli utilise des cookies et technologies similaires pour améliorer votre expérience sur la plateforme.
             </p>
             <div className="space-y-3">
               {[
@@ -296,7 +296,7 @@ export default function ConfidentialitePage() {
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-xl font-bold text-dz-gray-800 mb-4">10. Mineurs</h2>
             <p className="text-dz-gray-600 text-sm leading-relaxed">
-              Les services de DZColis sont réservés aux personnes majeures (18 ans ou plus). DZColis ne collecte pas
+              Les services de Waselli sont réservés aux personnes majeures (18 ans ou plus). Waselli ne collecte pas
               sciemment de données personnelles relatives à des mineurs. Si vous êtes parent ou tuteur et que vous
               pensez que votre enfant nous a fourni des données, contactez-nous immédiatement à{" "}
               <a href="mailto:dpo@dzcolis.dz" className="text-dz-green hover:underline">dpo@dzcolis.dz</a> afin
@@ -308,7 +308,7 @@ export default function ConfidentialitePage() {
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-xl font-bold text-dz-gray-800 mb-4">11. Modifications de la politique de confidentialité</h2>
             <p className="text-dz-gray-600 text-sm leading-relaxed">
-              DZColis se réserve le droit de modifier la présente politique de confidentialité à tout moment.
+              Waselli se réserve le droit de modifier la présente politique de confidentialité à tout moment.
               Toute modification substantielle vous sera notifiée par e-mail et via une alerte sur la plateforme
               au moins 30 jours avant son entrée en vigueur. Nous vous invitons à consulter régulièrement cette
               page pour rester informé(e) de nos pratiques en matière de protection des données.

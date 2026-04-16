@@ -237,7 +237,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             </svg>
           </button>
           <div className="flex-1">
-            <h1 className="text-gray-900 font-semibold text-base">Admin DZColis</h1>
+            <h1 className="text-gray-900 font-semibold text-base">Admin Waselli</h1>
             <p className="text-gray-400 text-xs capitalize">{formatDate()}</p>
           </div>
           <button

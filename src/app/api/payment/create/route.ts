@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
         success_url: `${appUrl}/paiement/succes?booking=${bookingId}`,
         failure_url: `${appUrl}/paiement/echec?booking=${bookingId}`,
         webhook_endpoint: `${appUrl}/api/payment/webhook`,
-        description: `DZColis - Réservation ${booking.booking_ref}`,
+        description: `Waselli - Réservation ${booking.booking_ref}`,
         locale: "fr",
         metadata: {
           booking_id: bookingId,

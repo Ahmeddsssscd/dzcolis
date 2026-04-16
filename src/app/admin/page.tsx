@@ -139,7 +139,7 @@ export default function AdminDashboard() {
       {/* Page header */}
       <div>
         <h2 className="text-2xl font-bold text-gray-900">Tableau de bord</h2>
-        <p className="text-gray-500 text-sm mt-1">Vue d&apos;ensemble de la plateforme DZColis</p>
+        <p className="text-gray-500 text-sm mt-1">Vue d&apos;ensemble de la plateforme Waselli</p>
       </div>
 
       {/* Stats row */}

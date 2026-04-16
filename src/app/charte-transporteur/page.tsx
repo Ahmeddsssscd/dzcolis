@@ -10,7 +10,7 @@ const OBLIGATIONS = [
       "Fournir une copie valide de votre carte nationale d'identité ou passeport",
       "Fournir votre permis de conduire (catégorie B minimum)",
       "Fournir la carte grise du véhicule utilisé pour les transports",
-      "Permettre à DZColis de vérifier vos documents à tout moment",
+      "Permettre à Waselli de vérifier vos documents à tout moment",
     ],
   },
   {
@@ -50,7 +50,7 @@ const OBLIGATIONS = [
     items: [
       "Il est strictement interdit d'accepter ou de transporter des articles illicites, même si l'expéditeur en fait la demande",
       "Tout transporteur surpris à transporter des stupéfiants, armes ou marchandises illicites sera définitivement banni et signalé aux autorités",
-      "Il est interdit de sous-traiter un transport à un tiers sans accord écrit de DZColis",
+      "Il est interdit de sous-traiter un transport à un tiers sans accord écrit de Waselli",
       "Toute tentative de fraude ou de manipulation des avis est sanctionnée par la suppression du compte",
     ],
   },
@@ -72,11 +72,11 @@ export default function CharteTransporteurPage() {
       <section className="bg-gradient-to-br from-dz-gray-800 to-dz-gray-700 text-white py-16">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm mb-5">
-            <span>🚚</span> Charte officielle DZColis
+            <span>🚚</span> Charte officielle Waselli
           </div>
           <h1 className="text-3xl md:text-5xl font-bold mb-3">Charte du Transporteur</h1>
           <p className="text-dz-gray-300 text-lg max-w-xl mx-auto">
-            Vos obligations, responsabilités et engagements en tant que transporteur sur la plateforme DZColis.
+            Vos obligations, responsabilités et engagements en tant que transporteur sur la plateforme Waselli.
           </p>
           <p className="text-dz-gray-400 text-sm mt-3">Version 1.0 — Avril 2026</p>
         </div>
@@ -87,7 +87,7 @@ export default function CharteTransporteurPage() {
         {/* Intro */}
         <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
           <p className="text-sm text-dz-gray-600 leading-relaxed">
-            La présente charte constitue un engagement contractuel entre le transporteur (ci-après «&nbsp;vous&nbsp;») et la société DZColis (ci-après «&nbsp;DZColis&nbsp;»). En vous inscrivant comme transporteur sur la plateforme, vous vous engagez à respecter l&apos;intégralité des règles définies dans ce document. Le non-respect de ces règles peut entraîner la suspension temporaire ou définitive de votre compte, ainsi que des poursuites judiciaires si les faits le justifient.
+            La présente charte constitue un engagement contractuel entre le transporteur (ci-après «&nbsp;vous&nbsp;») et la société Waselli (ci-après «&nbsp;Waselli&nbsp;»). En vous inscrivant comme transporteur sur la plateforme, vous vous engagez à respecter l&apos;intégralité des règles définies dans ce document. Le non-respect de ces règles peut entraîner la suspension temporaire ou définitive de votre compte, ainsi que des poursuites judiciaires si les faits le justifient.
           </p>
         </div>
 
@@ -117,7 +117,7 @@ export default function CharteTransporteurPage() {
             ⚠️ Responsabilité financière du transporteur
           </h2>
           <p className="text-sm text-orange-700 leading-relaxed mb-3">
-            En cas de perte, vol ou dommage causé à un colis par négligence avérée du transporteur, DZColis peut retenir le paiement et engager la responsabilité civile du transporteur à hauteur de la valeur déclarée du colis.
+            En cas de perte, vol ou dommage causé à un colis par négligence avérée du transporteur, Waselli peut retenir le paiement et engager la responsabilité civile du transporteur à hauteur de la valeur déclarée du colis.
           </p>
           <div className="bg-white rounded-xl p-4 space-y-2 text-sm">
             <div className="flex justify-between">
@@ -146,7 +146,7 @@ export default function CharteTransporteurPage() {
               </div>
               <div>
                 <h3 className="font-bold text-dz-gray-800">Signature électronique</h3>
-                <p className="text-xs text-dz-gray-500 mt-0.5">En signant, vous confirmez avoir lu et accepté l&apos;intégralité de la charte transporteur DZColis.</p>
+                <p className="text-xs text-dz-gray-500 mt-0.5">En signant, vous confirmez avoir lu et accepté l&apos;intégralité de la charte transporteur Waselli.</p>
               </div>
             </div>
 
@@ -158,7 +158,7 @@ export default function CharteTransporteurPage() {
                 className="mt-0.5 accent-dz-green w-4 h-4 flex-shrink-0"
               />
               <span className="text-xs text-dz-gray-600 leading-relaxed">
-                Je reconnais avoir lu et accepté l&apos;intégralité de la Charte du Transporteur DZColis. Je m&apos;engage à respecter toutes les obligations qui y sont définies et reconnais être seul responsable de mes actes en tant que transporteur sur la plateforme.
+                Je reconnais avoir lu et accepté l&apos;intégralité de la Charte du Transporteur Waselli. Je m&apos;engage à respecter toutes les obligations qui y sont définies et reconnais être seul responsable de mes actes en tant que transporteur sur la plateforme.
               </span>
             </label>
 

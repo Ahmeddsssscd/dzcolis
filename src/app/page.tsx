@@ -149,7 +149,7 @@ export default function Home() {
               Envoyez vos colis<br /><Cycle />
             </h1>
             <p className="text-lg text-green-100/90 mb-10 max-w-2xl leading-relaxed">
-              DZColis connecte les expéditeurs avec des transporteurs qui font déjà le trajet. Économique, écologique et sécurisé.
+              Waselli connecte les expéditeurs avec des transporteurs qui font déjà le trajet. Économique, écologique et sécurisé.
             </p>
             <HeroSearch />
             <p className="mt-6 text-sm text-green-200/80">
@@ -199,7 +199,7 @@ export default function Home() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Fade className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">Pourquoi DZColis</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">Pourquoi Waselli</h2>
             <p className="text-dz-gray-500 mt-2">La solution de livraison adaptée à l&apos;Algérie</p>
           </Fade>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -286,7 +286,7 @@ export default function Home() {
               Prêt à envoyer votre premier colis ?
             </h2>
             <p className="text-green-100 text-lg mb-8">
-              Rejoignez des milliers d&apos;Algériens qui utilisent DZColis pour envoyer et transporter des colis à travers tout le pays.
+              Rejoignez des milliers d&apos;Algériens qui utilisent Waselli pour envoyer et transporter des colis à travers tout le pays.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/envoyer"

@@ -6,12 +6,12 @@ type Permission = "default" | "granted" | "denied";
 // Demo notifications shown after user enables push
 const DEMO_NOTIFICATIONS = [
   {
-    title: "DZColis",
+    title: "Waselli",
     body: "Nouveau transporteur disponible sur votre trajet Alger → Paris 🇫🇷",
     delay: 4000,
   },
   {
-    title: "DZColis",
+    title: "Waselli",
     body: "Votre colis a été pris en charge par le transporteur ✅",
     delay: 9000,
   },
@@ -47,7 +47,7 @@ export default function PushNotifications() {
 
     if (result === "granted") {
       // Send a welcome notification
-      new Notification("DZColis — Notifications activées ✅", {
+      new Notification("Waselli — Notifications activées ✅", {
         body: "Vous serez alerté dès qu'un transporteur est disponible sur votre trajet.",
         icon: "/favicon.ico",
       });

@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth, useToast } from "@/lib/context";
-import DzColisLogo from "@/components/DzColisLogo";
+import WaselliLogo from "@/components/WaselliLogo";
 
 export default function ConnexionPage() {
   const [email, setEmail]       = useState("");
@@ -40,7 +40,7 @@ export default function ConnexionPage() {
         setError("Email ou mot de passe incorrect.");
       }
     } else {
-      addToast("Connexion réussie ! Bienvenue sur DZColis");
+      addToast("Connexion réussie ! Bienvenue sur Waselli");
       router.push("/tableau-de-bord");
     }
   };
@@ -50,10 +50,10 @@ export default function ConnexionPage() {
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex justify-center mb-4">
-            <DzColisLogo size="md" href="/" />
+            <WaselliLogo size="md" href="/" />
           </div>
           <h1 className="text-2xl font-bold text-dz-gray-800 mt-2">Connexion</h1>
-          <p className="text-dz-gray-500 mt-1">Bienvenue sur DZColis</p>
+          <p className="text-dz-gray-500 mt-1">Bienvenue sur Waselli</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-dz-gray-200 p-6 space-y-4">

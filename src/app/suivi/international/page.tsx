@@ -429,7 +429,7 @@ export default function InternationalSuiviPage() {
                     Livraison estimée : <span className="font-medium text-dz-gray-800">{data.estimatedDelivery}</span>
                   </p>
                   <a
-                    href="https://wa.me/40725028189?text=Bonjour%20DZColis%2C%20je%20veux%20suivre%20mon%20colis%20international."
+                    href="https://wa.me/40725028189?text=Bonjour%20Waselli%2C%20je%20veux%20suivre%20mon%20colis%20international."
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-xs bg-[#25D366] hover:bg-[#20B954] text-white px-4 py-2 rounded-xl font-medium transition-colors"

@@ -73,7 +73,7 @@ export default function PWAInstallPrompt() {
             📦
           </div>
           <div className="flex-1 min-w-0">
-            <p className="font-bold text-dz-gray-800 text-sm">Installer DZColis</p>
+            <p className="font-bold text-dz-gray-800 text-sm">Installer Waselli</p>
             <p className="text-xs text-dz-gray-500 mt-0.5 leading-relaxed">
               {isIOS
                 ? "Appuyez sur le bouton Partager puis « Sur l'écran d'accueil »"

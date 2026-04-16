@@ -101,7 +101,7 @@ export default function AssurancePage() {
             Inclus gratuitement dans chaque envoi
           </div>
           <div className="text-5xl mb-4">🛡️</div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">DZColis Protect</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Waselli Protect</h1>
           <p className="text-xl text-green-100 max-w-2xl mx-auto mb-10">
             Le système de confiance complet qui protège chaque colis, chaque transporteur,
             et chaque centime — du départ à la livraison.
@@ -215,7 +215,7 @@ export default function AssurancePage() {
         {/* Trust Score */}
         <section>
           <div className="text-center mb-10">
-            <h2 className="text-3xl font-bold text-dz-gray-800">Score de Confiance DZColis</h2>
+            <h2 className="text-3xl font-bold text-dz-gray-800">Score de Confiance Waselli</h2>
             <p className="text-dz-gray-500 mt-2">Plus votre score est élevé, plus votre couverture est grande</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -287,12 +287,12 @@ export default function AssurancePage() {
             <div className="flex flex-col md:flex-row gap-8 items-start">
               <div className="flex-1">
                 <div className="inline-flex items-center gap-2 bg-dz-green/10 text-dz-green rounded-full px-4 py-1 text-sm font-medium mb-4">
-                  🚓 Exclusif DZColis
+                  🚓 Exclusif Waselli
                 </div>
                 <h2 className="text-2xl font-bold text-dz-gray-800 mb-3">Rapport de police automatique</h2>
                 <p className="text-dz-gray-600 leading-relaxed mb-4">
                   En cas de sinistre, vous n&apos;avez plus à chercher les informations du transporteur.
-                  DZColis génère automatiquement un rapport pré-rempli contenant toutes les
+                  Waselli génère automatiquement un rapport pré-rempli contenant toutes les
                   informations nécessaires pour votre déclaration.
                 </p>
                 <ul className="space-y-2 mb-4">
@@ -323,7 +323,7 @@ export default function AssurancePage() {
                     <span className="text-white font-bold text-xs">DZ</span>
                   </div>
                   <div>
-                    <div className="text-xs font-bold text-dz-gray-800">DZColis Protect</div>
+                    <div className="text-xs font-bold text-dz-gray-800">Waselli Protect</div>
                     <div className="text-xs text-dz-gray-400">Rapport de sinistre</div>
                   </div>
                 </div>
@@ -341,7 +341,7 @@ export default function AssurancePage() {
                   </div>
                 ))}
                 <div className="mt-3 pt-3 border-t border-dz-gray-200 text-xs text-dz-green font-medium text-center">
-                  ✓ Certifié par DZColis
+                  ✓ Certifié par Waselli
                 </div>
               </div>
             </div>
@@ -357,7 +357,7 @@ export default function AssurancePage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {[
               { step: "1", icon: "📱", title: "Déclarez dans l'app", desc: "Signalez le problème dans votre tableau de bord sous 48h après la livraison prévue. Décrivez le sinistre et joignez les photos.", note: "Délai: 48h max" },
-              { step: "2", icon: "📋", title: "Rapport automatique", desc: "Pour les réclamations > 10 000 DA (70 €), DZColis génère automatiquement le rapport de police pré-rempli. Déposez-le au commissariat le plus proche.", note: "Formules Standard & Premium" },
+              { step: "2", icon: "📋", title: "Rapport automatique", desc: "Pour les réclamations > 10 000 DA (70 €), Waselli génère automatiquement le rapport de police pré-rempli. Déposez-le au commissariat le plus proche.", note: "Formules Standard & Premium" },
               { step: "3", icon: "💳", title: "Remboursement", desc: "Après vérification, le remboursement est effectué selon votre formule : 48h (Premium), 7 jours (Standard), ou 15 jours (Basique).", note: "Selon formule choisie" },
             ].map((s) => (
               <div key={s.step} className="bg-white rounded-2xl border border-dz-gray-200 p-6">
@@ -378,7 +378,7 @@ export default function AssurancePage() {
           <div className="text-4xl mb-4">🛡️</div>
           <h2 className="text-3xl font-bold mb-3">Expédiez en toute sécurité</h2>
           <p className="text-green-100 text-lg mb-8 max-w-xl mx-auto">
-            DZColis Protect est inclus automatiquement dans chaque envoi.
+            Waselli Protect est inclus automatiquement dans chaque envoi.
             Choisissez votre formule au moment de la publication.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

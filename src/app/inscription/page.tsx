@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth, useToast } from "@/lib/context";
-import DzColisLogo from "@/components/DzColisLogo";
+import WaselliLogo from "@/components/WaselliLogo";
 
 const WILAYAS = [
   "01 - Adrar","02 - Chlef","03 - Laghouat","04 - Oum El Bouaghi","05 - Batna",
@@ -81,7 +81,7 @@ export default function InscriptionPage() {
     return (
       <div className="bg-dz-gray-50 min-h-screen flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md text-center">
-          <div className="flex justify-center mb-6"><DzColisLogo size="md" href="/" /></div>
+          <div className="flex justify-center mb-6"><WaselliLogo size="md" href="/" /></div>
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-8">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <svg className="w-8 h-8 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -91,7 +91,7 @@ export default function InscriptionPage() {
             <h2 className="text-xl font-bold text-dz-gray-800 mb-2">Vérifiez votre email</h2>
             <p className="text-dz-gray-500 text-sm leading-relaxed">
               Un lien de confirmation a été envoyé à <strong>{form.email}</strong>.
-              Cliquez sur ce lien pour activer votre compte DZColis.
+              Cliquez sur ce lien pour activer votre compte Waselli.
             </p>
             <p className="text-xs text-dz-gray-400 mt-4">
               Vous ne trouvez pas l&apos;email ? Vérifiez vos spams.
@@ -109,9 +109,9 @@ export default function InscriptionPage() {
     <div className="bg-dz-gray-50 min-h-screen flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <div className="flex justify-center mb-4"><DzColisLogo size="md" href="/" /></div>
+          <div className="flex justify-center mb-4"><WaselliLogo size="md" href="/" /></div>
           <h1 className="text-2xl font-bold text-dz-gray-800 mt-2">Créer un compte</h1>
-          <p className="text-dz-gray-500 mt-1">Rejoignez la communauté DZColis</p>
+          <p className="text-dz-gray-500 mt-1">Rejoignez la communauté Waselli</p>
         </div>
 
         <form onSubmit={handleSubmit} className="bg-white rounded-2xl border border-dz-gray-200 p-6 space-y-4">
@@ -166,7 +166,7 @@ export default function InscriptionPage() {
               Code de parrainage <span className="text-dz-gray-400 font-normal">(optionnel)</span>
             </label>
             <input type="text" value={form.referralCode} onChange={(e) => update("referralCode", e.target.value.toUpperCase())}
-              placeholder="DZC-XXXX-XXX"
+              placeholder="WSL-XXXX-XXX"
               className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green font-mono text-sm" />
           </div>
 

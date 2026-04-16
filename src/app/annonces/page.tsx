@@ -55,7 +55,7 @@ function TrajetCard({ listing }: { listing: Listing }) {
         <p className="text-sm text-dz-gray-500 line-clamp-2 mb-4">{listing.description}</p>
 
         <div className="flex items-center justify-between pt-3 border-t border-dz-gray-100">
-          <p className="text-xs text-dz-gray-400">🛡️ Paiement sécurisé DZColis</p>
+          <p className="text-xs text-dz-gray-400">🛡️ Paiement sécurisé Waselli</p>
           <span className="bg-dz-green group-hover:bg-dz-green-light text-white text-sm px-4 py-2 rounded-xl font-medium transition-colors">
             Réserver
           </span>
@@ -170,7 +170,7 @@ export default function AnnoncesPage() {
       {/* Header */}
       <div className="bg-white border-b border-dz-gray-200 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-bold text-dz-gray-800">Marketplace DZColis</h1>
+          <h1 className="text-2xl font-bold text-dz-gray-800">Marketplace Waselli</h1>
           <p className="text-dz-gray-500 mt-1">Trouvez un transporteur ou proposez votre colis</p>
         </div>
       </div>

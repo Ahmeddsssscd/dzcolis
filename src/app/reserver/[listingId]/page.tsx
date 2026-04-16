@@ -221,7 +221,7 @@ export default function ReserverPage() {
                     <svg className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" viewBox="0 0 24 24">
                       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
                     </svg>
-                    DZColis vérifié
+                    Waselli vérifié
                   </div>
                 </div>
                 <div className="ml-auto">
@@ -239,11 +239,11 @@ export default function ReserverPage() {
                   <span className="font-medium">{transport.toLocaleString("fr-FR")} {currency}</span>
                 </div>
                 <div className="flex justify-between text-dz-gray-600">
-                  <span>Commission DZColis (10%)</span>
+                  <span>Commission Waselli (10%)</span>
                   <span className="font-medium">{commission.toLocaleString("fr-FR")} {currency}</span>
                 </div>
                 <div className="flex justify-between text-dz-green text-sm">
-                  <span>Assurance DZColis Protect</span>
+                  <span>Assurance Waselli Protect</span>
                   <span className="font-semibold">Gratuit</span>
                 </div>
                 <div className="border-t border-dz-gray-200 pt-2.5 flex justify-between font-bold text-dz-gray-800 text-base">
@@ -442,7 +442,7 @@ export default function ReserverPage() {
               {paymentMethod && (
                 <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded-xl">
                   <p className="text-xs text-amber-700 font-medium">
-                    Le paiement est conservé en escrow par DZColis et libéré uniquement après confirmation de réception de votre colis.
+                    Le paiement est conservé en escrow par Waselli et libéré uniquement après confirmation de réception de votre colis.
                   </p>
                 </div>
               )}
@@ -455,7 +455,7 @@ export default function ReserverPage() {
                   className="mt-0.5 w-4 h-4 accent-dz-green flex-shrink-0"/>
                 <span className="text-sm text-dz-gray-700">
                   J&apos;accepte les <Link href="/cgv" className="text-dz-green underline" target="_blank">Conditions Générales de Vente</Link> et la{" "}
-                  <Link href="/charte-transporteur" className="text-dz-green underline" target="_blank">Charte Transporteur</Link> de DZColis.
+                  <Link href="/charte-transporteur" className="text-dz-green underline" target="_blank">Charte Transporteur</Link> de Waselli.
                 </span>
               </label>
             </div>

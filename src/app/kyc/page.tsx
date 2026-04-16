@@ -251,7 +251,7 @@ export default function KycPage() {
           <ul className="space-y-2">
             {[
               "Accéder aux formules d'assurance Standard et Premium",
-              "Augmenter votre Score de Confiance DZColis",
+              "Augmenter votre Score de Confiance Waselli",
               "Publier des annonces de trajet en tant que transporteur",
               "Rassurer les expéditeurs et obtenir plus de réservations",
             ].map(b => (

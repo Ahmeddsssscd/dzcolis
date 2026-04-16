@@ -66,7 +66,7 @@ export default function NotFound() {
 
       {/* Subtle footer note */}
       <p className="mt-16 text-xs text-dz-gray-400">
-        DZColis · La livraison collaborative en Algérie
+        Waselli · La livraison collaborative en Algérie
       </p>
     </div>
   );

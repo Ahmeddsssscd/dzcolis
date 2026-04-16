@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
             currency: "eur",
             unit_amount: amountCents,
             product_data: {
-              name: `DZColis — Réservation ${booking.booking_ref ?? bookingId}`,
+              name: `Waselli — Réservation ${booking.booking_ref ?? bookingId}`,
               description: "Transport de colis international sécurisé",
             },
           },

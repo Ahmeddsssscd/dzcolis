@@ -432,7 +432,7 @@ export default function InternationalEnvoyerPage() {
                 />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-dz-gray-400 font-medium pointer-events-none">€</span>
               </div>
-              <p className="text-xs text-dz-gray-400 mt-2">Commission DZColis: 10% — Le transporteur recevra 90% du montant</p>
+              <p className="text-xs text-dz-gray-400 mt-2">Commission Waselli: 10% — Le transporteur recevra 90% du montant</p>
             </div>
           </div>
 

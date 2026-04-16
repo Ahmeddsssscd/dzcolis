@@ -43,8 +43,8 @@ export default function ConfirmationPage() {
 
   useEffect(() => {
     const urlRef = searchParams.get("ref");
-    const sessionRef = sessionStorage.getItem("dzcolis_booking_ref");
-    const r = urlRef || sessionRef || "DZC-XXXXXX";
+    const sessionRef = sessionStorage.getItem("waselli_booking_ref");
+    const r = urlRef || sessionRef || "WSL-XXXXXX";
     const l = sessionStorage.getItem("dzcolis_booking_listing");
     setRef(r);
     if (l) setListing(JSON.parse(l));
@@ -82,7 +82,7 @@ export default function ConfirmationPage() {
           <div>
             <p className="text-sm font-semibold text-green-800">Paiement sécurisé en escrow</p>
             <p className="text-xs text-green-700 mt-0.5 leading-relaxed">
-              Votre paiement est bloqué par DZColis et ne sera libéré au transporteur qu&apos;après votre confirmation de réception.
+              Votre paiement est bloqué par Waselli et ne sera libéré au transporteur qu&apos;après votre confirmation de réception.
             </p>
           </div>
         </div>

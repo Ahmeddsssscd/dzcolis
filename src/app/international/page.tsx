@@ -231,7 +231,7 @@ export default function InternationalPage() {
             <div>
               <h3 className="font-bold text-lg">Vous faites régulièrement le trajet Europe ↔ Algérie ?</h3>
               <p className="text-dz-gray-300 text-sm mt-1">
-                Devenez transporteur international DZColis et gagnez de l&apos;argent sur vos trajets.
+                Devenez transporteur international Waselli et gagnez de l&apos;argent sur vos trajets.
               </p>
             </div>
           </div>

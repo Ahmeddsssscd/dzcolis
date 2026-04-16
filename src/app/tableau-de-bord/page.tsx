@@ -54,7 +54,7 @@ export default function DashboardPage() {
 
   // Photo upload state: listingId → { pickupPhoto, deliveryPhoto }
   const [photoState, setPhotoState] = useState<Record<string, ListingPhotoState>>({});
-  // Collapsible "Actions DZColis Protect" per listing
+  // Collapsible "Actions Waselli Protect" per listing
   const [expandedListings, setExpandedListings] = useState<Record<string, boolean>>({});
   // Shipment reception confirmation per booking
   const [confirmState, setConfirmState] = useState<Record<string, ConfirmState>>({});
@@ -194,7 +194,7 @@ export default function DashboardPage() {
             <h2 className="text-lg font-bold text-dz-gray-800 mb-2">Vérification d&apos;identité</h2>
             <p className="text-dz-gray-500 text-sm mb-4">
               La vérification d&apos;identité vous permet d&apos;accéder aux formules d&apos;assurance Premium et
-              d&apos;augmenter votre Score de Confiance DZColis. Préparez une copie de votre carte nationale d&apos;identité.
+              d&apos;augmenter votre Score de Confiance Waselli. Préparez une copie de votre carte nationale d&apos;identité.
             </p>
             <div className="bg-dz-gray-50 border border-dz-gray-200 rounded-xl p-4 mb-4 text-sm text-dz-gray-600 space-y-1">
               <p>1. Recto / verso de la CIN</p>
@@ -264,7 +264,7 @@ export default function DashboardPage() {
         <div className="bg-white border border-dz-gray-200 rounded-2xl p-5 mb-6">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-dz-gray-500 uppercase tracking-wide mb-1">Score de Confiance DZColis</p>
+              <p className="text-xs font-semibold text-dz-gray-500 uppercase tracking-wide mb-1">Score de Confiance Waselli</p>
               <div className="flex items-center gap-3 mb-2">
                 <span className="text-2xl font-bold text-dz-gray-800">{trustScore} / 100</span>
                 <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${level.badgeCls}`}>{level.label}</span>
@@ -349,13 +349,13 @@ export default function DashboardPage() {
                           </div>
                         </Link>
 
-                        {/* Actions DZColis Protect toggle */}
+                        {/* Actions Waselli Protect toggle */}
                         <div className="border-t border-dz-gray-100">
                           <button
                             onClick={() => toggleListing(l.id)}
                             className="w-full flex items-center justify-between px-4 py-2.5 text-xs font-semibold text-dz-green hover:bg-green-50 transition-colors"
                           >
-                            <span>🛡️ Actions DZColis Protect</span>
+                            <span>🛡️ Actions Waselli Protect</span>
                             <svg
                               className={`w-4 h-4 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}
                               fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
@@ -669,11 +669,11 @@ export default function DashboardPage() {
           {/* ── Sidebar ── */}
           <div className="space-y-4">
 
-            {/* DZColis Protect insurance widget */}
+            {/* Waselli Protect insurance widget */}
             <div className="bg-white border border-dz-gray-200 rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-3">
                 <span className="text-lg">🛡️</span>
-                <h3 className="font-bold text-dz-gray-800 text-sm">DZColis Protect</h3>
+                <h3 className="font-bold text-dz-gray-800 text-sm">Waselli Protect</h3>
               </div>
 
               <div className={`flex items-center gap-2 mb-4 px-3 py-2 rounded-xl border text-xs font-semibold ${level.badgeCls}`}>

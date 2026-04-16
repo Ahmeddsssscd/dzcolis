@@ -27,7 +27,7 @@ const trustItems = [
   },
   {
     title: "Prix fixés par les transporteurs",
-    desc: "DZColis ne fixe pas les tarifs. Les transporteurs proposent leur prix et vous choisissez l'offre qui vous convient.",
+    desc: "Waselli ne fixe pas les tarifs. Les transporteurs proposent leur prix et vous choisissez l'offre qui vous convient.",
     icon: (
       <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
@@ -75,7 +75,7 @@ export default function TarifsPage() {
             <span className="text-green-300">sans mauvaises surprises</span>
           </h1>
           <p className="text-lg text-green-100 max-w-2xl mx-auto leading-relaxed">
-            DZColis prélève une commission de 10 % sur chaque transaction. Le transporteur garde 90 % du montant. Aucun abonnement, aucun frais caché.
+            Waselli prélève une commission de 10 % sur chaque transaction. Le transporteur garde 90 % du montant. Aucun abonnement, aucun frais caché.
           </p>
         </div>
       </section>
@@ -86,7 +86,7 @@ export default function TarifsPage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-dz-gray-800 mb-3">Notre modèle de commission</h2>
             <p className="text-dz-gray-500 max-w-xl mx-auto">
-              Simple et transparent : DZColis ne prend que 10 % pour financer la plateforme, l&apos;assurance et le service client.
+              Simple et transparent : Waselli ne prend que 10 % pour financer la plateforme, l&apos;assurance et le service client.
             </p>
           </div>
 
@@ -102,7 +102,7 @@ export default function TarifsPage() {
               <p className="text-sm text-dz-gray-500">Vous payez le prix proposé par le transporteur. Assurance incluse gratuitement.</p>
             </div>
 
-            {/* Commission DZColis — highlighted */}
+            {/* Commission Waselli — highlighted */}
             <div className="bg-dz-green rounded-2xl p-6 text-white text-center shadow-lg shadow-dz-green/20">
               <div className="w-14 h-14 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
                 <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -110,7 +110,7 @@ export default function TarifsPage() {
                 </svg>
               </div>
               <div className="text-4xl font-bold mb-1">10 %</div>
-              <h3 className="font-semibold mb-2">Commission DZColis</h3>
+              <h3 className="font-semibold mb-2">Commission Waselli</h3>
               <p className="text-sm text-green-100">Couvre la plateforme, l&apos;assurance, le paiement sécurisé et le service client.</p>
             </div>
 
@@ -140,7 +140,7 @@ export default function TarifsPage() {
               </svg>
               <div>
                 <div className="text-2xl font-bold text-dz-red">−300 DA</div>
-                <div className="text-sm text-dz-gray-500">Commission DZColis (10 %)</div>
+                <div className="text-sm text-dz-gray-500">Commission Waselli (10 %)</div>
               </div>
               <svg className="w-6 h-6 text-dz-gray-300 rotate-90 sm:rotate-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -253,7 +253,7 @@ export default function TarifsPage() {
           <div className="text-center mb-10">
             <h2 className="text-3xl font-bold text-dz-gray-800 mb-3">Assurance incluse — 0 DA de plus</h2>
             <p className="text-dz-gray-500 max-w-xl mx-auto">
-              Chaque envoi est automatiquement couvert par l&apos;assurance DZColis. Aucun supplément, aucun formulaire à remplir à l&apos;avance.
+              Chaque envoi est automatiquement couvert par l&apos;assurance Waselli. Aucun supplément, aucun formulaire à remplir à l&apos;avance.
             </p>
           </div>
 
@@ -308,7 +308,7 @@ export default function TarifsPage() {
             </div>
             <h2 className="text-3xl font-bold text-dz-gray-800 mb-3">Pas de frais cachés</h2>
             <p className="text-dz-gray-500 max-w-xl mx-auto">
-              La transparence est au coeur de DZColis. Ce que vous voyez est ce que vous payez.
+              La transparence est au coeur de Waselli. Ce que vous voyez est ce que vous payez.
             </p>
           </div>
 

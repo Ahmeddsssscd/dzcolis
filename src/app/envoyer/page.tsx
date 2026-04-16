@@ -310,7 +310,7 @@ export default function EnvoyerPage() {
                 <input type="number" value={form.price} onChange={(e) => update("price", e.target.value)} placeholder="Ex: 2500" className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green pr-12" />
                 <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-dz-gray-400 font-medium pointer-events-none">DA</span>
               </div>
-              <p className="text-xs text-dz-gray-400 mt-2">Commission DZColis: 10% — Le transporteur recevra 90% du montant</p>
+              <p className="text-xs text-dz-gray-400 mt-2">Commission Waselli: 10% — Le transporteur recevra 90% du montant</p>
             </div>
           </div>
 
@@ -523,7 +523,7 @@ export default function EnvoyerPage() {
               {/* Responsibility declaration */}
               <div className="bg-dz-gray-50 border border-dz-gray-200 rounded-xl p-4">
                 <p className="text-xs text-dz-gray-600 leading-relaxed mb-3">
-                  <strong className="text-dz-gray-800">Déclaration de responsabilité :</strong> En signant ce document, je déclare être l&apos;expéditeur légitime du colis décrit ci-dessus. Je certifie que le contenu déclaré est exact, complet et véridique. Je reconnais être seul responsable du contenu de mon colis et dégager DZColis de toute responsabilité en cas de contenu non déclaré, illicite ou dangereux. Je reconnais que toute fausse déclaration peut entraîner des poursuites judiciaires et la résiliation immédiate de mon compte sur la plateforme. DZColis agit en qualité d&apos;intermédiaire technique et ne saurait être tenu responsable des dommages causés par un contenu non conforme à la présente déclaration.
+                  <strong className="text-dz-gray-800">Déclaration de responsabilité :</strong> En signant ce document, je déclare être l&apos;expéditeur légitime du colis décrit ci-dessus. Je certifie que le contenu déclaré est exact, complet et véridique. Je reconnais être seul responsable du contenu de mon colis et dégager Waselli de toute responsabilité en cas de contenu non déclaré, illicite ou dangereux. Je reconnais que toute fausse déclaration peut entraîner des poursuites judiciaires et la résiliation immédiate de mon compte sur la plateforme. Waselli agit en qualité d&apos;intermédiaire technique et ne saurait être tenu responsable des dommages causés par un contenu non conforme à la présente déclaration.
                 </p>
                 <label className="flex items-start gap-3 cursor-pointer">
                   <input

@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/context";
 import ThemeToggle from "@/components/ThemeToggle";
 import PushNotifications from "@/components/PushNotifications";
-import DzColisLogo from "@/components/DzColisLogo";
+import WaselliLogo from "@/components/WaselliLogo";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -26,7 +26,7 @@ export default function Header() {
     <header className="bg-white dark:bg-dz-gray-800 border-b border-dz-gray-200 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <DzColisLogo size="sm" href="/" />
+          <WaselliLogo size="sm" href="/" />
 
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/annonces" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">

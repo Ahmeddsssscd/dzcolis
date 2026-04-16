@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM   = process.env.RESEND_FROM_EMAIL ?? "DZColis <noreply@dzcolis.com>";
+const FROM   = process.env.RESEND_FROM_EMAIL ?? "Waselli <noreply@dzcolis.com>";
 
 // ── Email templates ─────────────────────────────────────────────────────
 
@@ -9,7 +9,7 @@ function baseHtml(content: string) {
   return `<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DZColis</title>
+<title>Waselli</title>
 <style>
   body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif; background:#f4f5f7; margin:0; padding:0; }
   .wrap { max-width:580px; margin:32px auto; background:#fff; border-radius:16px; overflow:hidden; }
@@ -28,9 +28,9 @@ function baseHtml(content: string) {
 </style></head>
 <body>
 <div class="wrap">
-  <div class="header"><h1>🟢 DZColis</h1><p>Livraison entre particuliers · Algérie</p></div>
+  <div class="header"><h1>🟢 Waselli</h1><p>Livraison entre particuliers · Algérie</p></div>
   <div class="body">${content}</div>
-  <div class="footer"><p>© ${new Date().getFullYear()} DZColis — Ne pas répondre à cet email</p></div>
+  <div class="footer"><p>© ${new Date().getFullYear()} Waselli — Ne pas répondre à cet email</p></div>
 </div>
 </body></html>`;
 }
@@ -41,10 +41,10 @@ export async function sendWelcomeEmail(to: string, firstName: string) {
   await resend.emails.send({
     from: FROM,
     to,
-    subject: "Bienvenue sur DZColis 🎉",
+    subject: "Bienvenue sur Waselli 🎉",
     html: baseHtml(`
       <p>Bonjour <strong>${firstName}</strong>,</p>
-      <p>Bienvenue sur <strong>DZColis</strong> — la plateforme de livraison entre particuliers en Algérie !</p>
+      <p>Bienvenue sur <strong>Waselli</strong> — la plateforme de livraison entre particuliers en Algérie !</p>
       <p>Votre compte est créé. Pour commencer :</p>
       <ul style="color:#374151;font-size:15px;line-height:1.8;padding-left:20px;">
         <li>Parcourez les <strong>annonces de transporteurs</strong> disponibles</li>
@@ -158,7 +158,7 @@ export async function sendDeliveryConfirmedEmail(to: string, data: {
       <p>Bonjour <strong>${data.firstName}</strong>,</p>
       <p>Votre colis (réf. <strong>${data.bookingRef}</strong>) a été livré avec succès ! 📦</p>
       <p>Le paiement sera libéré au transporteur dans les prochaines heures.</p>
-      <p>Pensez à <strong>évaluer votre transporteur</strong> pour aider la communauté DZColis.</p>
+      <p>Pensez à <strong>évaluer votre transporteur</strong> pour aider la communauté Waselli.</p>
       <a href="${process.env.NEXT_PUBLIC_APP_URL}/tableau-de-bord" class="btn">Laisser un avis →</a>
     `),
   });

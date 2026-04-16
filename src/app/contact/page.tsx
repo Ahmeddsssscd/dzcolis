@@ -17,7 +17,7 @@ const contactInfo = [
   {
     icon: "👤",
     title: "Support",
-    value: "Équipe DZColis",
+    value: "Équipe Waselli",
     sub: "Disponible pour toute question",
   },
   {
@@ -35,7 +35,7 @@ const contactInfo = [
 ];
 
 const WHATSAPP_URL =
-  "https://wa.me/40725028189?text=Bonjour%20DZColis%2C%20j%27ai%20besoin%20d%27aide.";
+  "https://wa.me/40725028189?text=Bonjour%20Waselli%2C%20j%27ai%20besoin%20d%27aide.";
 
 export default function ContactPage() {
   const [name, setName] = useState("");
@@ -93,7 +93,7 @@ export default function ContactPage() {
             </div>
             <div>
               <p className="font-semibold text-sm">Support WhatsApp</p>
-              <p className="text-xs text-white/80">Support DZColis — Réponse rapide</p>
+              <p className="text-xs text-white/80">Support Waselli — Réponse rapide</p>
             </div>
             <svg className="w-4 h-4 ml-auto opacity-70 group-hover:translate-x-0.5 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />

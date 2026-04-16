@@ -33,7 +33,7 @@ export default function ReviewModal({ transporterName, transporterAvatar, onSubm
               </svg>
             </div>
             <p className="font-bold text-dz-gray-800 text-lg">Merci pour votre avis !</p>
-            <p className="text-dz-gray-500 text-sm mt-1">Votre avis aide la communauté DZColis.</p>
+            <p className="text-dz-gray-500 text-sm mt-1">Votre avis aide la communauté Waselli.</p>
           </div>
         ) : (
           <>

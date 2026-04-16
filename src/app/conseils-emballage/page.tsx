@@ -195,7 +195,7 @@ const donts = [
   {
     icon: "📋",
     text: "Oublier de déclarer « fragile » sur la plateforme",
-    desc: "Sans déclaration de fragilité sur DZColis, l'assurance peut refuser votre réclamation.",
+    desc: "Sans déclaration de fragilité sur Waselli, l'assurance peut refuser votre réclamation.",
   },
 ];
 
@@ -212,10 +212,10 @@ export default function ConseilsEmballagePage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10 text-center">
           <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm mb-6">
             <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
-            Guide officiel DZColis
+            Guide officiel Waselli
           </div>
           <div className="text-5xl mb-4">📦</div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">Conseils d&apos;emballage DZColis</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">Conseils d&apos;emballage Waselli</h1>
           <p className="text-xl text-green-100 max-w-2xl mx-auto mb-10">
             Un emballage soigné protège votre colis contre les dommages et garantit
             la couverture de votre assurance. Suivez ce guide pour expédier en toute confiance.
@@ -246,7 +246,7 @@ export default function ConseilsEmballagePage() {
               <p className="text-amber-700 leading-relaxed">
                 Un colis mal emballé peut être <strong>refusé par l&apos;assurance</strong> en cas de réclamation.
                 En déclarant &quot;fragile&quot; sur la plateforme et en suivant ces conseils, vous êtes pleinement
-                couvert par DZColis Protect. Sans cela, nous ne pouvons pas garantir le remboursement.
+                couvert par Waselli Protect. Sans cela, nous ne pouvons pas garantir le remboursement.
               </p>
             </div>
           </div>

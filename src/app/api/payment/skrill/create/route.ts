@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
       merchant_fields:   "booking_id,booking_ref",
       booking_id:        bookingId,
       booking_ref:       booking.booking_ref ?? "",
-      detail1_description: "DZColis",
+      detail1_description: "Waselli",
       detail1_text:      `Réservation ${booking.booking_ref}`,
       ...(skrillMethod ? { payment_methods: skrillMethod } : {}),
     });

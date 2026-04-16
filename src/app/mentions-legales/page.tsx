@@ -8,7 +8,7 @@ export default function MentionsLegalesPage() {
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h1 className="text-4xl font-bold mb-4">Mentions légales</h1>
           <p className="text-green-100 text-lg">
-            Informations légales relatives à la plateforme DZColis.
+            Informations légales relatives à la plateforme Waselli.
           </p>
         </div>
       </section>
@@ -32,7 +32,7 @@ export default function MentionsLegalesPage() {
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-xl font-bold text-dz-gray-800 mb-4">1. Éditeur du site</h2>
             <div className="space-y-2 text-dz-gray-600 text-sm leading-relaxed">
-              <p><span className="font-semibold text-dz-gray-700">Dénomination sociale :</span> DZColis</p>
+              <p><span className="font-semibold text-dz-gray-700">Dénomination sociale :</span> Waselli</p>
               <p><span className="font-semibold text-dz-gray-700">Forme juridique :</span> SARL (Société à Responsabilité Limitée)</p>
               <p><span className="font-semibold text-dz-gray-700">Siège social :</span> Alger, Algérie</p>
               <p><span className="font-semibold text-dz-gray-700">Adresse e-mail :</span>{" "}
@@ -40,7 +40,7 @@ export default function MentionsLegalesPage() {
                   contact@dzcolis.dz
                 </a>
               </p>
-              <p><span className="font-semibold text-dz-gray-700">Directeur de publication :</span> Le représentant légal de DZColis</p>
+              <p><span className="font-semibold text-dz-gray-700">Directeur de publication :</span> Le représentant légal de Waselli</p>
             </div>
           </div>
 
@@ -62,10 +62,10 @@ export default function MentionsLegalesPage() {
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-xl font-bold text-dz-gray-800 mb-4">3. Propriété intellectuelle</h2>
             <p className="text-dz-gray-600 text-sm leading-relaxed">
-              L&apos;ensemble des éléments constituant le site DZColis (textes, graphiques, logiciels, photographies, images, sons, plans, noms,
-              logos, marques, créations et œuvres protégeables diverses) est la propriété exclusive de DZColis ou fait l&apos;objet d&apos;une
+              L&apos;ensemble des éléments constituant le site Waselli (textes, graphiques, logiciels, photographies, images, sons, plans, noms,
+              logos, marques, créations et œuvres protégeables diverses) est la propriété exclusive de Waselli ou fait l&apos;objet d&apos;une
               autorisation d&apos;utilisation. Toute reproduction, représentation, modification, publication ou adaptation de tout ou partie des
-              éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite, sauf autorisation écrite préalable de DZColis.
+              éléments du site, quel que soit le moyen ou le procédé utilisé, est interdite, sauf autorisation écrite préalable de Waselli.
               Toute exploitation non autorisée du site ou de l&apos;un quelconque des éléments qu&apos;il contient sera considérée comme constitutive
               d&apos;une contrefaçon et poursuivie conformément à la législation algérienne en vigueur.
             </p>
@@ -75,13 +75,13 @@ export default function MentionsLegalesPage() {
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-xl font-bold text-dz-gray-800 mb-4">4. Limitation de responsabilité</h2>
             <p className="text-dz-gray-600 text-sm leading-relaxed mb-3">
-              DZColis agit exclusivement en qualité d&apos;intermédiaire technique et de place de marché numérique mettant en relation des expéditeurs et des transporteurs. DZColis n&apos;est en aucun cas transporteur, ni partie au contrat de transport conclu entre les utilisateurs.
+              Waselli agit exclusivement en qualité d&apos;intermédiaire technique et de place de marché numérique mettant en relation des expéditeurs et des transporteurs. Waselli n&apos;est en aucun cas transporteur, ni partie au contrat de transport conclu entre les utilisateurs.
             </p>
             <p className="text-dz-gray-600 text-sm leading-relaxed mb-3">
-              DZColis s&apos;efforce d&apos;assurer l&apos;exactitude et la mise à jour des informations diffusées sur ce site. Toutefois, DZColis ne peut garantir l&apos;exactitude, la précision ou l&apos;exhaustivité des informations mises à disposition.
+              Waselli s&apos;efforce d&apos;assurer l&apos;exactitude et la mise à jour des informations diffusées sur ce site. Toutefois, Waselli ne peut garantir l&apos;exactitude, la précision ou l&apos;exhaustivité des informations mises à disposition.
             </p>
             <p className="text-dz-gray-600 text-sm leading-relaxed mb-3">
-              La responsabilité de DZColis ne saurait être engagée pour :
+              La responsabilité de Waselli ne saurait être engagée pour :
             </p>
             <ul className="list-disc pl-5 space-y-1 text-dz-gray-500 text-sm mb-3">
               <li>Tout dommage direct ou indirect résultant de l&apos;accès au site ou de l&apos;impossibilité d&apos;y accéder ;</li>
@@ -91,7 +91,7 @@ export default function MentionsLegalesPage() {
               <li>Toute confiscation douanière d&apos;un colis contenant des articles interdits ou non déclarés.</li>
             </ul>
             <p className="text-dz-gray-600 text-sm leading-relaxed">
-              Dans tous les cas où la responsabilité de DZColis serait retenue, celle-ci est limitée au montant de la commission perçue sur la transaction concernée, conformément aux Conditions Générales de Vente.
+              Dans tous les cas où la responsabilité de Waselli serait retenue, celle-ci est limitée au montant de la commission perçue sur la transaction concernée, conformément aux Conditions Générales de Vente.
             </p>
           </div>
 
@@ -99,11 +99,11 @@ export default function MentionsLegalesPage() {
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-xl font-bold text-dz-gray-800 mb-4">5. Liens hypertextes</h2>
             <p className="text-dz-gray-600 text-sm leading-relaxed mb-3">
-              Le site DZColis peut contenir des liens vers d&apos;autres sites internet. DZColis n&apos;exerce aucun contrôle sur ces sites et
+              Le site Waselli peut contenir des liens vers d&apos;autres sites internet. Waselli n&apos;exerce aucun contrôle sur ces sites et
               décline toute responsabilité quant à leur contenu ou aux éventuels dommages résultant de leur utilisation.
             </p>
             <p className="text-dz-gray-600 text-sm leading-relaxed">
-              Tout lien hypertexte pointant vers le site DZColis doit faire l&apos;objet d&apos;une autorisation préalable et écrite de DZColis.
+              Tout lien hypertexte pointant vers le site Waselli doit faire l&apos;objet d&apos;une autorisation préalable et écrite de Waselli.
               Les demandes d&apos;autorisation peuvent être adressées à{" "}
               <a href="mailto:contact@dzcolis.dz" className="text-dz-green hover:underline">
                 contact@dzcolis.dz
@@ -115,7 +115,7 @@ export default function MentionsLegalesPage() {
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-xl font-bold text-dz-gray-800 mb-4">6. Droit applicable et juridiction compétente</h2>
             <p className="text-dz-gray-600 text-sm leading-relaxed mb-3">
-              Les présentes mentions légales, ainsi que l&apos;ensemble des services de la plateforme DZColis, sont régis exclusivement par la législation algérienne, notamment :
+              Les présentes mentions légales, ainsi que l&apos;ensemble des services de la plateforme Waselli, sont régis exclusivement par la législation algérienne, notamment :
             </p>
             <ul className="list-disc pl-5 space-y-1 text-dz-gray-500 text-sm mb-3">
               <li><strong className="text-dz-gray-700">Loi n° 18-05 du 10 mai 2018</strong> relative au commerce électronique ;</li>
@@ -133,7 +133,7 @@ export default function MentionsLegalesPage() {
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-xl font-bold text-dz-gray-800 mb-4">7. Contact et support</h2>
             <p className="text-dz-gray-600 text-sm leading-relaxed mb-4">
-              Pour toute question, réclamation ou demande d&apos;information relative à la plateforme DZColis, nos équipes sont disponibles via les canaux suivants :
+              Pour toute question, réclamation ou demande d&apos;information relative à la plateforme Waselli, nos équipes sont disponibles via les canaux suivants :
             </p>
             <div className="space-y-3">
               <div className="flex items-start gap-3 p-3 bg-dz-gray-50 rounded-xl">

@@ -19,7 +19,7 @@ const HOW_IT_WORKS = [
   {
     step: "2",
     title: "Ils s'inscrivent",
-    desc: "Votre filleul s'inscrit sur DZColis et entre votre code lors de l'inscription.",
+    desc: "Votre filleul s'inscrit sur Waselli et entre votre code lors de l'inscription.",
   },
   {
     step: "3",
@@ -53,7 +53,7 @@ export default function ParrainagePage() {
   );
   if (!user) return null;
 
-  const referralLink = `${typeof window !== "undefined" ? window.location.origin : "https://dzcolis.vercel.app"}/inscription?ref=${user.referralCode}`;
+  const referralLink = `${typeof window !== "undefined" ? window.location.origin : "https://waselli.com"}/inscription?ref=${user.referralCode}`;
 
   function copyCode() {
     navigator.clipboard.writeText(user!.referralCode).then(() => {
@@ -69,7 +69,7 @@ export default function ParrainagePage() {
 
   function shareWhatsApp() {
     const text = encodeURIComponent(
-      `Rejoins DZColis — livraison collaborative en Algérie ! 🚚📦\nUtilise mon code *${user!.referralCode}* à l'inscription pour 500 DA offerts : ${referralLink}`
+      `Rejoins Waselli — livraison collaborative en Algérie ! 🚚📦\nUtilise mon code *${user!.referralCode}* à l'inscription pour 500 DA offerts : ${referralLink}`
     );
     window.open(`https://wa.me/?text=${text}`, "_blank");
   }

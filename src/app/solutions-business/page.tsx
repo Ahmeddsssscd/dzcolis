@@ -95,19 +95,19 @@ const testimonials = [
     name: "Asma Benyahia",
     role: "Gérante — Boutique Tendance, Oran",
     initials: "AB",
-    text: "Depuis que nous utilisons DZColis Business, nos délais de livraison ont diminué de 30 %. La facturation mensuelle simplifiée nous fait gagner un temps précieux. Je recommande vivement à toutes les boutiques en ligne.",
+    text: "Depuis que nous utilisons Waselli Business, nos délais de livraison ont diminué de 30 %. La facturation mensuelle simplifiée nous fait gagner un temps précieux. Je recommande vivement à toutes les boutiques en ligne.",
   },
   {
     name: "Mourad Chekroun",
     role: "Responsable logistique — Groupe Chekroun Distribution, Constantine",
     initials: "MC",
-    text: "En tant que distributeur inter-wilayas, la fiabilité des transporteurs est essentielle. DZColis nous propose des transporteurs vérifiés et un suivi en temps réel. Notre taux de livraison réussie a atteint 97 %.",
+    text: "En tant que distributeur inter-wilayas, la fiabilité des transporteurs est essentielle. Waselli nous propose des transporteurs vérifiés et un suivi en temps réel. Notre taux de livraison réussie a atteint 97 %.",
   },
   {
     name: "Rania Medjkoune",
     role: "Directrice e-commerce — AlgerShop, Alger",
     initials: "RM",
-    text: "L'API de DZColis s'est intégrée facilement à notre plateforme en moins d'une journée. Les rapports mensuels nous aident à optimiser nos coûts et notre account manager est toujours disponible. Une solution sérieuse.",
+    text: "L'API de Waselli s'est intégrée facilement à notre plateforme en moins d'une journée. Les rapports mensuels nous aident à optimiser nos coûts et notre account manager est toujours disponible. Une solution sérieuse.",
   },
 ];
 
@@ -139,8 +139,8 @@ const faqs = [
     a: "Pour les plans Pro et Enterprise, toutes vos livraisons du mois sont regroupées en une seule facture émise en fin de mois. Vous bénéficiez d'un délai de paiement de 30 jours et pouvez régler par virement bancaire ou chèque.",
   },
   {
-    q: "Peut-on intégrer DZColis à notre système informatique ?",
-    a: "Oui. Nous proposons une API REST complète (disponible à partir du plan Enterprise) permettant d'intégrer DZColis à votre ERP, CMS e-commerce ou WMS. Notre équipe technique vous accompagne dans l'intégration.",
+    q: "Peut-on intégrer Waselli à notre système informatique ?",
+    a: "Oui. Nous proposons une API REST complète (disponible à partir du plan Enterprise) permettant d'intégrer Waselli à votre ERP, CMS e-commerce ou WMS. Notre équipe technique vous accompagne dans l'intégration.",
   },
   {
     q: "Quels sont les délais de livraison garantis ?",
@@ -173,7 +173,7 @@ export default function SolutionsBusinessPage() {
           </div>
 
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight mb-6">
-            DZColis pour les<br />
+            Waselli pour les<br />
             <span className="text-dz-green-light">entreprises</span>
           </h1>
           <p className="text-lg md:text-xl text-dz-gray-300 max-w-2xl mx-auto leading-relaxed mb-10">
@@ -221,7 +221,7 @@ export default function SolutionsBusinessPage() {
               Une solution pour chaque profil
             </h2>
             <p className="text-dz-gray-500 max-w-xl mx-auto">
-              Quelle que soit la taille ou l&apos;activité de votre entreprise, DZColis Business s&apos;adapte à vos contraintes.
+              Quelle que soit la taille ou l&apos;activité de votre entreprise, Waselli Business s&apos;adapte à vos contraintes.
             </p>
           </div>
 
@@ -254,7 +254,7 @@ export default function SolutionsBusinessPage() {
                 Tout ce dont votre entreprise a besoin
               </h2>
               <p className="text-dz-gray-500 leading-relaxed mb-6">
-                DZColis Business va bien au-delà d&apos;une simple plateforme de livraison.
+                Waselli Business va bien au-delà d&apos;une simple plateforme de livraison.
                 Nous devenons votre partenaire logistique à long terme.
               </p>
               <Link
@@ -377,7 +377,7 @@ export default function SolutionsBusinessPage() {
               Ils nous font confiance
             </h2>
             <p className="text-dz-gray-500 max-w-xl mx-auto">
-              Plus de 500 entreprises algériennes optimisent leur logistique avec DZColis Business.
+              Plus de 500 entreprises algériennes optimisent leur logistique avec Waselli Business.
             </p>
           </div>
 
