@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import HeroSearch from "@/components/HeroSearch";
-import { EUROPEAN_COUNTRIES } from "@/lib/data";
+import { useI18n } from "@/lib/i18n";
 
 /* ─── hooks ─────────────────────────────── */
 
@@ -38,56 +38,20 @@ function useCountUp(target: number, active: boolean, ms = 1600) {
   return n;
 }
 
-/* ─── data ──────────────────────────────── */
-
-const WORDS = ["partout en Algérie", "Alger \u2192 Oran", "Oran \u2192 Tlemcen", "Alger \u2192 Constantine"];
-
-const steps = [
-  { title: "Publiez votre annonce",   desc: "Décrivez votre colis, ajoutez une photo, indiquez le départ et l'arrivée." },
-  { title: "Recevez des offres",      desc: "Les transporteurs sur votre trajet vous envoient leurs propositions." },
-  { title: "Choisissez et réservez",  desc: "Comparez les offres, discutez avec le transporteur, et confirmez." },
-  { title: "Livraison sécurisée",     desc: "Le paiement est libéré uniquement après confirmation de réception." },
-];
-
-const features: { title: string; desc: string; icon: React.ReactNode }[] = [
-  { title: "Économique",  desc: "Jusqu'à 60 % moins cher grâce au co-transport.",
-    icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> },
-  { title: "Sécurisé",    desc: "Paiement séquestre, assurance incluse, profils vérifiés.",
-    icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg> },
-  { title: "Écologique",  desc: "Optimisez l'espace libre dans les véhicules en circulation.",
-    icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> },
-  { title: "Tout format", desc: "Du petit colis au meuble volumineux, aucune limite de taille.",
-    icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg> },
-];
-
-const routes = [
-  { from: "Alger",       to: "Oran",        price: "1 500 DA" },
-  { from: "Alger",       to: "Constantine", price: "1 500 DA" },
-  { from: "Oran",        to: "Tlemcen",     price: "800 DA" },
-  { from: "Alger",       to: "Sétif",       price: "1 200 DA" },
-  { from: "Alger",       to: "Béjaïa",      price: "1 000 DA" },
-  { from: "Constantine", to: "Annaba",      price: "800 DA" },
-];
-
-const intlRoutes = [
-  { country: "France",    flag: "FR", route: "Alger \u2192 Paris",       price: "25 €" },
-  { country: "Espagne",   flag: "ES", route: "Oran \u2192 Madrid",       price: "20 €" },
-  { country: "Belgique",  flag: "BE", route: "Alger \u2192 Bruxelles",   price: "22 €" },
-  { country: "Allemagne", flag: "DE", route: "Alger \u2192 Berlin",      price: "35 €" },
-  { country: "Italie",    flag: "IT", route: "Constantine \u2192 Milan",  price: "18 €" },
-];
-
 /* ─── small components ──────────────────── */
 
 function Cycle() {
+  const { t } = useI18n();
+  const WORDS = [t("cycle_1"), t("cycle_2"), t("cycle_3"), t("cycle_4")];
   const [i, setI] = useState(0);
   const [on, setOn] = useState(true);
   useEffect(() => {
-    const t = setInterval(() => {
+    const timer = setInterval(() => {
       setOn(false);
       setTimeout(() => { setI(prev => (prev + 1) % WORDS.length); setOn(true); }, 350);
     }, 3000);
-    return () => clearInterval(t);
+    return () => clearInterval(timer);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
     <span className="text-white inline-block transition-all duration-300"
@@ -115,7 +79,7 @@ function Stat({ label, target, suffix, go, fixed }: { label: string; target: num
   return (
     <div className="text-center">
       <div className="text-3xl md:text-4xl font-bold text-white tabular-nums">
-        {fixed ? (go ? fixed : "\u2013") : `${n.toLocaleString("fr-DZ")}${suffix}`}
+        {fixed ? (go ? fixed : "–") : `${n.toLocaleString("fr-DZ")}${suffix}`}
       </div>
       <div className="text-sm text-white/60 mt-1">{label}</div>
     </div>
@@ -125,7 +89,43 @@ function Stat({ label, target, suffix, go, fixed }: { label: string; target: num
 /* ─── page ──────────────────────────────── */
 
 export default function Home() {
+  const { t } = useI18n();
   const { ref: stRef, visible: stVis } = useInView(0.3);
+
+  const steps = [
+    { title: t("step1_title"), desc: t("step1_desc") },
+    { title: t("step2_title"), desc: t("step2_desc") },
+    { title: t("step3_title"), desc: t("step3_desc") },
+    { title: t("step4_title"), desc: t("step4_desc") },
+  ];
+
+  const features: { title: string; desc: string; icon: React.ReactNode }[] = [
+    { title: t("feat1_title"), desc: t("feat1_desc"),
+      icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> },
+    { title: t("feat2_title"), desc: t("feat2_desc"),
+      icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg> },
+    { title: t("feat3_title"), desc: t("feat3_desc"),
+      icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> },
+    { title: t("feat4_title"), desc: t("feat4_desc"),
+      icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg> },
+  ];
+
+  const routes = [
+    { from: "Alger",       to: "Oran",        price: "1 500 DA" },
+    { from: "Alger",       to: "Constantine", price: "1 500 DA" },
+    { from: "Oran",        to: "Tlemcen",     price: "800 DA" },
+    { from: "Alger",       to: "Sétif",       price: "1 200 DA" },
+    { from: "Alger",       to: "Béjaïa",      price: "1 000 DA" },
+    { from: "Constantine", to: "Annaba",      price: "800 DA" },
+  ];
+
+  const intlRoutes = [
+    { countryKey: "country_france" as const,   flag: "FR", route: "Alger → Paris",      price: "25 €" },
+    { countryKey: "country_spain" as const,    flag: "ES", route: "Oran → Madrid",      price: "20 €" },
+    { countryKey: "country_belgium" as const,  flag: "BE", route: "Alger → Bruxelles",  price: "22 €" },
+    { countryKey: "country_germany" as const,  flag: "DE", route: "Alger → Berlin",     price: "35 €" },
+    { countryKey: "country_italy" as const,    flag: "IT", route: "Constantine → Milan", price: "18 €" },
+  ];
 
   return (
     <>
@@ -143,33 +143,33 @@ export default function Home() {
           <div className="max-w-3xl">
             <p className="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-1.5 text-sm mb-8 border border-white/15">
               <span className="w-2 h-2 bg-blue-300 rounded-full animate-pulse" />
-              Livraison collaborative en Algérie
+              {t("hero_badge")}
             </p>
             <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
-              Envoyez vos colis<br /><Cycle />
+              {t("hero_title")}<br /><Cycle />
             </h1>
             <p className="text-lg text-white/80 mb-10 max-w-2xl leading-relaxed">
-              Waselli connecte les expéditeurs avec des transporteurs qui font déjà le trajet. Économique, écologique et sécurisé.
+              {t("hero_subtitle")}
             </p>
             <HeroSearch />
             <p className="mt-6 text-sm text-white/60">
-              Vous êtes transporteur ?{" "}
+              {t("hero_transporter")}{" "}
               <Link href="/transporter" className="text-white font-semibold underline underline-offset-2 hover:text-blue-200 transition-colors">
-                Proposez votre trajet et gagnez de l&apos;argent →
+                {t("hero_transporter_cta")}
               </Link>
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── Stats (blended from hero) ────── */}
+      {/* ── Stats ────────────────────────── */}
       <div className="blend">
         <div ref={stRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <Stat label="Utilisateurs"          target={50000} suffix="+" go={stVis} />
-            <Stat label="Wilayas couvertes"     target={69}    suffix=""  go={stVis} />
-            <Stat label="Taux de réclamation"   target={0}     suffix=""  go={stVis} fixed="0.2 %" />
-            <Stat label="D'économies en moyenne" target={60}   suffix=" %" go={stVis} />
+            <Stat label={t("stat_users")}      target={50000} suffix="+" go={stVis} />
+            <Stat label={t("stat_wilayas")}    target={69}    suffix=""  go={stVis} />
+            <Stat label={t("stat_complaints")} target={0}     suffix=""  go={stVis} fixed="0.2 %" />
+            <Stat label={t("stat_savings")}    target={60}    suffix=" %" go={stVis} />
           </div>
         </div>
       </div>
@@ -178,8 +178,8 @@ export default function Home() {
       <section className="py-20 bg-dz-gray-50" id="comment-ca-marche">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Fade className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">Comment ça marche</h2>
-            <p className="text-dz-gray-500 mt-2">En 4 étapes simples</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">{t("how_title")}</h2>
+            <p className="text-dz-gray-500 mt-2">{t("how_subtitle")}</p>
           </Fade>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {steps.map((s, i) => (
@@ -199,18 +199,17 @@ export default function Home() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Fade className="text-center mb-14">
-            <span className="inline-block bg-dz-green/10 text-dz-green text-xs font-bold px-4 py-1.5 rounded-full mb-4 uppercase tracking-wide">Pourquoi Waselli ?</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">Jusqu&apos;à 5× moins cher<br className="hidden sm:block" /> que les agences traditionnelles</h2>
-            <p className="text-dz-gray-500 mt-3 max-w-xl mx-auto">Comparez par vous-même. Même colis, même trajet — prix réels constatés en 2024.</p>
+            <span className="inline-block bg-dz-green/10 text-dz-green text-xs font-bold px-4 py-1.5 rounded-full mb-4 uppercase tracking-wide">{t("why_badge")}</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">{t("why_title")}</h2>
+            <p className="text-dz-gray-500 mt-3 max-w-xl mx-auto">{t("why_subtitle")}</p>
           </Fade>
 
-          {/* Price comparison table */}
           <Fade className="mb-14">
             <div className="overflow-x-auto rounded-2xl border border-dz-gray-100 shadow-sm">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-dz-gray-50 border-b border-dz-gray-100">
-                    <th className="text-left px-6 py-4 font-semibold text-dz-gray-600">Trajet (5 kg)</th>
+                    <th className="text-left px-6 py-4 font-semibold text-dz-gray-600">{t("table_route")}</th>
                     <th className="px-6 py-4 font-semibold text-red-500 text-center">DHL / Chronopost</th>
                     <th className="px-6 py-4 font-semibold text-red-400 text-center">Agences locales</th>
                     <th className="px-6 py-4 font-bold text-dz-green text-center bg-dz-green/5 rounded-tr-2xl">Waselli ✓</th>
@@ -218,10 +217,10 @@ export default function Home() {
                 </thead>
                 <tbody className="divide-y divide-dz-gray-50">
                   {[
-                    { route: "Alger → Paris",    dhl: "65 €",      local: "45 €",      waselli: "12 €" },
-                    { route: "Alger → Lyon",      dhl: "65 €",      local: "45 €",      waselli: "12 €" },
-                    { route: "Oran → Madrid",     dhl: "70 €",      local: "50 €",      waselli: "15 €" },
-                    { route: "Alger → Oran",      dhl: "4 500 DA",  local: "3 000 DA",  waselli: "900 DA" },
+                    { route: "Alger → Paris",      dhl: "65 €",     local: "45 €",     waselli: "12 €" },
+                    { route: "Alger → Lyon",        dhl: "65 €",     local: "45 €",     waselli: "12 €" },
+                    { route: "Oran → Madrid",       dhl: "70 €",     local: "50 €",     waselli: "15 €" },
+                    { route: "Alger → Oran",        dhl: "4 500 DA", local: "3 000 DA", waselli: "900 DA" },
                     { route: "Alger → Constantine", dhl: "4 500 DA", local: "3 000 DA", waselli: "900 DA" },
                   ].map((row, i) => (
                     <tr key={i} className="hover:bg-dz-gray-50/50 transition-colors">
@@ -236,10 +235,9 @@ export default function Home() {
                 </tbody>
               </table>
             </div>
-            <p className="text-xs text-dz-gray-400 text-center mt-3">* Prix indicatifs constatés. Waselli = prix négocié directement avec le transporteur.</p>
+            <p className="text-xs text-dz-gray-400 text-center mt-3">{t("table_note")}</p>
           </Fade>
 
-          {/* 4 feature cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((f, i) => (
               <Fade key={f.title} delay={i * 80}>
@@ -260,8 +258,8 @@ export default function Home() {
       <section className="py-20 bg-dz-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Fade className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">Trajets populaires</h2>
-            <p className="text-dz-gray-500 mt-2">Les itinéraires les plus demandés</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">{t("routes_title")}</h2>
+            <p className="text-dz-gray-500 mt-2">{t("routes_subtitle")}</p>
           </Fade>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {routes.map((r, i) => (
@@ -289,16 +287,16 @@ export default function Home() {
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Fade className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">Algérie ↔ Europe</h2>
-            <p className="text-dz-gray-500 mt-2">Service international vers 5 pays européens</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">{t("intl_title")}</h2>
+            <p className="text-dz-gray-500 mt-2">{t("intl_subtitle")}</p>
           </Fade>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
             {intlRoutes.map((r, i) => (
-              <Fade key={r.country} delay={i * 60}>
+              <Fade key={r.flag} delay={i * 60}>
                 <Link href="/international"
                   className="bg-dz-gray-50 rounded-2xl border border-dz-gray-100 hover:border-dz-green/30 hover:shadow-md transition-all duration-200 p-5 text-center block group">
                   <div className="w-10 h-10 bg-dz-green/10 text-dz-green rounded-lg flex items-center justify-center mx-auto mb-3 text-xs font-bold group-hover:bg-dz-green group-hover:text-white transition-colors">{r.flag}</div>
-                  <div className="font-semibold text-dz-gray-800 text-sm mb-1">{r.country}</div>
+                  <div className="font-semibold text-dz-gray-800 text-sm mb-1">{t(r.countryKey)}</div>
                   <div className="text-xs text-dz-gray-500 mb-1">{r.route}</div>
                   <div className="text-xs font-semibold text-dz-green">{r.price}</div>
                 </Link>
@@ -307,10 +305,10 @@ export default function Home() {
           </div>
           <Fade className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link href="/international" className="bg-dz-green hover:bg-dz-green-light text-white px-7 py-3 rounded-xl font-semibold transition-colors text-center text-sm">
-              Voir les transporteurs internationaux
+              {t("intl_cta1")}
             </Link>
             <Link href="/international/devenir-transporteur" className="border border-dz-green text-dz-green hover:bg-dz-green/5 px-7 py-3 rounded-xl font-semibold transition-colors text-center text-sm">
-              Devenir transporteur international
+              {t("intl_cta2")}
             </Link>
           </Fade>
         </div>
@@ -320,26 +318,18 @@ export default function Home() {
       <section className="py-20 bg-gradient-to-br from-dz-green via-dz-green-dark to-dz-gray-800 text-white">
         <div className="max-w-3xl mx-auto px-4 text-center">
           <Fade>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Prêt à envoyer votre premier colis ?
-            </h2>
-            <p className="text-green-100 text-lg mb-8">
-              Rejoignez des milliers d&apos;Algériens qui utilisent Waselli pour envoyer et transporter des colis à travers tout le pays.
-            </p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("cta_title")}</h2>
+            <p className="text-green-100 text-lg mb-8">{t("cta_subtitle")}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/envoyer"
-                className="bg-white text-dz-green hover:bg-green-50 px-8 py-3.5 rounded-xl font-semibold transition-colors">
-                Envoyer un colis
+              <Link href="/envoyer" className="bg-white text-dz-green hover:bg-green-50 px-8 py-3.5 rounded-xl font-semibold transition-colors">
+                {t("cta_send")}
               </Link>
-              <Link href="/transporter"
-                className="border border-white/30 hover:bg-white/10 px-8 py-3.5 rounded-xl font-semibold transition-colors">
-                Devenir transporteur
+              <Link href="/transporter" className="border border-white/30 hover:bg-white/10 px-8 py-3.5 rounded-xl font-semibold transition-colors">
+                {t("cta_transport")}
               </Link>
             </div>
-
-            {/* Store buttons */}
             <div className="mt-12 flex flex-col items-center gap-4">
-              <p className="text-green-200/60 text-sm">Bientôt disponible sur mobile</p>
+              <p className="text-green-200/60 text-sm">{t("cta_soon")}</p>
               <div className="flex flex-wrap gap-3 justify-center">
                 <a href="#" className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-colors text-sm">
                   <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">

@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/context";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type Lang } from "@/lib/i18n";
 import ThemeToggle from "@/components/ThemeToggle";
 import PushNotifications from "@/components/PushNotifications";
 import WaselliLogo from "@/components/WaselliLogo";
@@ -11,8 +11,14 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user, logout } = useAuth();
-  const { t } = useI18n();
+  const { t, lang, setLang } = useI18n();
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const LANGS: { code: Lang; flag: string; label: string }[] = [
+    { code: "fr", flag: "🇫🇷", label: "FR" },
+    { code: "ar", flag: "🇩🇿", label: "AR" },
+    { code: "en", flag: "🇬🇧", label: "EN" },
+  ];
 
   useEffect(() => {
     function handleClick(e: MouseEvent) {
@@ -130,6 +136,23 @@ export default function Header() {
 
         {mobileOpen && (
           <div className="md:hidden pb-4 border-t border-dz-gray-200 dark:border-dz-gray-700 pt-4 space-y-2 bg-white dark:bg-dz-gray-800">
+            {/* Language switcher row */}
+            <div className="flex items-center gap-2 pb-2">
+              {LANGS.map((l) => (
+                <button
+                  key={l.code}
+                  onClick={() => setLang(l.code)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-semibold border transition-colors
+                    ${lang === l.code
+                      ? "bg-dz-green text-white border-dz-green"
+                      : "text-dz-gray-600 border-dz-gray-200 hover:border-dz-green hover:text-dz-green"
+                    }`}
+                >
+                  <span>{l.flag}</span>
+                  <span>{l.label}</span>
+                </button>
+              ))}
+            </div>
             <div className="py-1"><ThemeToggle /></div>
             <Link href="/annonces" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_listings")}</Link>
             <Link href="/livreurs" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_deliverers")}</Link>
