@@ -8,6 +8,7 @@ import ReviewModal from "@/components/ReviewModal";
 // ─── Trust Score helpers ───────────────────────────────────────────────────
 
 function computeTrustScore(rating: number, reviews: number): number {
+  if (reviews === 0) return 0;
   const ratingPts = Math.round(rating * 10);          // 0-50
   const reviewPts = Math.min(reviews, 30);             // 0-30
   const bonusPts = rating >= 4.5 ? 10 : 0;
@@ -93,7 +94,7 @@ export default function DashboardPage() {
   const trustScore = computeTrustScore(user.rating, user.reviews);
   const level = trustLevel(trustScore);
   const accessiblePlans = insuranceAccess(trustScore);
-  const isNewUser = user.reviews === 0 || user.rating === 5.0;
+  const isNewUser = user.reviews === 0;
 
   const statusLabel: Record<string, { text: string; color: string }> = {
     pending:    { text: "En attente", color: "bg-yellow-100 text-yellow-700" },
@@ -242,11 +243,13 @@ export default function DashboardPage() {
           <div>
             <div className="flex flex-wrap items-center gap-3 mb-1">
               <h1 className="text-3xl font-bold text-dz-gray-800">Bonjour, {user.firstName} !</h1>
-              {/* Trust Score Badge */}
-              <div className={`flex items-center gap-2 border rounded-full px-3 py-1 text-xs font-semibold ${level.badgeCls}`}>
-                <span className="font-bold text-sm">{trustScore}</span>
-                <span>{level.label}</span>
-              </div>
+              {/* Trust Score Badge — only shown once user has reviews */}
+              {!isNewUser && (
+                <div className={`flex items-center gap-2 border rounded-full px-3 py-1 text-xs font-semibold ${level.badgeCls}`}>
+                  <span className="font-bold text-sm">{trustScore}</span>
+                  <span>{level.label}</span>
+                </div>
+              )}
             </div>
             <p className="text-dz-gray-500 mt-0.5">Bienvenue sur votre tableau de bord</p>
           </div>
@@ -265,24 +268,33 @@ export default function DashboardPage() {
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div className="flex-1 min-w-0">
               <p className="text-xs font-semibold text-dz-gray-500 uppercase tracking-wide mb-1">Score de Confiance Waselli</p>
-              <div className="flex items-center gap-3 mb-2">
-                <span className="text-2xl font-bold text-dz-gray-800">{trustScore} / 100</span>
-                <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${level.badgeCls}`}>{level.label}</span>
-              </div>
-              {/* Progress bar */}
-              <div className="w-full bg-dz-gray-100 rounded-full h-2">
-                <div
-                  className={`h-2 rounded-full transition-all duration-500 ${level.barCls}`}
-                  style={{ width: `${trustScore}%` }}
-                />
-              </div>
+              {isNewUser ? (
+                <p className="text-sm text-dz-gray-400 italic">
+                  Effectuez votre première livraison pour obtenir votre score de confiance.
+                </p>
+              ) : (
+                <>
+                  <div className="flex items-center gap-3 mb-2">
+                    <span className="text-2xl font-bold text-dz-gray-800">{trustScore} / 100</span>
+                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${level.badgeCls}`}>{level.label}</span>
+                  </div>
+                  <div className="w-full bg-dz-gray-100 rounded-full h-2">
+                    <div
+                      className={`h-2 rounded-full transition-all duration-500 ${level.barCls}`}
+                      style={{ width: `${trustScore}%` }}
+                    />
+                  </div>
+                </>
+              )}
             </div>
-            <Link
-              href="/assurance"
-              className="shrink-0 text-xs text-dz-green font-medium hover:underline whitespace-nowrap"
-            >
-              Comment améliorer mon score ?
-            </Link>
+            {!isNewUser && (
+              <Link
+                href="/assurance"
+                className="shrink-0 text-xs text-dz-green font-medium hover:underline whitespace-nowrap"
+              >
+                Comment améliorer mon score ?
+              </Link>
+            )}
           </div>
         </div>
 
@@ -298,12 +310,16 @@ export default function DashboardPage() {
           </div>
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-5">
             <p className="text-sm text-dz-gray-500">Note moyenne</p>
-            <p className="text-2xl font-bold text-dz-gray-800 mt-1 flex items-center gap-1">
-              {user.rating}
-              <svg className="w-5 h-5 text-yellow-400 fill-yellow-400" viewBox="0 0 24 24">
-                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-              </svg>
-            </p>
+            {isNewUser ? (
+              <p className="text-sm text-dz-gray-400 mt-2 italic">Aucun avis</p>
+            ) : (
+              <p className="text-2xl font-bold text-dz-gray-800 mt-1 flex items-center gap-1">
+                {user.rating.toFixed(1)}
+                <svg className="w-5 h-5 text-yellow-400 fill-yellow-400" viewBox="0 0 24 24">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                </svg>
+              </p>
+            )}
           </div>
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-5">
             <p className="text-sm text-dz-gray-500">Membre depuis</p>
@@ -676,39 +692,44 @@ export default function DashboardPage() {
                 <h3 className="font-bold text-dz-gray-800 text-sm">Waselli Protect</h3>
               </div>
 
-              <div className={`flex items-center gap-2 mb-4 px-3 py-2 rounded-xl border text-xs font-semibold ${level.badgeCls}`}>
-                <span>Niveau actuel :</span>
-                <span>{level.label}</span>
-                <span className="font-bold ml-auto">{trustScore}/100</span>
-              </div>
-
-              <p className="text-xs text-dz-gray-500 font-semibold uppercase tracking-wide mb-2">
-                Formules accessibles
-              </p>
-              {accessiblePlans.length === 0 ? (
-                <p className="text-xs text-dz-gray-400 italic">Augmentez votre score pour débloquer les formules</p>
+              {isNewUser ? (
+                <p className="text-xs text-dz-gray-400 italic mb-4 leading-relaxed">
+                  Effectuez votre première livraison pour débloquer votre niveau et accéder aux formules d&apos;assurance.
+                </p>
               ) : (
-                <ul className="space-y-1.5 mb-4">
-                  {accessiblePlans.map((plan) => (
-                    <li key={plan} className="flex items-center gap-2 text-xs text-dz-gray-700">
-                      <span className="text-dz-green font-bold">✓</span>
-                      {plan}
-                    </li>
-                  ))}
-                </ul>
-              )}
-
-              {/* Locked plans hint */}
-              {trustScore < 75 && (
-                <div className="border-t border-dz-gray-100 pt-3 mt-2">
-                  <p className="text-xs text-dz-gray-400 italic mb-1">À débloquer :</p>
-                  {trustScore < 50 && (
-                    <p className="text-xs text-dz-gray-400">— Formule Standard (score ≥ 50)</p>
+                <>
+                  <div className={`flex items-center gap-2 mb-4 px-3 py-2 rounded-xl border text-xs font-semibold ${level.badgeCls}`}>
+                    <span>Niveau actuel :</span>
+                    <span>{level.label}</span>
+                    <span className="font-bold ml-auto">{trustScore}/100</span>
+                  </div>
+                  <p className="text-xs text-dz-gray-500 font-semibold uppercase tracking-wide mb-2">
+                    Formules accessibles
+                  </p>
+                  {accessiblePlans.length === 0 ? (
+                    <p className="text-xs text-dz-gray-400 italic">Augmentez votre score pour débloquer les formules</p>
+                  ) : (
+                    <ul className="space-y-1.5 mb-4">
+                      {accessiblePlans.map((plan) => (
+                        <li key={plan} className="flex items-center gap-2 text-xs text-dz-gray-700">
+                          <span className="text-dz-green font-bold">✓</span>
+                          {plan}
+                        </li>
+                      ))}
+                    </ul>
                   )}
                   {trustScore < 75 && (
-                    <p className="text-xs text-dz-gray-400">— Formule Premium (score ≥ 75)</p>
+                    <div className="border-t border-dz-gray-100 pt-3 mt-2">
+                      <p className="text-xs text-dz-gray-400 italic mb-1">À débloquer :</p>
+                      {trustScore < 50 && (
+                        <p className="text-xs text-dz-gray-400">— Formule Standard (score ≥ 50)</p>
+                      )}
+                      {trustScore < 75 && (
+                        <p className="text-xs text-dz-gray-400">— Formule Premium (score ≥ 75)</p>
+                      )}
+                    </div>
                   )}
-                </div>
+                </>
               )}
 
               <Link

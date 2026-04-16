@@ -127,7 +127,8 @@ export default function ProfilPage() {
     year: "numeric", month: "long",
   });
 
-  const score = Math.min(100, 20 + user.rating * 10 + Math.min(user.reviews, 30));
+  const hasReviews = user.reviews > 0;
+  const score = hasReviews ? Math.min(100, 20 + user.rating * 10 + Math.min(user.reviews, 30)) : 0;
   const level = score >= 80 ? { label: "Elite ✓", color: "text-dz-green", bg: "bg-green-100" }
     : score >= 60 ? { label: "Expert", color: "text-blue-600", bg: "bg-blue-100" }
     : score >= 40 ? { label: "Confirmé", color: "text-orange-600", bg: "bg-orange-100" }
@@ -186,7 +187,7 @@ export default function ProfilPage() {
             <p className="text-green-100 text-sm mt-0.5 truncate">{user.email}</p>
             <div className="flex items-center gap-3 mt-2 flex-wrap">
               <span className="flex items-center gap-1 text-sm bg-white/15 px-3 py-1 rounded-full">
-                ⭐ {user.rating.toFixed(1)} · {user.reviews} avis
+                {hasReviews ? `⭐ ${user.rating.toFixed(1)} · ${user.reviews} avis` : "Aucun avis pour l'instant"}
               </span>
               <span className="text-green-100 text-xs">Membre depuis {memberSince}</span>
             </div>
@@ -220,9 +221,9 @@ export default function ProfilPage() {
             <h3 className="font-semibold text-dz-gray-900 mb-4 text-sm">Votre activité</h3>
             <div className="space-y-3">
               {[
-                { icon: "📦", label: "Colis envoyés", value: user.reviews },
-                { icon: "⭐", label: "Note moyenne", value: `${user.rating.toFixed(1)}/5` },
-                { icon: "✅", label: "Avis reçus", value: user.reviews },
+                { icon: "📦", label: "Colis envoyés", value: user.reviews > 0 ? user.reviews : "—" },
+                { icon: "⭐", label: "Note moyenne", value: hasReviews ? `${user.rating.toFixed(1)}/5` : "—" },
+                { icon: "✅", label: "Avis reçus", value: user.reviews > 0 ? user.reviews : "—" },
               ].map((s) => (
                 <div key={s.label} className="flex items-center justify-between">
                   <span className="text-xs text-dz-gray-500 flex items-center gap-2">
@@ -236,13 +237,21 @@ export default function ProfilPage() {
 
           <div className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-5">
             <h3 className="font-semibold text-dz-gray-900 mb-3 text-sm">Score de confiance</h3>
-            <div className="flex items-center justify-between mb-2">
-              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${level.bg} ${level.color}`}>{level.label}</span>
-              <span className="text-sm font-bold text-dz-gray-900">{score}/100</span>
-            </div>
-            <div className="w-full bg-dz-gray-100 rounded-full h-2">
-              <div className="bg-dz-green h-2 rounded-full transition-all duration-700" style={{ width: `${score}%` }} />
-            </div>
+            {hasReviews ? (
+              <>
+                <div className="flex items-center justify-between mb-2">
+                  <span className={`text-xs font-semibold px-2 py-0.5 rounded-full ${level.bg} ${level.color}`}>{level.label}</span>
+                  <span className="text-sm font-bold text-dz-gray-900">{score}/100</span>
+                </div>
+                <div className="w-full bg-dz-gray-100 rounded-full h-2">
+                  <div className="bg-dz-green h-2 rounded-full transition-all duration-700" style={{ width: `${score}%` }} />
+                </div>
+              </>
+            ) : (
+              <p className="text-xs text-dz-gray-400 italic leading-relaxed">
+                Effectuez votre première livraison pour obtenir votre score de confiance.
+              </p>
+            )}
           </div>
 
           <button
