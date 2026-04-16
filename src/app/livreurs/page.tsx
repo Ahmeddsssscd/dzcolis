@@ -90,7 +90,16 @@ export default function LivreursPage() {
     fetch(url)
       .then((r) => r.json())
       .then((data) => {
-        setLivreurs(Array.isArray(data) ? data : []);
+        if (!Array.isArray(data)) { setLivreurs([]); setLoading(false); return; }
+        // Deduplicate: keep only the first (highest-rated) profile per unique full name
+        const seen = new Set<string>();
+        const deduped = data.filter((l: Livreur) => {
+          const key = `${(l.first_name ?? "").toLowerCase().trim()}_${(l.last_name ?? "").toLowerCase().trim()}`;
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+        setLivreurs(deduped);
         setLoading(false);
       })
       .catch(() => setLoading(false));
