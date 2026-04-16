@@ -91,10 +91,12 @@ export default function LivreursPage() {
       .then((r) => r.json())
       .then((data) => {
         if (!Array.isArray(data)) { setLivreurs([]); setLoading(false); return; }
-        // Deduplicate: keep only the first (highest-rated) profile per unique full name
+        // Deduplicate by displayed name (first_name + first letter of last_name)
+        // because the UI shows "Ahmed G." — all accounts with same first name + same initial look identical
         const seen = new Set<string>();
         const deduped = data.filter((l: Livreur) => {
-          const key = `${(l.first_name ?? "").toLowerCase().trim()}_${(l.last_name ?? "").toLowerCase().trim()}`;
+          const initial = (l.last_name ?? "")[0]?.toLowerCase() ?? "";
+          const key = `${(l.first_name ?? "").toLowerCase().trim()}_${initial}`;
           if (seen.has(key)) return false;
           seen.add(key);
           return true;
