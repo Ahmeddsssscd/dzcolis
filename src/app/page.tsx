@@ -90,7 +90,7 @@ function Cycle() {
     return () => clearInterval(t);
   }, []);
   return (
-    <span className="text-green-300 inline-block transition-all duration-300"
+    <span className="text-white inline-block transition-all duration-300"
       style={{ opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(-8px)" }}>
       {WORDS[i]}
     </span>
@@ -117,7 +117,7 @@ function Stat({ label, target, suffix, go, fixed }: { label: string; target: num
       <div className="text-3xl md:text-4xl font-bold text-white tabular-nums">
         {fixed ? (go ? fixed : "\u2013") : `${n.toLocaleString("fr-DZ")}${suffix}`}
       </div>
-      <div className="text-sm text-green-200/70 mt-1">{label}</div>
+      <div className="text-sm text-white/60 mt-1">{label}</div>
     </div>
   );
 }
@@ -142,19 +142,19 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 relative z-10">
           <div className="max-w-3xl">
             <p className="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-1.5 text-sm mb-8 border border-white/15">
-              <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
+              <span className="w-2 h-2 bg-blue-300 rounded-full animate-pulse" />
               Livraison collaborative en Algérie
             </p>
             <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
               Envoyez vos colis<br /><Cycle />
             </h1>
-            <p className="text-lg text-green-100/90 mb-10 max-w-2xl leading-relaxed">
+            <p className="text-lg text-white/80 mb-10 max-w-2xl leading-relaxed">
               Waselli connecte les expéditeurs avec des transporteurs qui font déjà le trajet. Économique, écologique et sécurisé.
             </p>
             <HeroSearch />
-            <p className="mt-6 text-sm text-green-200/80">
+            <p className="mt-6 text-sm text-white/60">
               Vous êtes transporteur ?{" "}
-              <Link href="/transporter" className="text-white font-semibold underline underline-offset-2 hover:text-green-300 transition-colors">
+              <Link href="/transporter" className="text-white font-semibold underline underline-offset-2 hover:text-blue-200 transition-colors">
                 Proposez votre trajet et gagnez de l&apos;argent →
               </Link>
             </p>
