@@ -72,27 +72,27 @@ export default function Header() {
                   </svg>
                 </button>
                 {dropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-dz-gray-100 border border-dz-gray-200 rounded-xl shadow-lg py-2">
-                    <div className="px-4 py-2 border-b border-dz-gray-100">
-                      <p className="text-sm font-medium text-dz-gray-800">{user.firstName} {user.lastName}</p>
-                      <p className="text-xs text-dz-gray-500">{user.email}</p>
+                  <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-dz-gray-800 border border-dz-gray-200 dark:border-dz-gray-700 rounded-xl shadow-lg dark:shadow-black/40 py-2">
+                    <div className="px-4 py-2 border-b border-dz-gray-100 dark:border-dz-gray-700">
+                      <p className="text-sm font-medium text-dz-gray-800 dark:text-dz-gray-100">{user.firstName} {user.lastName}</p>
+                      <p className="text-xs text-dz-gray-500 dark:text-dz-gray-400">{user.email}</p>
                     </div>
-                    <Link href="/tableau-de-bord" className="block px-4 py-2.5 text-sm text-dz-gray-700 hover:bg-dz-gray-50" onClick={() => setDropdownOpen(false)}>
+                    <Link href="/tableau-de-bord" className="block px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
                       📊 Tableau de bord
                     </Link>
-                    <Link href="/suivi" className="block px-4 py-2.5 text-sm text-dz-gray-700 hover:bg-dz-gray-50" onClick={() => setDropdownOpen(false)}>
+                    <Link href="/suivi" className="block px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
                       📦 Suivi de colis
                     </Link>
-                    <Link href="/messages" className="block px-4 py-2.5 text-sm text-dz-gray-700 hover:bg-dz-gray-50" onClick={() => setDropdownOpen(false)}>
+                    <Link href="/messages" className="block px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
                       💬 Messages
                     </Link>
-                    <Link href="/profil" className="block px-4 py-2.5 text-sm text-dz-gray-700 hover:bg-dz-gray-50" onClick={() => setDropdownOpen(false)}>
+                    <Link href="/profil" className="block px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
                       👤 Mon profil
                     </Link>
-                    <div className="border-t border-dz-gray-100 mt-1 pt-1">
+                    <div className="border-t border-dz-gray-100 dark:border-dz-gray-700 mt-1 pt-1">
                       <button
                         onClick={() => { logout(); setDropdownOpen(false); }}
-                        className="block w-full text-left px-4 py-2.5 text-sm text-dz-red hover:bg-red-50"
+                        className="block w-full text-left px-4 py-2.5 text-sm text-dz-red hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                       >
                         Déconnexion
                       </button>
