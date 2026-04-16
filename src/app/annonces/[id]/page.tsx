@@ -116,7 +116,7 @@ export default function ListingDetailPage() {
     ? Math.round(listing.price_per_kg * listing.available_weight * 100) / 100
     : Math.round(listing.price_per_kg * listing.available_weight);
   const ownerInitials = transporter
-    ? (transporter.first_name[0] ?? "") + (transporter.last_name[0] ?? "")
+    ? ((transporter.first_name?.[0] ?? "") + (transporter.last_name?.[0] ?? "")).toUpperCase() || "?"
     : "?";
   const ownerName = transporter
     ? `${transporter.first_name} ${transporter.last_name}`

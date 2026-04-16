@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminSupabase } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 
 const CHARGILY_BASE =
   process.env.CHARGILY_MODE === "live"
@@ -8,6 +9,11 @@ const CHARGILY_BASE =
 
 export async function POST(req: NextRequest) {
   try {
+    // ── Auth check ──────────────────────────────────────────────────────────
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const { bookingId, paymentMethod } = await req.json();
 
     if (!bookingId || !paymentMethod) {
@@ -20,6 +26,11 @@ export async function POST(req: NextRequest) {
       .select("*")
       .eq("id", bookingId)
       .single();
+
+    // Ensure requester owns this booking
+    if (booking && booking.sender_id !== user.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+    }
 
     if (bookingError || !booking) {
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });

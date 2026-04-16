@@ -42,7 +42,7 @@ export default function KYCPage() {
 
     setGrouped(records.map(r => ({
       userId: r.user_id,
-      name: `${r.profiles.first_name} ${r.profiles.last_name}`,
+      name: `${r.profiles?.first_name ?? ""} ${r.profiles?.last_name ?? ""}`.trim() || "Inconnu",
       phone: r.profiles.phone,
       wilaya: r.profiles.wilaya,
       submittedAt: new Date(r.submitted_at).toLocaleDateString("fr-DZ"),

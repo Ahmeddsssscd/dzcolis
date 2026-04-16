@@ -46,7 +46,7 @@ function StepBar({ current }: { current: number }) {
 export default function ReserverPage() {
   const { listingId } = useParams<{ listingId: string }>();
   const { getListingById } = useListings();
-  const { user } = useAuth();
+  const { user, authLoading } = useAuth();
   const { createBooking } = useBookings();
   const { addToast } = useToast();
   const router = useRouter();
@@ -71,9 +71,15 @@ export default function ReserverPage() {
   const listing = getListingById(listingId);
 
   useEffect(() => {
+    if (authLoading) return;
     if (!user) router.push("/connexion");
-  }, [user, router]);
+  }, [user, authLoading, router]);
 
+  if (authLoading) return (
+    <div className="min-h-screen bg-dz-gray-50 flex items-center justify-center">
+      <div className="w-8 h-8 border-4 border-dz-green border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
   if (!user) return null;
 
   if (!listing) {
