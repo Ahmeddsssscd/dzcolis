@@ -7,23 +7,18 @@ interface WaselliLogoProps {
 }
 
 /*
- * viewBox: 320 × 82
+ * Pure wordmark — no badge, no icon, no truck.
+ * Just "Waselli" in premium typography with brand gradient.
  *
- * ┌─────────────┐  Waselli
- * │  delivery   │  ──────────────
- * │  van icon   │  وصّلي
- * └─────────────┘
- *
- * Badge: 68 × 68, starts at (0, 7).
- * Van: side-view silhouette (cargo + cab + wheels), facing right.
- * Wordmark: Plus Jakarta Sans 900, negative tracking, brand gradient.
- * Sub-identity: وصّلي in Cairo 700, right-aligned.
+ * viewBox: 210 × 64
+ *   "Waselli"  — x=0, y=46, fontSize=52, weight=900, tracking=-2.5
+ *   "وصّلي"    — x=208, y=62, textAnchor=end, small Arabic subtitle
  */
 const sizes = {
-  sm:  { width: 160, height: 41  },
-  md:  { width: 224, height: 57  },
-  lg:  { width: 288, height: 74  },
-  xl:  { width: 352, height: 90  },
+  sm:  { width: 131, height: 40 },
+  md:  { width: 175, height: 53 },
+  lg:  { width: 236, height: 72 },
+  xl:  { width: 298, height: 91 },
 };
 
 export default function WaselliLogo({
@@ -37,67 +32,38 @@ export default function WaselliLogo({
     <svg
       width={width}
       height={height}
-      viewBox="0 0 320 82"
+      viewBox="0 0 210 64"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      aria-label="Waselli – وصّلي"
+      aria-label="Waselli"
       role="img"
       className={className}
     >
       <defs>
-        {/* Badge background: deep navy → police blue, diagonal */}
+        {/* Brand gradient: deep navy → police blue → sky */}
         <linearGradient
-          id="wBadgeBg"
-          x1="0" y1="7" x2="68" y2="75"
+          id="wGrad"
+          x1="0" y1="0" x2="210" y2="0"
           gradientUnits="userSpaceOnUse"
         >
           <stop offset="0%"   stopColor="#1e3a8a" />
-          <stop offset="60%"  stopColor="#1d4ed8" />
-          <stop offset="100%" stopColor="#2563eb" />
-        </linearGradient>
-
-        {/* Glass highlight on badge — top-left radial spot */}
-        <radialGradient
-          id="wBadgeHL"
-          cx="30%" cy="22%" r="58%"
-          gradientUnits="objectBoundingBox"
-        >
-          <stop offset="0%"   stopColor="#ffffff" stopOpacity="0.22" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0"    />
-        </radialGradient>
-
-        {/* Wordmark: same navy-to-sky sweep */}
-        <linearGradient
-          id="wText"
-          x1="78" y1="0" x2="305" y2="0"
-          gradientUnits="userSpaceOnUse"
-        >
-          <stop offset="0%"   stopColor="#1e3a8a" />
-          <stop offset="42%"  stopColor="#1d4ed8" />
+          <stop offset="40%"  stopColor="#1d4ed8" />
           <stop offset="100%" stopColor="#3b82f6" />
         </linearGradient>
 
-        {/* Wordmark top-light sheen */}
+        {/* Top-light sheen — letter surfaces catch light from above */}
         <linearGradient
           id="wSheen"
-          x1="0" y1="12" x2="0" y2="52"
+          x1="0" y1="0" x2="0" y2="48"
           gradientUnits="userSpaceOnUse"
         >
           <stop offset="0%"   stopColor="#ffffff" stopOpacity="0.20" />
-          <stop offset="50%"  stopColor="#ffffff" stopOpacity="0"    />
+          <stop offset="45%"  stopColor="#ffffff" stopOpacity="0"    />
           <stop offset="100%" stopColor="#000000" stopOpacity="0.04" />
         </linearGradient>
 
-        {/* Badge lift shadow */}
-        <filter id="wBadgeF" x="-14%" y="-12%" width="138%" height="134%">
-          <feDropShadow
-            dx="0" dy="3" stdDeviation="5"
-            floodColor="#1e3a8a" floodOpacity="0.38"
-          />
-        </filter>
-
-        {/* Wordmark shadow */}
-        <filter id="wTextF" x="-2%" y="-8%" width="112%" height="140%">
+        {/* Wordmark shadow — depth without heaviness */}
+        <filter id="wShadow" x="-2%" y="-8%" width="110%" height="140%">
           <feDropShadow
             dx="0" dy="1.5" stdDeviation="2"
             floodColor="#0f2460" floodOpacity="0.16"
@@ -105,90 +71,30 @@ export default function WaselliLogo({
         </filter>
       </defs>
 
-      {/* ═══════════════════════════════════════════════════
-          BADGE  68 × 68
-          ═══════════════════════════════════════════════════ */}
-      <rect x="0" y="7" width="68" height="68" rx="16"
-            fill="url(#wBadgeBg)" filter="url(#wBadgeF)" />
-      <rect x="0" y="7" width="68" height="68" rx="16"
-            fill="url(#wBadgeHL)" />
-
-      {/* ═══════════════════════════════════════════════════
-          DELIVERY VAN — side view, facing right
-          White silhouette; windows/hubs use badge gradient
-          as "knockout" fill so they appear transparent.
-
-          Layout inside badge (x 0–68, y 7–75):
-            cargo body  x 6–41   y 30–56
-            cab body    x 39–64  y 26–56  (4 px taller = roof step)
-            wheels      cy 56    r 6.5
-          ═══════════════════════════════════════════════════ */}
-
-      {/* ── Cargo box ── */}
-      <rect x="6" y="30" width="35" height="26" rx="3" fill="white" />
-
-      {/* ── Cab (taller, with rounded windshield front corner) ──
-          Path: top-left → roof-right → cubic curve (windshield corner)
-                → front face down → bottom back to start            */}
-      <path
-        d="M 39 26 L 54 26 C 62 26 64 30 64 37 L 64 56 L 39 56 Z"
-        fill="white"
-      />
-
-      {/* ── Windshield glass (shows badge gradient = "transparent") ──
-          Follows the same bezier corner as the cab, inset 2 px       */}
-      <path
-        d="M 46 28 L 53 28 C 60 28 62 31 62 37 L 62 40 L 46 40 Z"
-        fill="url(#wBadgeBg)"
-      />
-
-      {/* ── Cargo side window ── */}
-      <rect x="11" y="33" width="15" height="9" rx="2"
-            fill="url(#wBadgeBg)" />
-
-      {/* ── Wheels (white disc + badge-color hub knockout) ── */}
-      {/* Rear */}
-      <circle cx="16" cy="56" r="7"   fill="white" />
-      <circle cx="16" cy="56" r="2.8" fill="url(#wBadgeBg)" />
-      {/* Front */}
-      <circle cx="51" cy="56" r="7"   fill="white" />
-      <circle cx="51" cy="56" r="2.8" fill="url(#wBadgeBg)" />
-
-      {/* ── Road / ground line (subtle) ── */}
-      <line x1="6" y1="63" x2="62" y2="63"
-            stroke="white" strokeWidth="1.2" opacity="0.18"
-            strokeLinecap="round" />
-
-      {/* ── Motion lines (van is moving → speed) ── */}
-      <line x1="1"  y1="36" x2="6"  y2="36"
-            stroke="white" strokeWidth="1.8" strokeLinecap="round" opacity="0.55" />
-      <line x1="0"  y1="41" x2="6"  y2="41"
-            stroke="white" strokeWidth="2.2" strokeLinecap="round" opacity="0.45" />
-      <line x1="1"  y1="46" x2="6"  y2="46"
-            stroke="white" strokeWidth="1.8" strokeLinecap="round" opacity="0.55" />
-
-      {/* ═══════════════════════════════════════════════════
-          WORDMARK  "Waselli"
-          ═══════════════════════════════════════════════════ */}
-      {/* Gradient fill */}
+      {/* ── Wordmark "Waselli" ─────────────────────────────────────
+          Weight 900, letter-spacing -2.5 → luxury brand feel.
+          Gradient fill + sheen overlay gives the letters depth.   */}
       <text
-        x="78" y="50"
+        x="0"
+        y="46"
         fontFamily='"Plus Jakarta Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif'
         fontWeight="900"
-        fontSize="48"
-        letterSpacing="-2"
-        fill="url(#wText)"
-        filter="url(#wTextF)"
+        fontSize="52"
+        letterSpacing="-2.5"
+        fill="url(#wGrad)"
+        filter="url(#wShadow)"
       >
         Waselli
       </text>
-      {/* Top-light sheen */}
+
+      {/* Sheen pass */}
       <text
-        x="78" y="50"
+        x="0"
+        y="46"
         fontFamily='"Plus Jakarta Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif'
         fontWeight="900"
-        fontSize="48"
-        letterSpacing="-2"
+        fontSize="52"
+        letterSpacing="-2.5"
         fill="url(#wSheen)"
         aria-hidden="true"
         style={{ pointerEvents: "none" }}
@@ -196,21 +102,26 @@ export default function WaselliLogo({
         Waselli
       </text>
 
-      {/* ═══════════════════════════════════════════════════
-          SEPARATOR + ARABIC SUB-IDENTITY  وصّلي
-          ═══════════════════════════════════════════════════ */}
-      <line x1="78" y1="57" x2="316" y2="57"
-            stroke="#1d4ed8" strokeWidth="0.7" opacity="0.20" />
-
+      {/* ── Arabic sub-identity "وصّلي" ────────────────────────────
+          Right-aligned. Cairo font. Same blue family, lighter weight.
+          Acts as a bilingual signature — not a label.              */}
+      <line
+        x1="0" y1="52"
+        x2="208" y2="52"
+        stroke="#1d4ed8"
+        strokeWidth="0.6"
+        opacity="0.18"
+      />
       <text
-        x="316" y="73"
+        x="208"
+        y="63"
         textAnchor="end"
-        fontFamily='var(--font-cairo), "Cairo", "Noto Sans Arabic", "Segoe UI", sans-serif'
-        fontWeight="700"
-        fontSize="18"
-        letterSpacing="0.8"
+        fontFamily='var(--font-cairo), "Cairo", "Noto Sans Arabic", sans-serif'
+        fontWeight="600"
+        fontSize="15"
+        letterSpacing="0.5"
         fill="#2563eb"
-        opacity="0.88"
+        opacity="0.82"
       >
         وصّلي
       </text>
@@ -222,7 +133,7 @@ export default function WaselliLogo({
   return (
     <Link
       href={href}
-      className="inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-xl"
+      className="inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-lg"
     >
       {svg}
     </Link>

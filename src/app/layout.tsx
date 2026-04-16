@@ -35,8 +35,13 @@ export const metadata: Metadata = {
     startupImage: "/icons/icon-512.png",
   },
   icons: {
-    icon: "/icons/icon-512.png",
-    apple: "/icons/icon-512.png",
+    icon: [
+      { url: "/icons/icon.svg", type: "image/svg+xml" },
+      { url: "/api/icon?size=192", sizes: "192x192", type: "image/png" },
+      { url: "/api/icon?size=512", sizes: "512x512", type: "image/png" },
+    ],
+    apple: { url: "/api/icon?size=180", sizes: "180x180", type: "image/png" },
+    shortcut: "/icons/icon.svg",
   },
   openGraph: {
     title: "Waselli — Livraison collaborative Algérie ↔ Europe",

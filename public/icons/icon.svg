@@ -1,15 +1,24 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-  <rect width="512" height="512" rx="96" fill="#16a34a"/>
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <mask id="cm">
-      <rect width="512" height="512" fill="white"/>
-      <circle cx="340" cy="136" r="110" fill="black"/>
-    </mask>
+    <linearGradient id="bg" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="#1e3a8a"/>
+      <stop offset="55%"  stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <radialGradient id="hl" cx="30%" cy="20%" r="60%" gradientUnits="objectBoundingBox">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
   </defs>
-  <circle cx="290" cy="160" r="128" fill="#22c55e" mask="url(#cm)"/>
-  <rect x="80" y="276" width="352" height="96" rx="28" fill="#15803d"/>
-  <rect x="80" y="348" width="352" height="164" rx="28" fill="white" opacity="0.15"/>
-  <rect x="80" y="348" width="352" height="164" rx="28" fill="#16a34a"/>
-  <rect x="240" y="276" width="32" height="236" fill="white" opacity="0.2"/>
-  <rect x="80" y="380" width="352" height="28" fill="white" opacity="0.2"/>
+  <rect width="512" height="512" rx="115" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="115" fill="url(#hl)"/>
+  <text
+    x="256" y="390"
+    text-anchor="middle"
+    font-family="'Segoe UI', 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif"
+    font-weight="900"
+    font-size="360"
+    fill="white"
+    opacity="0.96"
+  >W</text>
 </svg>

@@ -125,7 +125,7 @@ export default function ParametresPage() {
                 onChange={(e) => setCommission(e.target.value)}
                 min="0"
                 max="100"
-                className="w-28 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 pr-8"
+                className="w-28 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-8"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">%</span>
             </div>
@@ -142,7 +142,7 @@ export default function ParametresPage() {
             <select
               value={delaiLib}
               onChange={(e) => setDelaiLib(e.target.value)}
-              className="px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white"
+              className="px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
             >
               <option value="24h">24 heures</option>
               <option value="48h">48 heures</option>
@@ -164,7 +164,7 @@ export default function ParametresPage() {
                 value={montantMin}
                 onChange={(e) => setMontantMin(e.target.value)}
                 min="0"
-                className="w-36 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500 pr-10"
+                className="w-36 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 pr-10"
               />
               <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">DA</span>
             </div>
@@ -186,7 +186,7 @@ export default function ParametresPage() {
               type="email"
               value={emailContact}
               onChange={(e) => setEmailContact(e.target.value)}
-              className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               onClick={() => save("Email de contact")}
@@ -202,7 +202,7 @@ export default function ParametresPage() {
               type="text"
               value={whatsapp}
               onChange={(e) => setWhatsapp(e.target.value)}
-              className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               onClick={() => save("WhatsApp")}
@@ -218,7 +218,7 @@ export default function ParametresPage() {
               type="text"
               value={adresse}
               onChange={(e) => setAdresse(e.target.value)}
-              className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <button
               onClick={() => save("Adresse")}
