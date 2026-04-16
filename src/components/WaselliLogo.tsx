@@ -7,24 +7,20 @@ interface WaselliLogoProps {
 }
 
 /*
- * Pure wordmark — no badge, no icon.
+ * Pure "Waselli" wordmark — nothing else.
+ * No badge, no truck, no Arabic (Arabic doesn't render in SVG text on mobile).
  *
- * Design decisions vs previous version:
- *   • weight 700 (not 900) — elegant, not forced
- *   • letterSpacing +1 (open, breathable — readable at all sizes)
- *   • fill="currentColor" — SVG text adopts the wrapper's CSS color,
- *     so dark/light mode works automatically via Tailwind classes
- *   • No complex gradient or filter on the text — clean renders sharper
- *   • Accent dot after the "i" in brand blue — unique brand mark
- *   • Arabic وصّلي stays as bilingual signature
+ * fill="currentColor" → adapts to dark/light mode via CSS:
+ *   light  →  text-blue-700  (#1d4ed8)
+ *   dark   →  dark:text-blue-400  (#60a5fa)
  *
- * viewBox: 200 × 70
+ * viewBox: 190 × 52
  */
 const sizes = {
-  sm:  { width: 126, height: 44 },
-  md:  { width: 172, height: 60 },
-  lg:  { width: 230, height: 80 },
-  xl:  { width: 290, height: 101 },
+  sm:  { width: 120, height: 33 },
+  md:  { width: 165, height: 45 },
+  lg:  { width: 220, height: 60 },
+  xl:  { width: 285, height: 78 },
 };
 
 export default function WaselliLogo({
@@ -38,56 +34,28 @@ export default function WaselliLogo({
     <svg
       width={width}
       height={height}
-      viewBox="0 0 200 70"
+      viewBox="0 0 190 52"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-label="Waselli"
       role="img"
       className={className}
     >
-      {/* ── "Waselli" wordmark ────────────────────────────────────
-          fill="currentColor" means this text takes its color from
-          the wrapping <Link>'s Tailwind color class:
-            light  →  text-blue-700  (#1d4ed8)
-            dark   →  dark:text-blue-400  (#60a5fa)
-          That way the logo always has perfect contrast on both
-          the white header and the dark-mode header.              */}
+      {/* Wordmark — clean, open, readable at every size */}
       <text
         x="0"
-        y="46"
+        y="42"
         fontFamily='"Plus Jakarta Sans", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif'
         fontWeight="700"
-        fontSize="48"
-        letterSpacing="1"
+        fontSize="46"
+        letterSpacing="0.5"
         fill="currentColor"
       >
         Waselli
       </text>
 
-      {/* Accent dot — brand mark, always brand blue regardless of mode */}
-      <circle cx="194" cy="38" r="4" fill="#1d4ed8" opacity="0.85" />
-
-      {/* ── Arabic sub-identity ──────────────────────────────────── */}
-      <line
-        x1="0" y1="53"
-        x2="196" y2="53"
-        stroke="currentColor"
-        strokeWidth="0.5"
-        opacity="0.15"
-      />
-      <text
-        x="196"
-        y="65"
-        textAnchor="end"
-        fontFamily='var(--font-cairo), "Cairo", "Noto Sans Arabic", sans-serif'
-        fontWeight="600"
-        fontSize="14"
-        letterSpacing="0.5"
-        fill="#2563eb"
-        opacity="0.75"
-      >
-        وصّلي
-      </text>
+      {/* Brand dot — small accent mark, always brand blue */}
+      <circle cx="184" cy="14" r="5" fill="#1d4ed8" opacity="0.9" />
     </svg>
   );
 
@@ -96,9 +64,7 @@ export default function WaselliLogo({
   return (
     <Link
       href={href}
-      // Light mode: blue-700 (#1d4ed8) on white bg — high contrast ✓
-      // Dark mode:  blue-400 (#60a5fa) on dark bg  — high contrast ✓
-      className="text-blue-700 dark:text-blue-400 inline-flex items-start focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg transition-colors"
+      className="text-blue-700 dark:text-blue-400 inline-flex items-center focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-lg transition-colors"
     >
       {svg}
     </Link>
