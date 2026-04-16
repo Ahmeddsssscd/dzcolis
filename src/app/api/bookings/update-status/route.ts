@@ -82,27 +82,64 @@ export async function PATCH(req: NextRequest) {
     });
   }
 
-  // Send delivery email when status = delivered
-  if (status === "delivered") {
-    // Get sender email from auth
-    try {
-      const { adminClient: adminSb } = await import("@/lib/supabase/admin");
-      const { data: senderAuth } = await adminSb.auth.admin.getUserById(booking.sender_id);
-      const senderEmail = senderAuth?.user?.email;
-      if (senderEmail) {
-        const { data: senderProfile } = await (supabase as any)
-          .from("profiles")
-          .select("first_name")
-          .eq("id", booking.sender_id)
-          .single();
-        const { sendDeliveryConfirmedEmail } = await import("@/lib/email");
-        await sendDeliveryConfirmedEmail(senderEmail, {
-          firstName: senderProfile?.first_name ?? "Client",
-          bookingRef: booking.booking_ref,
+  // ── Email notifications per status ──────────────────────────────────
+  try {
+    const { adminClient: adminSb } = await import("@/lib/supabase/admin");
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.waselli.com";
+
+    // Helper to get email + first_name for a user id
+    async function getUserInfo(userId: string) {
+      const { data: auth } = await adminSb.auth.admin.getUserById(userId);
+      const { data: profile } = await (supabase as any).from("profiles").select("first_name, last_name").eq("id", userId).single();
+      return { email: auth?.user?.email ?? null, firstName: profile?.first_name ?? "Utilisateur", lastName: profile?.last_name ?? "" };
+    }
+
+    const fromCity = booking.listing?.from_city ?? "";
+    const toCity   = booking.listing?.to_city   ?? "";
+    const ref      = booking.booking_ref;
+
+    if (status === "accepted") {
+      // Email to sender: your booking was accepted
+      const sender = await getUserInfo(booking.sender_id);
+      const transporter = await getUserInfo(booking.listing?.user_id);
+      if (sender.email) {
+        const { sendBookingAcceptedToSenderEmail } = await import("@/lib/email");
+        await sendBookingAcceptedToSenderEmail(sender.email, {
+          senderName: sender.firstName,
+          bookingRef: ref,
+          fromCity,
+          toCity,
+          transporterName: transporter.firstName,
         }).catch(() => {});
       }
-    } catch { /* email is non-critical */ }
-  }
+    }
+
+    if (status === "in_transit") {
+      // Email to sender: your package is on the way
+      const sender = await getUserInfo(booking.sender_id);
+      if (sender.email) {
+        const { sendBookingInTransitEmail } = await import("@/lib/email");
+        await sendBookingInTransitEmail(sender.email, {
+          senderName: sender.firstName,
+          bookingRef: ref,
+          fromCity,
+          toCity,
+        }).catch(() => {});
+      }
+    }
+
+    if (status === "delivered") {
+      // Email to sender: confirm reception
+      const sender = await getUserInfo(booking.sender_id);
+      if (sender.email) {
+        const { sendDeliveryConfirmedEmail } = await import("@/lib/email");
+        await sendDeliveryConfirmedEmail(sender.email, {
+          firstName: sender.firstName,
+          bookingRef: ref,
+        }).catch(() => {});
+      }
+    }
+  } catch { /* emails are non-critical */ }
 
   return NextResponse.json({ ok: true });
 }

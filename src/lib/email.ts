@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const FROM   = process.env.RESEND_FROM_EMAIL ?? "Waselli <noreply@waselli.com>";
+const FROM   = process.env.RESEND_FROM_EMAIL ?? "Waselli <No-Reply@waselli.com>";
 
 // ── Email templates ─────────────────────────────────────────────────────
 
@@ -142,6 +142,88 @@ export async function sendKycRejectedEmail(to: string, firstName: string) {
       </ul>
       <p>Veuillez soumettre de nouveaux documents clairs et valides.</p>
       <a href="${process.env.NEXT_PUBLIC_APP_URL}/kyc" class="btn">Resoumettre mes documents →</a>
+    `),
+  });
+}
+
+export async function sendNewBookingToTransporterEmail(to: string, data: {
+  transporterName: string;
+  senderName: string;
+  bookingRef: string;
+  fromCity: string;
+  toCity: string;
+  weight: number;
+  content: string;
+  totalAmount: number;
+  dashboardUrl: string;
+}) {
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `📦 Nouvelle réservation sur votre trajet — ${data.bookingRef}`,
+    html: baseHtml(`
+      <p>Bonjour <strong>${data.transporterName}</strong>,</p>
+      <p>Vous avez reçu une <strong>nouvelle demande de livraison</strong> sur votre trajet !</p>
+      <div class="card">
+        <p><strong>Référence :</strong> <span class="ref">${data.bookingRef}</span></p>
+        <p style="margin-top:12px"><strong>Trajet :</strong> ${data.fromCity} → ${data.toCity}</p>
+        <p><strong>Expéditeur :</strong> ${data.senderName}</p>
+        <p><strong>Contenu :</strong> ${data.content}</p>
+        <p><strong>Poids :</strong> ${data.weight} kg</p>
+        <p><strong>Montant :</strong> ${data.totalAmount.toLocaleString()} DA</p>
+      </div>
+      <p>Connectez-vous à votre tableau de bord pour <strong>accepter ou refuser</strong> cette demande. Le paiement est déjà sécurisé.</p>
+      <a href="${data.dashboardUrl}" class="btn">Voir la demande →</a>
+      <p style="font-size:13px;color:#6b7280;">⏳ Répondez rapidement — les expéditeurs choisissent les transporteurs les plus réactifs.</p>
+    `),
+  });
+}
+
+export async function sendBookingAcceptedToSenderEmail(to: string, data: {
+  senderName: string;
+  bookingRef: string;
+  fromCity: string;
+  toCity: string;
+  transporterName: string;
+}) {
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `✅ Votre réservation a été acceptée — ${data.bookingRef}`,
+    html: baseHtml(`
+      <p>Bonjour <strong>${data.senderName}</strong>,</p>
+      <p>Bonne nouvelle ! Le transporteur <strong>${data.transporterName}</strong> a accepté votre demande.</p>
+      <div class="card">
+        <p><strong>Référence :</strong> <span class="ref">${data.bookingRef}</span></p>
+        <p style="margin-top:12px"><strong>Trajet :</strong> ${data.fromCity} → ${data.toCity}</p>
+        <p><strong>Statut :</strong> <span style="color:#00a651;font-weight:600;">✅ Accepté</span></p>
+      </div>
+      <p>Le transporteur va vous contacter pour organiser la récupération du colis. Votre paiement reste sécurisé jusqu'à livraison confirmée.</p>
+      <a href="${process.env.NEXT_PUBLIC_APP_URL}/tableau-de-bord" class="btn">Suivre ma réservation →</a>
+    `),
+  });
+}
+
+export async function sendBookingInTransitEmail(to: string, data: {
+  senderName: string;
+  bookingRef: string;
+  fromCity: string;
+  toCity: string;
+}) {
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `🚗 Votre colis est en route — ${data.bookingRef}`,
+    html: baseHtml(`
+      <p>Bonjour <strong>${data.senderName}</strong>,</p>
+      <p>Votre colis est maintenant <strong>en route</strong> vers sa destination !</p>
+      <div class="card">
+        <p><strong>Référence :</strong> <span class="ref">${data.bookingRef}</span></p>
+        <p style="margin-top:12px"><strong>Trajet :</strong> ${data.fromCity} → ${data.toCity}</p>
+        <p><strong>Statut :</strong> <span style="color:#7c3aed;font-weight:600;">🚗 En transit</span></p>
+      </div>
+      <p>Dès que votre colis est livré, pensez à <strong>confirmer la réception</strong> depuis votre tableau de bord pour libérer le paiement au transporteur.</p>
+      <a href="${process.env.NEXT_PUBLIC_APP_URL}/tableau-de-bord" class="btn">Confirmer la réception →</a>
     `),
   });
 }

@@ -364,7 +364,16 @@ export function AppProvider({ children }: { children: ReactNode }) {
 
     await fetchBookings();
 
-    // Send booking confirmation email (fire and forget)
+    // Notify transporter by email (fire and forget)
+    if (booking) {
+      fetch("/api/email/new-booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId: booking.id }),
+      }).catch(() => {});
+    }
+
+    // Send booking confirmation email to sender (fire and forget)
     if (booking && user?.email) {
       const { data: listingForEmail } = await db
         .from("listings")
