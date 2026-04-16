@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth, useToast } from "@/lib/context";
 import WaselliLogo from "@/components/WaselliLogo";
@@ -32,6 +32,7 @@ export default function InscriptionPage() {
   const { register, user } = useAuth();
   const { addToast }       = useToast();
   const router             = useRouter();
+  const justRegistered     = useRef(false);
 
   useEffect(() => {
     const ref = searchParams.get("ref");
@@ -39,7 +40,7 @@ export default function InscriptionPage() {
   }, [searchParams]);
 
   useEffect(() => {
-    if (user) router.replace("/tableau-de-bord");
+    if (user && !justRegistered.current) router.replace("/tableau-de-bord");
   }, [user, router]);
 
   const update = (field: string, value: string | boolean) =>
@@ -58,6 +59,7 @@ export default function InscriptionPage() {
       setError("Veuillez accepter les conditions d'utilisation"); return;
     }
     setLoading(true);
+    justRegistered.current = true;
     const { error: err } = await register({
       firstName: form.firstName, lastName: form.lastName,
       email: form.email, phone: form.phone,
@@ -66,6 +68,7 @@ export default function InscriptionPage() {
     });
     setLoading(false);
     if (err) {
+      justRegistered.current = false;
       if (err.includes("already registered") || err.includes("already exists")) {
         setError("Un compte existe déjà avec cet email.");
       } else {
