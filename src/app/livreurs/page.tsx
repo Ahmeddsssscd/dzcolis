@@ -13,9 +13,9 @@ interface Livreur {
   rating: number;
   review_count: number;
   kyc_status: string;
-  avatar_url: string | null;
+  avatar_url?: string | null;
   created_at: string;
-  listings?: { is_international: boolean; transport_type?: string }[];
+  listings?: { is_international: boolean; listing_type?: string; status?: string }[];
 }
 
 const TRANSPORT_ICONS: Record<string, string> = {
@@ -74,8 +74,7 @@ function getLivreurBadges(livreur: Livreur) {
 
 function getTransportType(livreur: Livreur): string {
   if (livreur.listings?.some((l) => l.is_international)) return "avion";
-  const type = livreur.listings?.[0]?.transport_type;
-  return type ?? "voiture";
+  return "voiture";
 }
 
 export default function LivreursPage() {
