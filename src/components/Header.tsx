@@ -32,6 +32,9 @@ export default function Header() {
             <Link href="/annonces" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
               Annonces
             </Link>
+            <Link href="/livreurs" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
+              Livreurs
+            </Link>
             <Link href="/envoyer" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
               Envoyer
             </Link>
@@ -127,6 +130,7 @@ export default function Header() {
           <div className="md:hidden pb-4 border-t border-dz-gray-200 dark:border-dz-gray-700 pt-4 space-y-2 bg-white dark:bg-dz-gray-800">
             <div className="py-1"><ThemeToggle /></div>
             <Link href="/annonces" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Annonces</Link>
+            <Link href="/livreurs" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Livreurs</Link>
             <Link href="/envoyer" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Envoyer un colis</Link>
             <Link href="/transporter" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Transporter</Link>
             <Link href="/suivi" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>📦 Suivi de colis</Link>

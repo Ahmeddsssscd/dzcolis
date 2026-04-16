@@ -195,13 +195,51 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Features ─────────────────────── */}
+      {/* ── Why Us / Price Comparison ─────── */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <Fade className="text-center mb-14">
-            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">Pourquoi Waselli</h2>
-            <p className="text-dz-gray-500 mt-2">La solution de livraison adaptée à l&apos;Algérie</p>
+            <span className="inline-block bg-dz-green/10 text-dz-green text-xs font-bold px-4 py-1.5 rounded-full mb-4 uppercase tracking-wide">Pourquoi Waselli ?</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">Jusqu&apos;à 5× moins cher<br className="hidden sm:block" /> que les agences traditionnelles</h2>
+            <p className="text-dz-gray-500 mt-3 max-w-xl mx-auto">Comparez par vous-même. Même colis, même trajet — prix réels constatés en 2024.</p>
           </Fade>
+
+          {/* Price comparison table */}
+          <Fade className="mb-14">
+            <div className="overflow-x-auto rounded-2xl border border-dz-gray-100 shadow-sm">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-dz-gray-50 border-b border-dz-gray-100">
+                    <th className="text-left px-6 py-4 font-semibold text-dz-gray-600">Trajet (5 kg)</th>
+                    <th className="px-6 py-4 font-semibold text-red-500 text-center">DHL / Chronopost</th>
+                    <th className="px-6 py-4 font-semibold text-red-400 text-center">Agences locales</th>
+                    <th className="px-6 py-4 font-bold text-dz-green text-center bg-dz-green/5 rounded-tr-2xl">Waselli ✓</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-dz-gray-50">
+                  {[
+                    { route: "Alger → Paris",    dhl: "65 €",      local: "45 €",      waselli: "12 €" },
+                    { route: "Alger → Lyon",      dhl: "65 €",      local: "45 €",      waselli: "12 €" },
+                    { route: "Oran → Madrid",     dhl: "70 €",      local: "50 €",      waselli: "15 €" },
+                    { route: "Alger → Oran",      dhl: "4 500 DA",  local: "3 000 DA",  waselli: "900 DA" },
+                    { route: "Alger → Constantine", dhl: "4 500 DA", local: "3 000 DA", waselli: "900 DA" },
+                  ].map((row, i) => (
+                    <tr key={i} className="hover:bg-dz-gray-50/50 transition-colors">
+                      <td className="px-6 py-4 font-medium text-dz-gray-800">{row.route}</td>
+                      <td className="px-6 py-4 text-center text-red-500 font-semibold line-through opacity-70">{row.dhl}</td>
+                      <td className="px-6 py-4 text-center text-red-400 font-semibold line-through opacity-70">{row.local}</td>
+                      <td className="px-6 py-4 text-center bg-dz-green/5">
+                        <span className="inline-flex items-center gap-1 bg-dz-green text-white font-bold px-3 py-1 rounded-full text-sm">{row.waselli}</span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="text-xs text-dz-gray-400 text-center mt-3">* Prix indicatifs constatés. Waselli = prix négocié directement avec le transporteur.</p>
+          </Fade>
+
+          {/* 4 feature cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((f, i) => (
               <Fade key={f.title} delay={i * 80}>
