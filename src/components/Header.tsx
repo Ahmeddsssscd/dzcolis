@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "@/lib/context";
+import { useI18n } from "@/lib/i18n";
 import ThemeToggle from "@/components/ThemeToggle";
 import PushNotifications from "@/components/PushNotifications";
 import WaselliLogo from "@/components/WaselliLogo";
@@ -10,6 +11,7 @@ export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { t } = useI18n();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,25 +32,25 @@ export default function Header() {
 
           <nav className="hidden md:flex items-center gap-6">
             <Link href="/annonces" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
-              Annonces
+              {t("nav_listings")}
             </Link>
             <Link href="/livreurs" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
-              Livreurs
+              {t("nav_deliverers")}
             </Link>
             <Link href="/envoyer" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
-              Envoyer
+              {t("nav_send")}
             </Link>
             <Link href="/transporter" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
-              Transporter
+              {t("nav_transport")}
             </Link>
             <Link href="/suivi" className="flex items-center gap-1.5 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
-              Suivi
+              {t("nav_tracking")}
             </Link>
             <Link href="/international" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
-              International
+              {t("nav_international")}
             </Link>
           </nav>
 
@@ -81,23 +83,23 @@ export default function Header() {
                       <p className="text-xs text-dz-gray-500 dark:text-dz-gray-400">{user.email}</p>
                     </div>
                     <Link href="/tableau-de-bord" className="block px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
-                      📊 Tableau de bord
+                      📊 {t("nav_dashboard")}
                     </Link>
                     <Link href="/suivi" className="block px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
-                      📦 Suivi de colis
+                      📦 {t("nav_tracking")}
                     </Link>
                     <Link href="/messages" className="block px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
-                      💬 Messages
+                      💬 {t("nav_messages")}
                     </Link>
                     <Link href="/profil" className="block px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
-                      👤 Mon profil
+                      👤 {t("nav_profile")}
                     </Link>
                     <div className="border-t border-dz-gray-100 dark:border-dz-gray-700 mt-1 pt-1">
                       <button
                         onClick={() => { logout(); setDropdownOpen(false); }}
                         className="block w-full text-left px-4 py-2.5 text-sm text-dz-red hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
                       >
-                        Déconnexion
+                        {t("nav_logout")}
                       </button>
                     </div>
                   </div>
@@ -106,10 +108,10 @@ export default function Header() {
             ) : (
               <>
                 <Link href="/connexion" className="text-dz-gray-600 hover:text-dz-green font-medium transition-colors">
-                  Connexion
+                  {t("nav_login")}
                 </Link>
                 <Link href="/inscription" className="bg-dz-green hover:bg-dz-green-light text-white px-5 py-2.5 rounded-xl font-medium transition-colors">
-                  Inscription
+                  {t("nav_register")}
                 </Link>
               </>
             )}
@@ -129,24 +131,24 @@ export default function Header() {
         {mobileOpen && (
           <div className="md:hidden pb-4 border-t border-dz-gray-200 dark:border-dz-gray-700 pt-4 space-y-2 bg-white dark:bg-dz-gray-800">
             <div className="py-1"><ThemeToggle /></div>
-            <Link href="/annonces" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Annonces</Link>
-            <Link href="/livreurs" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Livreurs</Link>
-            <Link href="/envoyer" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Envoyer un colis</Link>
-            <Link href="/transporter" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Transporter</Link>
-            <Link href="/suivi" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>📦 Suivi de colis</Link>
-            <Link href="/international" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>International</Link>
-            <Link href="/comment-ca-marche" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Comment ça marche</Link>
+            <Link href="/annonces" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_listings")}</Link>
+            <Link href="/livreurs" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_deliverers")}</Link>
+            <Link href="/envoyer" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_send")}</Link>
+            <Link href="/transporter" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_transport")}</Link>
+            <Link href="/suivi" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>📦 {t("nav_tracking")}</Link>
+            <Link href="/international" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_international")}</Link>
+            <Link href="/comment-ca-marche" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_how_it_works")}</Link>
             {user ? (
               <>
-                <Link href="/tableau-de-bord" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Tableau de bord</Link>
-                <Link href="/messages" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Messages</Link>
-                <Link href="/profil" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Mon profil</Link>
-                <button onClick={() => { logout(); setMobileOpen(false); }} className="block py-2 text-dz-red font-medium">Déconnexion</button>
+                <Link href="/tableau-de-bord" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_dashboard")}</Link>
+                <Link href="/messages" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_messages")}</Link>
+                <Link href="/profil" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_profile")}</Link>
+                <button onClick={() => { logout(); setMobileOpen(false); }} className="block py-2 text-dz-red font-medium">{t("nav_logout")}</button>
               </>
             ) : (
               <div className="flex gap-3 pt-2">
-                <Link href="/connexion" className="text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>Connexion</Link>
-                <Link href="/inscription" className="bg-dz-green text-white px-4 py-2 rounded-xl font-medium" onClick={() => setMobileOpen(false)}>Inscription</Link>
+                <Link href="/connexion" className="text-dz-gray-600 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_login")}</Link>
+                <Link href="/inscription" className="bg-dz-green text-white px-4 py-2 rounded-xl font-medium" onClick={() => setMobileOpen(false)}>{t("nav_register")}</Link>
               </div>
             )}
           </div>

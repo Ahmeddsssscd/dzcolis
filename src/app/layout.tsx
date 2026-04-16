@@ -2,12 +2,14 @@ import type { Metadata } from "next";
 import { Plus_Jakarta_Sans, Cairo } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "@/lib/context";
+import { LanguageProvider } from "@/lib/i18n";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ToastContainer from "@/components/Toast";
 import ThemeProvider from "@/components/ThemeProvider";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -85,14 +87,17 @@ export default function RootLayout({
     <html lang="fr" className={`${jakarta.variable} ${cairo.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
         <ThemeProvider>
-          <AppProvider>
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <ToastContainer />
-            <WhatsAppButton />
-            <PWAInstallPrompt />
-          </AppProvider>
+          <LanguageProvider>
+            <AppProvider>
+              <Header />
+              <main className="flex-1">{children}</main>
+              <Footer />
+              <ToastContainer />
+              <WhatsAppButton />
+              <PWAInstallPrompt />
+              <LanguageSwitcher />
+            </AppProvider>
+          </LanguageProvider>
         </ThemeProvider>
       </body>
     </html>
