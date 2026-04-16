@@ -1,9 +1,10 @@
 import LivreurProfileClient from "./LivreurProfileClient";
 
 interface Props {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }
 
-export default function LivreurProfilePage({ params }: Props) {
-  return <LivreurProfileClient id={params.id} />;
+export default async function LivreurProfilePage({ params }: Props) {
+  const { id } = await params;
+  return <LivreurProfileClient id={id} />;
 }
