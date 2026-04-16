@@ -3,57 +3,24 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 
-interface Listing {
-  id: string;
-  from_city: string;
-  to_city: string;
-  departure_date: string;
-  available_weight: number;
-  price_per_kg: number;
-  is_international: boolean;
-  status: string;
-}
-
 interface LivreurData {
   id: string;
   first_name: string;
   last_name: string;
   wilaya: string;
-  rating: number;
-  review_count: number;
-  kyc_status: string;
-  avatar_url: string | null;
+  transport_type: string;
+  message?: string;
   created_at: string;
-  listings: Listing[];
 }
 
-const BADGE_CONFIG: Record<string, { label: string; cls: string; icon: string }> = {
-  verified: { label: "Identité vérifiée", cls: "bg-green-100 text-green-700 border-green-200", icon: "✓" },
-  top:      { label: "Top Livreur",       cls: "bg-yellow-100 text-yellow-700 border-yellow-200", icon: "⭐" },
-  fast:     { label: "Livraison rapide",  cls: "bg-blue-100 text-blue-700 border-blue-200", icon: "⚡" },
-  intl:     { label: "International",    cls: "bg-purple-100 text-purple-700 border-purple-200", icon: "✈️" },
+const TRANSPORT_ICONS: Record<string, string> = {
+  voiture: "🚗",
+  moto: "🏍️",
+  camionnette: "🚐",
+  camion: "🚛",
+  avion: "✈️",
+  international: "✈️",
 };
-
-function getBadges(l: LivreurData) {
-  const b: string[] = [];
-  if (l.kyc_status === "approved") b.push("verified");
-  if (l.review_count >= 10 && l.rating >= 4.5) b.push("top");
-  if (l.review_count >= 5 && l.rating >= 4.7) b.push("fast");
-  if (l.listings?.some((li) => li.is_international)) b.push("intl");
-  return b;
-}
-
-function Stars({ rating }: { rating: number }) {
-  return (
-    <div className="flex gap-0.5">
-      {[1,2,3,4,5].map((s) => (
-        <svg key={s} className={`w-5 h-5 ${s <= Math.round(rating) ? "fill-yellow-400 text-yellow-400" : "fill-gray-200 text-gray-200"}`} viewBox="0 0 24 24">
-          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-        </svg>
-      ))}
-    </div>
-  );
-}
 
 export default function LivreurProfileClient({ id }: { id: string }) {
   const [data, setData] = useState<LivreurData | null>(null);
@@ -86,17 +53,16 @@ export default function LivreurProfileClient({ id }: { id: string }) {
     </div>
   );
 
-  const badges = getBadges(data);
   const initial = (data.first_name[0] ?? "?") + (data.last_name[0] ?? "");
   const memberSince = new Date(data.created_at).toLocaleDateString("fr-FR", { month: "long", year: "numeric" });
-  const activeListings = data.listings?.filter((l) => l.status === "active") ?? [];
   const profileUrl = `https://www.waselli.com/livreurs/${id}`;
+  const transport = data.transport_type || "voiture";
 
   return (
     <div className="min-h-screen bg-dz-gray-50">
 
       {/* ── Banner ── */}
-      <div className="bg-gradient-to-br from-dz-green to-green-700 h-32" />
+      <div className="bg-gradient-to-br from-dz-green to-dz-green-dark h-32" />
 
       <div className="max-w-4xl mx-auto px-4 -mt-16 pb-12">
 
@@ -106,52 +72,31 @@ export default function LivreurProfileClient({ id }: { id: string }) {
 
             {/* Avatar */}
             <div className="w-24 h-24 rounded-2xl overflow-hidden bg-dz-green/10 flex items-center justify-center border-4 border-white shadow-md shrink-0">
-              {data.avatar_url ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={data.avatar_url} alt={data.first_name} className="w-full h-full object-cover" />
-              ) : (
-                <span className="text-3xl font-black text-dz-green">{initial}</span>
-              )}
+              <span className="text-3xl font-black text-dz-green">{initial}</span>
             </div>
 
             <div className="flex-1 min-w-0">
-              <div className="flex flex-wrap items-center gap-3 mb-1">
-                <h1 className="text-2xl font-bold text-dz-gray-900">
-                  {data.first_name} {data.last_name[0]}.
-                </h1>
-                {badges.includes("verified") && (
-                  <span className="text-xs font-bold bg-green-100 text-green-700 border border-green-200 px-2.5 py-1 rounded-full">✓ Identité vérifiée</span>
-                )}
-              </div>
+              <h1 className="text-2xl font-bold text-dz-gray-900 mb-1">
+                {data.first_name} {data.last_name[0]}.
+              </h1>
 
-              <p className="text-sm text-dz-gray-400 mb-2 flex items-center gap-1">
+              <p className="text-sm text-dz-gray-400 mb-3 flex items-center gap-1">
                 <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 </svg>
                 {data.wilaya || "Algérie"} · Membre depuis {memberSince}
               </p>
 
-              <div className="flex items-center gap-3 mb-3">
-                <Stars rating={data.rating} />
-                <span className="text-sm font-semibold text-dz-gray-700">
-                  {data.review_count > 0 ? `${data.rating.toFixed(1)} · ${data.review_count} avis` : "Nouveau livreur"}
+              {/* Transport type badge */}
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 bg-dz-green/10 text-dz-green text-sm font-semibold px-3 py-1.5 rounded-full">
+                  <span>{TRANSPORT_ICONS[transport] ?? "🚗"}</span>
+                  <span className="capitalize">{transport}</span>
                 </span>
-              </div>
-
-              {/* Other badges */}
-              <div className="flex flex-wrap gap-2">
-                {badges.filter(b => b !== "verified").map((b) => {
-                  const conf = BADGE_CONFIG[b];
-                  return (
-                    <span key={b} className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${conf.cls}`}>
-                      {conf.icon} {conf.label}
-                    </span>
-                  );
-                })}
               </div>
             </div>
 
-            {/* Share button */}
+            {/* Share buttons */}
             <div className="flex flex-col gap-2 shrink-0">
               <button
                 onClick={copyLink}
@@ -183,60 +128,36 @@ export default function LivreurProfileClient({ id }: { id: string }) {
           </div>
         </div>
 
-        {/* ── Stats row ── */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
-          {[
-            { label: "Livraisons", value: data.review_count > 0 ? data.review_count : "—" },
-            { label: "Note", value: data.review_count > 0 ? `${data.rating.toFixed(1)}/5` : "—" },
-            { label: "Annonces actives", value: activeListings.length },
-          ].map((s) => (
-            <div key={s.label} className="bg-white rounded-2xl border border-dz-gray-100 p-4 text-center">
-              <p className="text-2xl font-bold text-dz-gray-800">{s.value}</p>
-              <p className="text-xs text-dz-gray-400 mt-1">{s.label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* ── Active listings ── */}
-        <div className="bg-white rounded-2xl border border-dz-gray-100 p-6">
-          <h2 className="font-bold text-dz-gray-800 text-lg mb-4">
-            Trajets disponibles
-            {activeListings.length > 0 && (
-              <span className="ml-2 text-sm font-normal text-dz-gray-400">({activeListings.length})</span>
-            )}
-          </h2>
-
-          {activeListings.length === 0 ? (
-            <p className="text-dz-gray-400 text-sm italic py-4 text-center">
-              Aucun trajet actif pour le moment.
+        {/* ── Bio / Message section ── */}
+        {data.message && (
+          <div className="bg-white rounded-2xl border border-dz-gray-100 p-6 mb-6">
+            <h2 className="font-bold text-dz-gray-800 text-lg mb-3">À propos</h2>
+            <p className="text-dz-gray-600 text-sm leading-relaxed italic">
+              &ldquo;{data.message}&rdquo;
             </p>
-          ) : (
-            <div className="space-y-3">
-              {activeListings.map((l) => (
-                <Link
-                  key={l.id}
-                  href={`/annonces/${l.id}`}
-                  className="flex items-center justify-between p-4 rounded-xl border border-dz-gray-100 hover:border-dz-green/30 hover:shadow-sm transition-all group"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg">{l.is_international ? "✈️" : "🚗"}</span>
-                    <div>
-                      <p className="font-semibold text-dz-gray-800 text-sm group-hover:text-dz-green transition-colors">
-                        {l.from_city} → {l.to_city}
-                      </p>
-                      <p className="text-xs text-dz-gray-400 mt-0.5">
-                        {new Date(l.departure_date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
-                        {" · "}{l.available_weight} kg disponibles
-                      </p>
-                    </div>
-                  </div>
-                  <span className="font-bold text-dz-green text-sm">
-                    {l.price_per_kg.toLocaleString("fr-FR")} {l.is_international ? "€" : "DA"}/kg
-                  </span>
-                </Link>
-              ))}
-            </div>
-          )}
+          </div>
+        )}
+
+        {/* ── Contact section ── */}
+        <div className="bg-white rounded-2xl border border-dz-gray-100 p-6 mb-6">
+          <h2 className="font-bold text-dz-gray-800 text-lg mb-3">Contacter ce transporteur</h2>
+          <p className="text-dz-gray-500 text-sm mb-4">
+            Intéressé(e) ? Contactez ce transporteur via Waselli pour organiser votre envoi.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              href="/envoyer"
+              className="inline-flex items-center justify-center gap-2 bg-dz-green hover:bg-dz-green-light text-white font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm"
+            >
+              Envoyer un colis
+            </Link>
+            <Link
+              href="/inscription"
+              className="inline-flex items-center justify-center gap-2 border border-dz-gray-200 hover:border-dz-green/40 text-dz-gray-700 hover:text-dz-green font-semibold px-5 py-2.5 rounded-xl transition-colors text-sm"
+            >
+              Créer un compte
+            </Link>
+          </div>
         </div>
 
         <div className="mt-6 text-center">
