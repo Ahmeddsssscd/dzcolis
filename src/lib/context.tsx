@@ -88,6 +88,7 @@ interface AuthContextType {
     firstName: string; lastName: string; email: string;
     password: string; phone: string; wilaya: string; referredBy?: string;
   }) => Promise<{ error: string | null }>;
+  signInWithGoogle: () => Promise<void>;
   logout: () => Promise<void>;
   updateUser: (data: Partial<Pick<User, "firstName" | "lastName" | "phone" | "wilaya" | "avatarUrl">>) => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -261,6 +262,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
       },
     });
     return { error: error?.message ?? null };
+  };
+
+  const signInWithGoogle = async () => {
+    await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: `${window.location.origin}/auth/callback`,
+      },
+    });
   };
 
   const logout = async () => {
@@ -485,7 +495,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   );
 
   return (
-    <AuthContext.Provider value={{ user, supabaseUser, authLoading, login, register, logout, updateUser, refreshUser }}>
+    <AuthContext.Provider value={{ user, supabaseUser, authLoading, login, register, signInWithGoogle, logout, updateUser, refreshUser }}>
       <ListingsContext.Provider value={{ listings, listingsLoading, addListing, getListingById, refreshListings: fetchListings }}>
         <BookingsContext.Provider value={{ bookings, bookingsLoading, createBooking, updateBookingStatus, getBookingsForUser, refreshBookings: fetchBookings }}>
           <MessagesContext.Provider value={{ conversations, messages, sendMessage, getOrCreateConversation, getMessages }}>
