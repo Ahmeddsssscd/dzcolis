@@ -1,26 +1,46 @@
-<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+<svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="0.6" y2="1">
-      <stop offset="0%" stop-color="#1e3a8a"/>
-      <stop offset="55%" stop-color="#1d4ed8"/>
-      <stop offset="100%" stop-color="#2563eb"/>
+    <!-- Waselli brand blue — same family as the reference icon.
+         Top-left darker navy, bottom-right bright royal, subtle sheen. -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%"  stop-color="#2f5fe8"/>
+      <stop offset="55%" stop-color="#2a55d6"/>
+      <stop offset="100%" stop-color="#1e3fb8"/>
     </linearGradient>
+    <!-- Soft top-left glare to match the reference. -->
+    <radialGradient id="sheen" cx="0.25" cy="0.18" r="0.8">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.18"/>
+      <stop offset="60%"  stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
   </defs>
 
-  <!-- Background rounded square -->
-  <rect width="512" height="512" rx="115" fill="url(#bg)"/>
+  <!-- Rounded square, no stroke border (this is what avoids the
+       outline artefact the OS sometimes paints behind the icon). -->
+  <rect width="512" height="512" rx="112" ry="112" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="112" ry="112" fill="url(#sheen)"/>
 
-  <!-- Subtle glass highlight -->
-  <ellipse cx="185" cy="90" rx="210" ry="105" fill="white" opacity="0.11"/>
+  <!-- Two motion dashes — speed lines on the left of the W. -->
+  <g fill="#ffffff">
+    <rect x="92"  y="214" width="112" height="26" rx="13"/>
+    <rect x="70"  y="268" width="140" height="26" rx="13"/>
+  </g>
 
-  <!-- Bold W lettermark -->
-  <text
-    x="256"
-    y="375"
-    font-family="'Segoe UI', Arial Black, sans-serif"
-    font-weight="900"
-    font-size="348"
-    fill="white"
-    text-anchor="middle"
-    letter-spacing="-14">W</text>
+  <!-- The W lettermark with a trailing flourish loop.
+       Single bold stroke so it reads as a hand-drawn signature
+       rather than a rigid typeface glyph. Rounded caps and joins
+       carry the motion-dash rhythm into the mark itself. -->
+  <path d="M 178 168
+           L 210 358
+           L 256 240
+           L 302 358
+           L 344 168
+           C 360 220, 378 290, 368 348
+           C 362 386, 334 408, 308 400
+           C 286 392, 288 368, 308 362
+           C 330 358, 358 372, 362 388"
+        fill="none"
+        stroke="#ffffff"
+        stroke-width="30"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
 </svg>

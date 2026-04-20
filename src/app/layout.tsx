@@ -26,7 +26,7 @@ const cairo = Cairo({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#1d4ed8",
+  themeColor: "#2a55d6",
 };
 
 export const metadata: Metadata = {
@@ -48,12 +48,19 @@ export const metadata: Metadata = {
     capable: true,
     statusBarStyle: "default",
     title: "Waselli",
-    startupImage: "/icons/logo.png",
+    startupImage: "/icons/icon-512.png",
   },
+  // Next.js auto-discovers /src/app/icon.png, apple-icon.png, and
+  // /public/favicon.ico — we still declare the SVG + PNG fallbacks
+  // explicitly so older browsers and search-engine crawlers find them.
   icons: {
-    icon: "/icons/logo.png",
-    apple: "/icons/logo.png",
-    shortcut: "/icons/logo.png",
+    icon: [
+      { url: "/icons/icon.svg",     type: "image/svg+xml" },
+      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: "/favicon.ico",
   },
   openGraph: {
     title: "Waselli — Livraison collaborative Algérie & Europe",
@@ -62,13 +69,13 @@ export const metadata: Metadata = {
     url: "https://www.waselli.com",
     locale: "fr_DZ",
     siteName: "Waselli",
-    images: [{ url: "/icons/logo.png", width: 512, height: 512, alt: "Waselli" }],
+    images: [{ url: "/icons/icon-512.png", width: 512, height: 512, alt: "Waselli" }],
   },
   twitter: {
     card: "summary",
     title: "Waselli — Livraison collaborative Algérie & Europe",
     description: "Envoyez vos colis entre l'Algérie et l'Europe grâce à des transporteurs vérifiés.",
-    images: ["/icons/logo.png"],
+    images: ["/icons/icon-512.png"],
   },
   robots: {
     index: true,
