@@ -128,7 +128,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       if (res.ok) {
         setAuthenticated(true);
       } else {
-        setError("Mot de passe incorrect.");
+        // Try to surface the real server error so config issues (missing env
+        // vars, rate-limit, etc.) are debuggable instead of always saying
+        // "password incorrect".
+        let msg = "Mot de passe incorrect.";
+        try {
+          const body = await res.json();
+          if (body?.error && typeof body.error === "string") msg = body.error;
+        } catch { /* non-JSON response — keep default msg */ }
+        if (res.status === 500) {
+          msg = "Configuration serveur incomplète — prévenir l'administrateur.";
+        }
+        setError(msg);
       }
     } catch {
       setError("Erreur de connexion. Réessayez.");
