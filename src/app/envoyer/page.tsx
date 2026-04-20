@@ -8,12 +8,19 @@ import Link from "next/link";
 
 type InsuranceTier = "basique" | "standard" | "premium";
 
+/**
+ * Assurance premium = pure percentage of declared value.
+ * No flat minimum — charging 300 DA on a 500 DA parcel felt wrong,
+ * and any minimum at all reads as a hidden fee to first-time users.
+ * If the client declares nothing, premium is zero — they keep the
+ * free Basique tier coverage.
+ */
 function calcInsurancePremium(tier: InsuranceTier, declaredValue: string): number {
   const val = parseFloat(declaredValue) || 0;
   if (val <= 0) return 0;
   if (tier === "basique") return 0;
-  if (tier === "standard") return Math.max(150, val * 0.01);
-  return Math.max(300, val * 0.02);
+  if (tier === "standard") return Math.round(val * 0.01);
+  return Math.round(val * 0.02);
 }
 
 export default function EnvoyerPage() {

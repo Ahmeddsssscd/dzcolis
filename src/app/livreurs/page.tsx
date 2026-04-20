@@ -27,7 +27,6 @@ const TRANSPORT_FILTERS = [
   { value: "", label: "Tous les types" },
   { value: "voiture", label: "Voiture" },
   { value: "moto", label: "Moto" },
-  { value: "camionnette", label: "Camionnette" },
   { value: "camion", label: "Camion" },
   { value: "international", label: "International" },
 ];
@@ -35,7 +34,6 @@ const TRANSPORT_FILTERS = [
 const TRANSPORT_TYPES = [
   { value: "voiture", label: "Voiture" },
   { value: "moto", label: "Moto" },
-  { value: "camionnette", label: "Camionnette" },
   { value: "camion", label: "Camion" },
   { value: "international", label: "International" },
 ];

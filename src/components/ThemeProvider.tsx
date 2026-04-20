@@ -17,8 +17,12 @@ export default function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setTheme] = useState<Theme>("light");
 
   useEffect(() => {
+    // First visit → always light. Only respect the user's explicit choice
+    // after they've clicked the toggle (stored in localStorage).
+    // Ignoring OS `prefers-color-scheme` keeps the brand feel consistent
+    // for newcomers who don't know we have a dark mode yet.
     const stored = localStorage.getItem("waselli_theme") as Theme | null;
-    const preferred = stored ?? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    const preferred: Theme = stored ?? "light";
     setTheme(preferred);
     document.documentElement.classList.toggle("dark", preferred === "dark");
   }, []);

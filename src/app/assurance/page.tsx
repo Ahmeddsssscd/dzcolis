@@ -19,8 +19,8 @@ const tiers = [
   },
   {
     name: "Standard",
-    price: "1% valeur déclarée",
-    priceMin: "min 150 DA / 1 €",
+    price: "1% de la valeur déclarée",
+    priceMin: "Sans frais minimum",
     coverage: "50 000 DA",
     coverageInt: "1 500 €",
     color: "border-blue-200",
@@ -36,8 +36,8 @@ const tiers = [
   },
   {
     name: "Premium",
-    price: "2% valeur déclarée",
-    priceMin: "min 300 DA / 2 €",
+    price: "2% de la valeur déclarée",
+    priceMin: "Sans frais minimum",
     coverage: "150 000 DA",
     coverageInt: "3 000 €",
     color: "border-dz-green",

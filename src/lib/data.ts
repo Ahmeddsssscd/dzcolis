@@ -305,13 +305,13 @@ export const INTERNATIONAL_LISTINGS: Listing[] = [
   {
     id: "int-2",
     type: "trip",
-    title: "Trajet Alger → Lyon - Camionnette",
+    title: "Trajet Alger → Lyon - Fourgon",
     from: "Alger",
     to: "Lyon",
     date: "2026-04-22",
     price: 5000,
     weight: "jusqu'à 120 kg",
-    description: "Camionnette avec grand espace de chargement. Idéal pour colis lourds ou volumineux. Documents douaniers pris en charge.",
+    description: "Fourgon avec grand espace de chargement. Idéal pour colis lourds ou volumineux. Documents douaniers pris en charge.",
     user: { name: "Kamel R.", rating: 5.0, reviews: 61, avatar: "KR" },
   },
   {
