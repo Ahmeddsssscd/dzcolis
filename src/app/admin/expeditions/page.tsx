@@ -239,6 +239,17 @@ export default function ExpeditionsPage() {
                       <td className="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">{exp.date}</td>
                       <td className="px-4 py-3">
                         <div className="flex items-center gap-1 flex-wrap">
+                          {/* Bon de livraison PDF — always available so admins
+                              can issue a signed proof at any stage. */}
+                          <a
+                            href={`/api/admin/bookings/${exp.id}/proof-pdf`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-2 py-1 text-xs font-semibold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors whitespace-nowrap"
+                            title="Télécharger le bon de livraison signé"
+                          >
+                            PDF
+                          </a>
                           {/* Accepter */}
                           {exp.statut === "en_attente" && (
                             <button disabled={isActing}
