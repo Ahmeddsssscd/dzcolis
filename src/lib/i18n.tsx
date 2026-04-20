@@ -659,6 +659,19 @@ const translations = {
     about_cta_subtitle:        "Expéditeurs ou transporteurs, faites partie du mouvement qui révolutionne la livraison en Algérie.",
     about_cta_register:        "Créer un compte",
     about_cta_contact:         "Nous contacter",
+
+    // ── Booking / shipment status labels (used in /suivi, /tableau-de-bord) ──
+    status_pending:           "En attente",
+    status_pending_long:      "En attente de récupération",
+    status_accepted:          "Accepté",
+    status_accepted_long:     "Accepté par le transporteur",
+    status_in_transit:        "En transit",
+    status_in_transit_long:   "En transit",
+    status_delivered:         "Livré",
+    status_delivered_long:    "Livré avec succès",
+    status_cancelled:         "Annulé",
+    status_cancelled_long:    "Annulé",
+    status_rejected:          "Refusé",
   },
 
   en: {
@@ -1303,6 +1316,19 @@ const translations = {
     about_cta_subtitle:        "Senders or transporters, be part of the movement revolutionizing delivery in Algeria.",
     about_cta_register:        "Create an account",
     about_cta_contact:         "Contact us",
+
+    // ── Booking / shipment status labels ──
+    status_pending:           "Pending",
+    status_pending_long:      "Awaiting pickup",
+    status_accepted:          "Accepted",
+    status_accepted_long:     "Accepted by carrier",
+    status_in_transit:        "In transit",
+    status_in_transit_long:   "In transit",
+    status_delivered:         "Delivered",
+    status_delivered_long:    "Delivered successfully",
+    status_cancelled:         "Cancelled",
+    status_cancelled_long:    "Cancelled",
+    status_rejected:          "Rejected",
   },
 
   ar: {
@@ -1947,6 +1973,19 @@ const translations = {
     about_cta_subtitle:        "مرسلون أو سائقون، كونوا جزءًا من الحركة التي تُحدث ثورة في التوصيل بالجزائر.",
     about_cta_register:        "إنشاء حساب",
     about_cta_contact:         "تواصل معنا",
+
+    // ── Booking / shipment status labels ──
+    status_pending:           "قيد الانتظار",
+    status_pending_long:      "في انتظار الاستلام",
+    status_accepted:          "مقبول",
+    status_accepted_long:     "تم القبول من قبل الناقل",
+    status_in_transit:        "في الطريق",
+    status_in_transit_long:   "في الطريق",
+    status_delivered:         "تم التسليم",
+    status_delivered_long:    "تم التسليم بنجاح",
+    status_cancelled:         "ملغى",
+    status_cancelled_long:    "ملغى",
+    status_rejected:          "مرفوض",
 
     // ── Marketplace (annonces) ──
   },

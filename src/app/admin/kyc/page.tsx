@@ -153,7 +153,10 @@ export default function KYCPage() {
                         )}
                         <span>{doc.label}</span>
                         {doc.url && (
-                          <a href={`${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/kyc-documents/${doc.url}`}
+                          // The API already returns a short-lived signed URL
+                          // (10-min TTL) — the bucket is private, so there's
+                          // no permanent /public/ link the admin could copy.
+                          <a href={doc.url}
                             target="_blank" rel="noreferrer"
                             className="ml-auto text-blue-500 hover:underline font-normal">Voir</a>
                         )}

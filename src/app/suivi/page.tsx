@@ -1,14 +1,8 @@
 "use client";
-import { useState, useEffect, FormEvent } from "react";
+import { useState, useEffect, Suspense, FormEvent } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-
-const STEPS = [
-  { label: "En attente",   sublabel: "De récupération",     icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg> },
-  { label: "Accepté",      sublabel: "Par le transporteur", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" /></svg> },
-  { label: "En transit",   sublabel: "Vers destination",    icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg> },
-  { label: "Livré",        sublabel: "Confirmé",            icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg> },
-];
+import { useI18n } from "@/lib/i18n";
 
 const STATUS_INDEX: Record<string, number> = {
   pending:    0,
@@ -16,14 +10,6 @@ const STATUS_INDEX: Record<string, number> = {
   in_transit: 2,
   delivered:  3,
   cancelled:  -1,
-};
-
-const STATUS_LABEL: Record<string, string> = {
-  pending:    "En attente de récupération",
-  accepted:   "Accepté par le transporteur",
-  in_transit: "En transit",
-  delivered:  "Livré avec succès",
-  cancelled:  "Annulé",
 };
 
 const STATUS_COLOR: Record<string, string> = {
@@ -65,12 +51,49 @@ function fmt(date: string | null) {
   });
 }
 
+// Suspense wrapper — Next.js 16 requires any component that reads the URL
+// via `useSearchParams()` to be inside a <Suspense> boundary, otherwise
+// the entire route gets pushed to client-side rendering and the static
+// shell flashes blank on first paint. Keeping the hook in a child lets
+// the parent prerender the loading fallback.
 export default function SuiviPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-[60vh] flex items-center justify-center">
+          <div className="animate-pulse text-dz-gray-500 text-sm">Chargement…</div>
+        </div>
+      }
+    >
+      <SuiviPageContent />
+    </Suspense>
+  );
+}
+
+function SuiviPageContent() {
+  const { t } = useI18n();
   const searchParams = useSearchParams();
   const [inputValue, setInputValue] = useState(searchParams.get("ref") ?? "");
   const [result, setResult] = useState<TrackingResult | null>(null);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Steps for the progress tracker — labels flow through i18n so the
+  // badge switches language along with the rest of the UI.
+  const STEPS = [
+    { label: t("status_pending"),    sublabel: t("status_pending_long"),   icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg> },
+    { label: t("status_accepted"),   sublabel: t("status_accepted_long"),  icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" /></svg> },
+    { label: t("status_in_transit"), sublabel: t("status_in_transit_long"), icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg> },
+    { label: t("status_delivered"),  sublabel: t("status_delivered_long"),  icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg> },
+  ];
+
+  const STATUS_LABEL: Record<string, string> = {
+    pending:    t("status_pending_long"),
+    accepted:   t("status_accepted_long"),
+    in_transit: t("status_in_transit_long"),
+    delivered:  t("status_delivered_long"),
+    cancelled:  t("status_cancelled_long"),
+  };
 
   // Auto-search if ref is in URL
   useEffect(() => {

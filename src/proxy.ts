@@ -2,19 +2,26 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 // ── Maintenance mode cache (module-level, survives across requests in same instance) ──
+// Two-tier cache:
+//   - `fresh` window (SHORT_TTL): hit — no Supabase call, return cached value
+//   - `stale` window (STALE_TTL): hit — return cached value AND refresh in
+//     background, so the admin toggle still propagates within ~1 minute
+//     without hammering the service-role endpoint on every request.
+//
+// Why bother: the previous 10-second window meant a moderately busy site
+// would call Supabase (with the service-role key in the Authorization
+// header) six times per minute per instance. Any request-log capture of
+// that header == database compromise. Longer TTL = less exposure surface.
 let maintenanceCache: { enabled: boolean; message: string; ts: number } | null = null;
-const CACHE_TTL = 10_000; // 10 seconds — short so admin toggle reflects quickly
+let refreshInFlight = false;
+const SHORT_TTL = 60_000;  // 1 min — serve without touching Supabase
+const STALE_TTL = 300_000; // 5 min — still serve, but kick a background refresh
 
-async function getMaintenanceStatus(): Promise<{ enabled: boolean; message: string }> {
-  const now = Date.now();
-  if (maintenanceCache && now - maintenanceCache.ts < CACHE_TTL) {
-    return { enabled: maintenanceCache.enabled, message: maintenanceCache.message };
-  }
-
+async function fetchMaintenanceFromSupabase(): Promise<{ enabled: boolean; message: string } | null> {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-    if (!supabaseUrl || !serviceKey) return { enabled: false, message: "" };
+    if (!supabaseUrl || !serviceKey) return null;
 
     const res = await fetch(
       `${supabaseUrl}/rest/v1/platform_settings?key=in.(maintenance,maintenance_message)&select=key,value`,
@@ -27,19 +34,49 @@ async function getMaintenanceStatus(): Promise<{ enabled: boolean; message: stri
       }
     );
 
-    if (res.ok) {
-      const rows: { key: string; value: string }[] = await res.json();
-      const enabled = rows.find((r) => r.key === "maintenance")?.value === "true";
-      const message =
-        rows.find((r) => r.key === "maintenance_message")?.value ??
-        "Le site est temporairement en maintenance. Nous revenons très bientôt.";
-      maintenanceCache = { enabled, message, ts: now };
-      return { enabled, message };
-    }
+    if (!res.ok) return null;
+
+    const rows: { key: string; value: string }[] = await res.json();
+    const enabled = rows.find((r) => r.key === "maintenance")?.value === "true";
+    const message =
+      rows.find((r) => r.key === "maintenance_message")?.value ??
+      "Le site est temporairement en maintenance. Nous revenons très bientôt.";
+    return { enabled, message };
   } catch {
-    // Supabase unreachable — don't block users
+    return null;
+  }
+}
+
+async function getMaintenanceStatus(): Promise<{ enabled: boolean; message: string }> {
+  const now = Date.now();
+  const age = maintenanceCache ? now - maintenanceCache.ts : Infinity;
+
+  // Fresh — return immediately without a network call.
+  if (maintenanceCache && age < SHORT_TTL) {
+    return { enabled: maintenanceCache.enabled, message: maintenanceCache.message };
   }
 
+  // Stale but still usable — return cached value, kick off a background refresh.
+  if (maintenanceCache && age < STALE_TTL && !refreshInFlight) {
+    refreshInFlight = true;
+    fetchMaintenanceFromSupabase()
+      .then((fresh) => {
+        if (fresh) maintenanceCache = { ...fresh, ts: Date.now() };
+      })
+      .finally(() => {
+        refreshInFlight = false;
+      });
+    return { enabled: maintenanceCache.enabled, message: maintenanceCache.message };
+  }
+
+  // No cache or too old — blocking refresh.
+  const fresh = await fetchMaintenanceFromSupabase();
+  if (fresh) {
+    maintenanceCache = { ...fresh, ts: now };
+    return fresh;
+  }
+
+  // Supabase unreachable — fail open (don't block users).
   return { enabled: false, message: "" };
 }
 
@@ -83,11 +120,18 @@ export async function proxy(request: NextRequest) {
     /\.(png|jpg|jpeg|svg|ico|webp|gif|woff2?)$/.test(pathname);
 
   if (!isExempt) {
-    const { enabled, message } = await getMaintenanceStatus();
+    const { enabled } = await getMaintenanceStatus();
     if (enabled) {
       const url = request.nextUrl.clone();
       url.pathname = "/maintenance";
-      url.searchParams.set("message", message);
+      // Intentionally DO NOT propagate the admin message in the URL.
+      // The maintenance page's client component fetches the current
+      // message from /api/maintenance/status on mount, so pushing it
+      // through the URL is unnecessary AND it creates an injection
+      // surface (a user-crafted `?message=...` would appear on the page,
+      // and any HTML/JS payload stored in the admin message setting
+      // would land in the address bar of every redirected user). Keep
+      // admin-controlled text out of URLs.
       return NextResponse.redirect(url);
     }
   }

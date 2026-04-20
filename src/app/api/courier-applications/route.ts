@@ -61,6 +61,27 @@ export async function POST(request: Request) {
     if (!user?.email) {
       return NextResponse.json({ error: "Vous devez être connecté pour postuler." }, { status: 401 });
     }
+
+    // Require a confirmed email before letting someone publish a carrier
+    // application. Otherwise a typo in the email locks them out forever
+    // and unverified applicants end up in our admin queue — cost in
+    // review time AND an SEO/trust problem if anyone browses carriers.
+    //
+    // Supabase sets `email_confirmed_at` when the user completes the
+    // confirmation link. If it's missing, ask them to confirm first.
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const emailConfirmedAt = (user as any).email_confirmed_at ?? (user as any).confirmed_at;
+    if (!emailConfirmedAt) {
+      return NextResponse.json(
+        {
+          error:
+            "Veuillez confirmer votre adresse e-mail avant de postuler. " +
+            "Vérifiez votre boîte de réception (ou les spams) pour le lien de confirmation.",
+        },
+        { status: 403 }
+      );
+    }
+
     const email = user.email;
 
     if (!first_name || !last_name || !email || !phone || !wilaya || !transport_type) {

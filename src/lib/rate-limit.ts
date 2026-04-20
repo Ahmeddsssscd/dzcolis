@@ -33,9 +33,31 @@ export function getClientIp(req: NextRequest | Request): string {
   const headerGet = (name: string) =>
     (req as NextRequest).headers?.get?.(name) ?? null;
 
-  const forwarded = headerGet("x-forwarded-for");
+  // On Vercel (our production host), `x-real-ip` is set by the edge proxy
+  // and CANNOT be overridden by the client. Prefer it when present.
   const real = headerGet("x-real-ip");
-  return forwarded?.split(",")[0]?.trim() || real || "unknown";
+  if (real) return real;
+
+  // Fallback: `x-forwarded-for` is a comma-separated chain. The LEFTMOST
+  // entry is the original claimed client — which the client controls and
+  // can spoof (`curl -H "X-Forwarded-For: 1.2.3.4"`). The RIGHTMOST entry
+  // is the one the closest trusted proxy appended, which is the real
+  // source IP. Use the last entry so per-IP rate limits can't be bypassed
+  // by forging the header.
+  //
+  // This matches OWASP guidance for XFF parsing behind a single trusted
+  // hop. If we ever add Cloudflare in front of Vercel we'll need to skip
+  // one additional proxy-added entry from the tail.
+  const forwarded = headerGet("x-forwarded-for");
+  if (forwarded) {
+    const parts = forwarded
+      .split(",")
+      .map((p) => p.trim())
+      .filter(Boolean);
+    if (parts.length > 0) return parts[parts.length - 1];
+  }
+
+  return "unknown";
 }
 
 /**

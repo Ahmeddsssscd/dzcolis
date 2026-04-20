@@ -1,6 +1,25 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
+/**
+ * Privacy rule: sender phone numbers are only exposed once a booking has
+ * actually moved past "pending". If a booking is still waiting for the
+ * transporter's decision (or was refused/cancelled), we show a masked phone
+ * so transporters cannot harvest contact info from senders they never
+ * committed to transport.
+ *
+ * Once the transporter ACCEPTS the booking, the full phone appears — they
+ * need it to coordinate pickup.
+ */
+const FULL_CONTACT_STATUSES = new Set(["accepted", "in_transit", "delivered"]);
+
+function maskPhone(phone: unknown): string {
+  if (typeof phone !== "string" || phone.length === 0) return "—";
+  const digits = phone.replace(/\D+/g, "");
+  if (digits.length <= 4) return "•••";
+  return `••• ••• ${digits.slice(-2)}`;
+}
+
 export async function GET() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
@@ -43,17 +62,24 @@ export async function GET() {
   const profileMap = Object.fromEntries((profiles ?? []).map((p: any) => [p.id, p]));
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const enriched = bookings.map((b: any) => ({
-    ...b,
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sender_name: profileMap[b.sender_id] ? `${(profileMap[b.sender_id] as any).first_name} ${(profileMap[b.sender_id] as any).last_name}`.trim() : "—",
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    sender_phone: (profileMap[b.sender_id] as any)?.phone ?? "—",
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    from_city: (listingMap[b.listing_id] as any)?.from_city ?? "—",
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    to_city: (listingMap[b.listing_id] as any)?.to_city ?? "—",
-  }));
+  const enriched = bookings.map((b: any) => {
+    const profile = profileMap[b.sender_id];
+    const rawPhone = profile?.phone ?? null;
+    const canSeeFullPhone = FULL_CONTACT_STATUSES.has(String(b.status));
+    return {
+      ...b,
+      sender_name: profile
+        ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          `${(profile as any).first_name ?? ""} ${(profile as any).last_name ?? ""}`.trim() || "—"
+        : "—",
+      sender_phone: canSeeFullPhone ? (rawPhone ?? "—") : maskPhone(rawPhone),
+      sender_phone_masked: !canSeeFullPhone,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      from_city: (listingMap[b.listing_id] as any)?.from_city ?? "—",
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      to_city: (listingMap[b.listing_id] as any)?.to_city ?? "—",
+    };
+  });
 
   return NextResponse.json(enriched);
 }

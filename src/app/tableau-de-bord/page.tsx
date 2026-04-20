@@ -207,10 +207,12 @@ export default function DashboardPage() {
           <ReviewModal
             transporterName="Transporteur"
             transporterAvatar="T"
-            onSubmit={(rating, comment) => {
+            onSubmit={(_rating, _comment) => {
+              // Actual submission is already persisted by the ReviewModal
+              // component via /api/bookings/[id]/review; here we just mark
+              // the booking as reviewed locally so the CTA disappears.
               setReviewedBookings(prev => new Set([...prev, reviewBookingId]));
               setReviewBookingId(null);
-              console.log("Review submitted:", { rating, comment, bookingId: reviewBookingId });
             }}
             onClose={() => setReviewBookingId(null)}
           />
@@ -421,6 +423,18 @@ export default function DashboardPage() {
 
                           {isExpanded && (
                             <div className="px-4 pb-4 bg-green-50/50">
+                              {/* TODO(dead-branch): this was originally a
+                                  role-based switch — transporter actions
+                                  (pickup/delivery photo upload) vs. sender
+                                  actions (shipment-receive confirmation).
+                                  The condition was replaced with `true` to
+                                  disable the sender flow mid-refactor, so
+                                  the else branch below is permanently dead.
+                                  Don't "clean up" blindly: the sender flow
+                                  needs to land before the condition is
+                                  restored, otherwise senders lose their
+                                  shipment-confirmation UI. See issue
+                                  tracker / future feature task. */}
                               {true ? (
                                 /* Transporteur actions */
                                 <div className="space-y-3 pt-3">
@@ -691,6 +705,15 @@ export default function DashboardPage() {
                         </div>
                         <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
                           <span className="text-sm font-bold text-dz-gray-800">{Number(b.total_amount ?? 0).toLocaleString("fr-FR")} {(b as any).listings?.is_international ? "€" : "DA"}</span>
+                          <a
+                            href={`/api/bookings/${String(b.id)}/receipt-pdf`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-2 py-1.5 text-xs font-semibold rounded-lg bg-gray-100 text-gray-700 hover:bg-gray-200 transition-colors"
+                            title="Télécharger le reçu PDF"
+                          >
+                            PDF
+                          </a>
                           {bStatus === "pending" && (
                             <>
                               <button disabled={updatingBooking === String(b.id)}
