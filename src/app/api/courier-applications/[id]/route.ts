@@ -1,6 +1,9 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
-import { checkAdminCookie } from "@/lib/admin-auth";
+import { requireAction } from "@/lib/admin-auth";
+import { logAdminAction } from "@/lib/admin-audit";
+
+export const runtime = "nodejs";
 
 function getServiceSupabase() {
   return createClient(
@@ -10,10 +13,13 @@ function getServiceSupabase() {
   );
 }
 
-export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
-  if (!(await checkAdminCookie())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const sessionOrRes = await requireAction("courier_applications.review");
+  if (sessionOrRes instanceof NextResponse) return sessionOrRes;
+  const session = sessionOrRes;
 
   const { id } = await params;
   const body = await request.json();
@@ -31,6 +37,16 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     .select()
     .single();
 
-  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  if (error) return NextResponse.json({ error: "Erreur serveur." }, { status: 500 });
+
+  await logAdminAction({
+    session,
+    req: request,
+    action: status === "approved" ? "courier_application.approve" : "courier_application.reject",
+    targetType: "courier_application",
+    targetId: id,
+    metadata: { admin_note: admin_note ?? null },
+  });
+
   return NextResponse.json(data);
 }

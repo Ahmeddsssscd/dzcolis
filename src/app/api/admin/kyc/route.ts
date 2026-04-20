@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminSupabase } from "@/lib/supabase/admin";
-import { checkAdminCookie } from "@/lib/admin-auth";
+import { requireAction } from "@/lib/admin-auth";
+import { logAdminAction } from "@/lib/admin-audit";
 import { sendKycApprovedEmail, sendKycRejectedEmail } from "@/lib/email";
 import { checkRateLimit } from "@/lib/rate-limit";
 
@@ -45,9 +46,8 @@ async function signPath(path: string | null): Promise<string | null> {
 
 // GET — list KYC submissions (paginated, with signed URLs)
 export async function GET(req: NextRequest) {
-  if (!(await checkAdminCookie())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  const sessionOrRes = await requireAction("kyc.view");
+  if (sessionOrRes instanceof NextResponse) return sessionOrRes;
 
   // Even admin endpoints get rate-limited — if a token leaks, slow the bleed.
   const limited = checkRateLimit(req, {
@@ -90,9 +90,9 @@ export async function GET(req: NextRequest) {
 
 // POST — approve or reject a user's KYC
 export async function POST(req: NextRequest) {
-  if (!(await checkAdminCookie())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  const sessionOrRes = await requireAction("kyc.review");
+  if (sessionOrRes instanceof NextResponse) return sessionOrRes;
+  const session = sessionOrRes;
 
   const limited = checkRateLimit(req, {
     bucket: "admin-kyc-action",
@@ -161,6 +161,15 @@ export async function POST(req: NextRequest) {
     const emailFn = action === "approve" ? sendKycApprovedEmail : sendKycRejectedEmail;
     await emailFn(authUser.user.email, profile.first_name).catch(console.error);
   }
+
+  await logAdminAction({
+    session,
+    req,
+    action: action === "approve" ? "kyc.approve" : "kyc.reject",
+    targetType: "user",
+    targetId: userId,
+    metadata: {},
+  });
 
   return NextResponse.json({ success: true, newStatus });
 }

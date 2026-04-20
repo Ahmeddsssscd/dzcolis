@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { adminSupabase } from "@/lib/supabase/admin";
-import { checkAdminCookie } from "@/lib/admin-auth";
+import { requireAction } from "@/lib/admin-auth";
+
+export const runtime = "nodejs";
 
 export async function GET() {
-  if (!(await checkAdminCookie())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const sessionOrRes = await requireAction("dashboard.view");
+  if (sessionOrRes instanceof NextResponse) return sessionOrRes;
 
   try {
     const now = new Date();

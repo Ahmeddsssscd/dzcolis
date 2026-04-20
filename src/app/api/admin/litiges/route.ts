@@ -1,15 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminSupabase } from "@/lib/supabase/admin";
-import { checkAdminCookie } from "@/lib/admin-auth";
+import { requireAction } from "@/lib/admin-auth";
+import { logAdminAction } from "@/lib/admin-audit";
+
+export const runtime = "nodejs";
 
 // We persist litige resolutions in the notifications table
 // using type "litige_resolution" and user_id "admin"
 // so they survive page refreshes without needing a new table.
 
 export async function GET() {
-  if (!(await checkAdminCookie())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const sessionOrRes = await requireAction("disputes.view");
+  if (sessionOrRes instanceof NextResponse) return sessionOrRes;
 
   try {
     const { data, error } = await adminSupabase
@@ -33,9 +35,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  if (!(await checkAdminCookie())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const sessionOrRes = await requireAction("disputes.resolve");
+  if (sessionOrRes instanceof NextResponse) return sessionOrRes;
+  const session = sessionOrRes;
 
   try {
     const { litige_id, decision } = await req.json();
@@ -59,9 +61,17 @@ export async function POST(req: NextRequest) {
     });
 
     if (error) throw error;
+    await logAdminAction({
+      session,
+      req,
+      action: "dispute.resolve",
+      targetType: "litige",
+      targetId: litige_id,
+      metadata: { decision },
+    });
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("Litiges POST error:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json({ error: "Erreur serveur." }, { status: 500 });
   }
 }

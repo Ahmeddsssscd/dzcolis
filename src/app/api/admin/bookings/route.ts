@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminSupabase } from "@/lib/supabase/admin";
-import { checkAdminCookie } from "@/lib/admin-auth";
+import { requireAction } from "@/lib/admin-auth";
+import { logAdminAction } from "@/lib/admin-audit";
+
+export const runtime = "nodejs";
 
 export async function PATCH(req: NextRequest) {
-  if (!(await checkAdminCookie())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const sessionOrRes = await requireAction("payments.refund");
+  if (sessionOrRes instanceof NextResponse) return sessionOrRes;
+  const session = sessionOrRes;
 
   try {
     const { id, status, payment_status } = await req.json();
@@ -29,6 +32,14 @@ export async function PATCH(req: NextRequest) {
     if (payment_status === "refunded") {
       await adminSupabase.from("payments").update({ status: "refunded" }).eq("booking_id", id);
     }
+    await logAdminAction({
+      session,
+      req,
+      action: "booking.update",
+      targetType: "booking",
+      targetId: id,
+      metadata: { status, payment_status },
+    });
     return NextResponse.json({ ok: true });
   } catch (err) {
     console.error("Bookings PATCH error:", err);
@@ -37,9 +48,8 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function GET() {
-  if (!(await checkAdminCookie())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const sessionOrRes = await requireAction("bookings.view");
+  if (sessionOrRes instanceof NextResponse) return sessionOrRes;
 
   try {
     const { data: bookings, error } = await adminSupabase

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { adminSupabase } from "@/lib/supabase/admin";
-import { checkAdminCookie } from "@/lib/admin-auth";
+import { requireAction } from "@/lib/admin-auth";
 
 async function checkSupabase(): Promise<{ ok: boolean; latencyMs: number }> {
   const start = Date.now();
@@ -51,9 +51,8 @@ async function checkChargily(): Promise<{ ok: boolean; mode: string }> {
 }
 
 export async function GET() {
-  if (!(await checkAdminCookie())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const sessionOrRes = await requireAction("dashboard.view");
+  if (sessionOrRes instanceof NextResponse) return sessionOrRes;
 
   const [supabase, resend, chargily] = await Promise.all([
     checkSupabase(),

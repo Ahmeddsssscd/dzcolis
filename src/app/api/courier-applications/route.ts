@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { createClient as createServerClient } from "@/lib/supabase/server";
-import { checkAdminCookie } from "@/lib/admin-auth";
+import { requireAction } from "@/lib/admin-auth";
 import { createClient } from "@supabase/supabase-js";
 import { checkRateLimit } from "@/lib/rate-limit";
 
@@ -27,9 +27,8 @@ function isValidVehiclePhotoUrl(url: unknown): url is string {
 
 // GET — list all applications (admin only)
 export async function GET() {
-  if (!(await checkAdminCookie())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
-  }
+  const sessionOrRes = await requireAction("courier_applications.review");
+  if (sessionOrRes instanceof NextResponse) return sessionOrRes;
   const supabase = getServiceSupabase();
   const { data, error } = await supabase
     .from("courier_applications")

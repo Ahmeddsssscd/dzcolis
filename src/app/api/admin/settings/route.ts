@@ -1,18 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminSupabase } from "@/lib/supabase/admin";
-import { checkAdminCookie } from "@/lib/admin-auth";
+import { requireAction } from "@/lib/admin-auth";
+import { logAdminAction } from "@/lib/admin-audit";
+
+export const runtime = "nodejs";
 
 export async function GET() {
-  if (!(await checkAdminCookie())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const sessionOrRes = await requireAction("dashboard.view");
+  if (sessionOrRes instanceof NextResponse) return sessionOrRes;
 
   const { data, error } = await adminSupabase
     .from("platform_settings")
     .select("key, value");
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Erreur serveur." }, { status: 500 });
   }
 
   const settings: Record<string, string> = {};
@@ -24,9 +26,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  if (!(await checkAdminCookie())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  const sessionOrRes = await requireAction("settings.update");
+  if (sessionOrRes instanceof NextResponse) return sessionOrRes;
+  const session = sessionOrRes;
 
   const body = await req.json();
 
@@ -41,8 +43,16 @@ export async function POST(req: NextRequest) {
     .upsert(upserts, { onConflict: "key" });
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: "Erreur serveur." }, { status: 500 });
   }
+
+  await logAdminAction({
+    session,
+    req,
+    action: "settings.update",
+    targetType: "platform_settings",
+    metadata: { keys: Object.keys(body) },
+  });
 
   return NextResponse.json({ success: true });
 }
