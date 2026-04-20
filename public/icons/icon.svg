@@ -1,39 +1,51 @@
 <svg viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" shape-rendering="geometricPrecision">
   <defs>
-    <radialGradient id="bg" cx="0.5" cy="0.38" r="0.75">
-      <stop offset="0%"   stop-color="#5080F2"/>
-      <stop offset="55%"  stop-color="#3A6EE6"/>
-      <stop offset="100%" stop-color="#2850CE"/>
+    <radialGradient id="bg" cx="0.5" cy="0.42" r="0.72">
+      <stop offset="0%"   stop-color="#4A7CEE"/>
+      <stop offset="55%"  stop-color="#3868E2"/>
+      <stop offset="100%" stop-color="#2650CC"/>
     </radialGradient>
   </defs>
 
-  <!-- iOS-style squircle background -->
   <rect width="512" height="512" rx="115" ry="115" fill="url(#bg)"/>
 
-  <!-- Speed line 1: rounded-left, right-pointing arrow -->
-  <path d="M 192 228 L 210 243 L 192 258 L 100 258 A 15 15 0 0 1 100 228 Z" fill="white"/>
+  <!-- Speed line 1 (top) -->
+  <path d="M 188 216 L 206 230 L 188 244 L 94 244 A 14 14 0 0 1 94 216 Z" fill="white"/>
 
-  <!-- Speed line 2: slightly longer, same style -->
-  <path d="M 196 268 L 214 283 L 196 298 L 79 298 A 15 15 0 0 1 79 268 Z" fill="white"/>
+  <!-- Speed line 2 (bottom) -->
+  <path d="M 192 264 L 210 278 L 192 292 L 74 292 A 14 14 0 0 1 74 264 Z" fill="white"/>
 
-  <!-- Cursive w + 9-loop lettermark (single continuous stroke) -->
+  <!--
+    w + 9 lettermark.
+
+    Circle: centre (375,200) r=100.
+    Junction = CW-135° point = (304,271).
+    Full clockwise traversal starting from junction:
+      junction(304,271) → left(275,200) → top(375,100) → right(475,200)
+      → bottom(375,300) → junction(304,271)   [self-crossing = "9" effect]
+    Tail exits junction downward.
+
+    w: two valleys (~y=310), peak (~y=232), exits at junction (304,271).
+  -->
   <path d="
-    M 198 255
-    C 204 255, 216 278, 220 304
-    C 224 328, 252 244, 256 220
-    C 260 196, 288 282, 290 306
-    C 292 328, 322 264, 332 248
-    C 340 234, 360 196, 378 186
-    C 400 172, 430 196, 430 250
-    C 430 304, 412 328, 390 332
-    C 368 336, 346 322, 336 302
-    C 326 284, 330 264, 336 252
-    C 330 266, 324 306, 320 348
-    C 316 382, 320 406, 334 414
+    M 190 258
+    C 196 258, 210 286, 212 310
+    C 214 334, 244 254, 246 232
+    C 248 210, 276 288, 278 310
+    C 280 332, 298 286, 304 271
+
+    C 294 247, 275 228, 275 200
+    C 275 145, 320 100, 375 100
+    C 430 100, 475 145, 475 200
+    C 475 255, 430 300, 375 300
+    C 349 300, 314 296, 304 271
+
+    C 304 296, 296 362, 292 430
+    C 290 456, 298 466, 314 468
   "
     fill="none"
     stroke="white"
-    stroke-width="34"
+    stroke-width="38"
     stroke-linecap="round"
     stroke-linejoin="round"
   />

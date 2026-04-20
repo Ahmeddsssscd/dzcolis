@@ -28,14 +28,29 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
+
+// Use the high-resolution PNG master (icon-master.png) if present,
+// otherwise fall back to the SVG. The PNG master is the canonical brand
+// asset copied from the designer's 4096×4096 export.
+const SRC_PNG = resolve(ROOT, "public/icons/icon-master.png");
 const SRC_SVG = resolve(ROOT, "public/icons/icon.svg");
 
-const svgBuffer = await readFile(SRC_SVG);
+let srcBuffer;
+let usingSvg = false;
+try {
+  srcBuffer = await readFile(SRC_PNG);
+} catch {
+  srcBuffer = await readFile(SRC_SVG);
+  usingSvg = true;
+}
 
 async function png(outPath, size, opts = {}) {
   const abs = resolve(ROOT, outPath);
   await mkdir(dirname(abs), { recursive: true });
-  await sharp(svgBuffer, { density: 384 })
+  const sharpInstance = usingSvg
+    ? sharp(srcBuffer, { density: 384 })
+    : sharp(srcBuffer);
+  await sharpInstance
     .resize(size, size, { fit: "contain", background: opts.bg ?? { r: 0, g: 0, b: 0, alpha: 0 } })
     .png({ compressionLevel: 9 })
     .toFile(abs);
@@ -54,7 +69,8 @@ async function pngMaskable(outPath, size) {
   // Render the logo at the inner size, then composite onto a solid blue
   // square at the full size — OS can crop to a circle and the W stays
   // well inside the safe zone.
-  const logo = await sharp(svgBuffer, { density: 384 })
+  const sharpSrc = usingSvg ? sharp(srcBuffer, { density: 384 }) : sharp(srcBuffer);
+  const logo = await sharpSrc
     .resize(inner, inner)
     .png()
     .toBuffer();
@@ -81,7 +97,7 @@ async function favicon(outPath) {
   const sizes = [16, 32, 48];
   const buffers = await Promise.all(
     sizes.map((s) =>
-      sharp(svgBuffer, { density: 384 })
+      (usingSvg ? sharp(srcBuffer, { density: 384 }) : sharp(srcBuffer))
         .resize(s, s)
         .png()
         .toBuffer(),
@@ -122,7 +138,7 @@ function buildIco(sizes, pngBuffers) {
   return Buffer.concat([header, directory, ...pngBuffers]);
 }
 
-console.log("Generating Waselli icons from", SRC_SVG);
+console.log("Generating Waselli icons from", usingSvg ? SRC_SVG : SRC_PNG);
 
 await png("public/icons/icon-192.png",  192);
 await png("public/icons/icon-512.png",  512);
