@@ -12,6 +12,7 @@ import {
   type IssueSeverity,
   type IssueStatus,
 } from "./audit-data";
+import { useAdminT, type AdminKey } from "@/lib/admin-i18n";
 
 /*
  * /admin/systeme — the "what's the state of this codebase" page.
@@ -26,6 +27,12 @@ import {
  * ./audit-data.ts. Treat that file as the single source of truth: flip
  * status → "fixed" once something ships. The AUDIT_UPDATED_AT banner at
  * the top tells admins how stale the list is at a glance.
+ *
+ * All visible text is translated through `useAdminT()` so switching the
+ * global language switcher re-renders this page in fr/en/ar. Audit item
+ * `title`/`note` strings stay in French — they're engineering-facing
+ * content maintained alongside the code; translating them per locale
+ * isn't worth the cost.
  */
 
 type Tab = "sante" | "securite" | "features" | "infra";
@@ -37,33 +44,33 @@ interface HealthData {
   checkedAt: string;
 }
 
-/* ─── Tiny presentational helpers ─────────────────────────────────── */
+/* ─── Style maps (colour stays, labels resolved via t()) ──────────── */
 
-const SEVERITY_STYLES: Record<IssueSeverity, { chip: string; dot: string; label: string }> = {
-  critical: { chip: "bg-red-50 text-red-700 border-red-200",         dot: "bg-red-500",    label: "Critique" },
-  high:     { chip: "bg-orange-50 text-orange-700 border-orange-200", dot: "bg-orange-500", label: "Élevé" },
-  medium:   { chip: "bg-yellow-50 text-yellow-700 border-yellow-200", dot: "bg-yellow-500", label: "Moyen" },
-  low:      { chip: "bg-blue-50 text-blue-700 border-blue-200",       dot: "bg-blue-500",   label: "Bas" },
+const SEVERITY_STYLES: Record<IssueSeverity, { chip: string; dot: string; key: AdminKey }> = {
+  critical: { chip: "bg-red-50 text-red-700 border-red-200",         dot: "bg-red-500",    key: "adm_sys_sev_crit" },
+  high:     { chip: "bg-orange-50 text-orange-700 border-orange-200", dot: "bg-orange-500", key: "adm_sys_sev_high" },
+  medium:   { chip: "bg-yellow-50 text-yellow-700 border-yellow-200", dot: "bg-yellow-500", key: "adm_sys_sev_med" },
+  low:      { chip: "bg-blue-50 text-blue-700 border-blue-200",       dot: "bg-blue-500",   key: "adm_sys_sev_low" },
 };
 
-const STATUS_STYLES: Record<IssueStatus, { chip: string; label: string }> = {
-  open:    { chip: "bg-gray-100 text-gray-700",  label: "À faire" },
-  wip:     { chip: "bg-indigo-100 text-indigo-700", label: "En cours" },
-  fixed:   { chip: "bg-green-100 text-green-700",  label: "Corrigé" },
-  wontfix: { chip: "bg-gray-200 text-gray-500",    label: "Accepté" },
+const STATUS_STYLES: Record<IssueStatus, { chip: string; key: AdminKey }> = {
+  open:    { chip: "bg-gray-100 text-gray-700",     key: "adm_sys_st_open" },
+  wip:     { chip: "bg-indigo-100 text-indigo-700", key: "adm_sys_st_wip" },
+  fixed:   { chip: "bg-green-100 text-green-700",   key: "adm_sys_st_fixed" },
+  wontfix: { chip: "bg-gray-200 text-gray-500",     key: "adm_sys_st_wontfix" },
 };
 
-const INFRA_SEVERITY_STYLES: Record<InfraItem["severity"], { chip: string; label: string }> = {
-  high:   { chip: "bg-orange-50 text-orange-700 border-orange-200", label: "Élevé" },
-  medium: { chip: "bg-yellow-50 text-yellow-700 border-yellow-200", label: "Moyen" },
-  low:    { chip: "bg-blue-50 text-blue-700 border-blue-200",       label: "Bas" },
+const INFRA_SEVERITY_STYLES: Record<InfraItem["severity"], { chip: string; key: AdminKey }> = {
+  high:   { chip: "bg-orange-50 text-orange-700 border-orange-200", key: "adm_sys_sev_high" },
+  medium: { chip: "bg-yellow-50 text-yellow-700 border-yellow-200", key: "adm_sys_sev_med" },
+  low:    { chip: "bg-blue-50 text-blue-700 border-blue-200",       key: "adm_sys_sev_low" },
 };
 
-const FEATURE_STATUS_STYLES: Record<FeatureItem["status"], { chip: string; bar: string; label: string }> = {
-  idea:    { chip: "bg-gray-100 text-gray-600",        bar: "bg-gray-300",    label: "Idée" },
-  wip:     { chip: "bg-indigo-100 text-indigo-700",    bar: "bg-indigo-500",  label: "En cours" },
-  done:    { chip: "bg-green-100 text-green-700",      bar: "bg-green-500",   label: "Livré" },
-  blocked: { chip: "bg-red-100 text-red-700",          bar: "bg-red-400",     label: "Bloqué" },
+const FEATURE_STATUS_STYLES: Record<FeatureItem["status"], { chip: string; bar: string; key: AdminKey }> = {
+  idea:    { chip: "bg-gray-100 text-gray-600",     bar: "bg-gray-300",    key: "adm_sys_f_idea" },
+  wip:     { chip: "bg-indigo-100 text-indigo-700", bar: "bg-indigo-500",  key: "adm_sys_f_wip" },
+  done:    { chip: "bg-green-100 text-green-700",   bar: "bg-green-500",   key: "adm_sys_f_done" },
+  blocked: { chip: "bg-red-100 text-red-700",       bar: "bg-red-400",     key: "adm_sys_f_blocked" },
 };
 
 function Chip({ className, children }: { className: string; children: React.ReactNode }) {
@@ -81,6 +88,7 @@ function HealthDot({ ok }: { ok: boolean }) {
 }
 
 function HealthTab() {
+  const { t, lang } = useAdminT();
   const [health, setHealth] = useState<HealthData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -93,7 +101,7 @@ function HealthTab() {
       if (!res.ok) throw new Error(String(res.status));
       setHealth(await res.json());
     } catch {
-      setError("Impossible de récupérer l'état du système.");
+      setError(t("adm_sys_h_error"));
     } finally {
       setLoading(false);
     }
@@ -101,25 +109,32 @@ function HealthTab() {
 
   useEffect(() => {
     refresh();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const tag = lang === "ar" ? "ar-DZ" : lang === "en" ? "en-US" : "fr-FR";
+  let checkedStr: string = t("adm_sys_h_waiting");
+  if (health?.checkedAt) {
+    try {
+      checkedStr = `${t("adm_sys_h_checked")} ${new Date(health.checkedAt).toLocaleTimeString(tag)}`;
+    } catch {
+      checkedStr = `${t("adm_sys_h_checked")} ${new Date(health.checkedAt).toLocaleTimeString("fr-FR")}`;
+    }
+  }
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <div>
-          <h3 className="text-gray-900 font-semibold">Services externes</h3>
-          <p className="text-xs text-gray-400 mt-0.5">
-            {health?.checkedAt
-              ? `Vérifié à ${new Date(health.checkedAt).toLocaleTimeString("fr-FR")}`
-              : "En attente de la première vérification…"}
-          </p>
+          <h3 className="text-gray-900 font-semibold">{t("adm_sys_h_services")}</h3>
+          <p className="text-xs text-gray-400 mt-0.5">{checkedStr}</p>
         </div>
         <button
           onClick={refresh}
           disabled={loading}
           className="text-xs font-medium text-blue-600 hover:text-blue-700 disabled:text-gray-400"
         >
-          {loading ? "Vérification…" : "Actualiser"}
+          {loading ? t("adm_sys_h_checking") : t("adm_sys_h_refresh")}
         </button>
       </div>
 
@@ -131,52 +146,43 @@ function HealthTab() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <HealthCard
-          title="Base de données"
-          subtitle="Supabase"
+          title={t("adm_sys_h_db")}
+          subtitle={t("adm_sys_h_db_sub")}
           ok={health?.supabase.ok ?? false}
           loading={loading && !health}
           detail={health?.supabase.latencyMs != null ? `${health.supabase.latencyMs} ms` : "—"}
         />
         <HealthCard
-          title="Emails"
-          subtitle="Resend"
+          title={t("adm_sys_h_mail")}
+          subtitle={t("adm_sys_h_mail_sub")}
           ok={health?.resend.ok ?? false}
           loading={loading && !health}
           detail={health?.resend.mode ?? "—"}
         />
         <HealthCard
-          title="Paiements"
-          subtitle="Chargily"
+          title={t("adm_sys_h_pay")}
+          subtitle={t("adm_sys_h_pay_sub")}
           ok={health?.chargily.ok ?? false}
           loading={loading && !health}
-          detail={`Mode : ${health?.chargily.mode ?? "—"}`}
+          detail={`${t("adm_sys_h_mode")} ${health?.chargily.mode ?? "—"}`}
         />
       </div>
 
       {/* Static reminders that often fail silently */}
       <div className="bg-white border border-gray-100 rounded-2xl p-5 space-y-3">
-        <h4 className="text-sm font-semibold text-gray-900">Rappels de configuration</h4>
+        <h4 className="text-sm font-semibold text-gray-900">{t("adm_sys_h_rem_title")}</h4>
         <ul className="space-y-2 text-sm text-gray-600">
           <li className="flex items-start gap-2">
             <span className="text-gray-400">•</span>
-            <span>
-              <strong>STRIPE_WEBHOOK_SECRET</strong> doit être défini sinon les paiements EUR
-              n&apos;enregistrent pas la completion (voir onglet Infra → O2).
-            </span>
+            <span>{t("adm_sys_h_rem_stripe")}</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-gray-400">•</span>
-            <span>
-              Migration <strong>002_kyc_private_storage.sql</strong> à appliquer en prod pour fermer
-              l&apos;accès public aux scans CIN (voir onglet Infra → O1).
-            </span>
+            <span>{t("adm_sys_h_rem_migration")}</span>
           </li>
           <li className="flex items-start gap-2">
             <span className="text-gray-400">•</span>
-            <span>
-              Vérifier que <strong>ADMIN_SESSION_SECRET</strong> est défini (≥ 32 caractères) et
-              que chaque env de paiement pointe vers le bon <em>mode</em>.
-            </span>
+            <span>{t("adm_sys_h_rem_secret")}</span>
           </li>
         </ul>
       </div>
@@ -189,6 +195,7 @@ function HealthCard({
 }: {
   title: string; subtitle: string; ok: boolean; loading: boolean; detail: string;
 }) {
+  const { t } = useAdminT();
   return (
     <div
       className={`rounded-2xl p-5 border ${
@@ -206,7 +213,7 @@ function HealthCard({
       </div>
       <p className="text-xs text-gray-400 mb-2">{subtitle}</p>
       <p className={`text-sm font-medium ${loading ? "text-gray-400" : ok ? "text-green-700" : "text-red-700"}`}>
-        {loading ? "Vérification…" : ok ? "Opérationnel" : "Indisponible / à configurer"}
+        {loading ? t("adm_sys_h_checking") : ok ? t("adm_sys_h_ok") : t("adm_sys_h_down")}
       </p>
       {!loading && <p className="text-xs text-gray-500 mt-1">{detail}</p>}
     </div>
@@ -218,6 +225,7 @@ function HealthCard({
 const SEVERITY_ORDER: IssueSeverity[] = ["critical", "high", "medium", "low"];
 
 function SecurityTab() {
+  const { t } = useAdminT();
   const [onlyOpen, setOnlyOpen] = useState(true);
 
   const filtered = useMemo(
@@ -246,18 +254,18 @@ function SecurityTab() {
             <div key={sev} className={`rounded-xl border p-4 ${style.chip}`}>
               <div className="flex items-center gap-2">
                 <span className={`w-2 h-2 rounded-full ${style.dot}`} />
-                <span className="text-xs font-semibold uppercase tracking-wide">{style.label}</span>
+                <span className="text-xs font-semibold uppercase tracking-wide">{t(style.key)}</span>
               </div>
               <p className="text-2xl font-bold mt-1">{count}</p>
-              <p className="text-xs opacity-70">item{count > 1 ? "s" : ""}</p>
+              <p className="text-xs opacity-70">{count > 1 ? t("adm_sys_items") : t("adm_sys_item")}</p>
             </div>
           );
         })}
       </div>
 
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
         <p className="text-xs text-gray-500">
-          {counts.fixed} corrigé{counts.fixed > 1 ? "s" : ""} · {counts.open} encore ouvert{counts.open > 1 ? "s" : ""}
+          {counts.fixed} {counts.fixed > 1 ? t("adm_sys_fixed_count_p") : t("adm_sys_fixed_count")} · {counts.open} {counts.open > 1 ? t("adm_sys_open_count_p") : t("adm_sys_open_count")}
         </p>
         <label className="inline-flex items-center gap-2 text-xs text-gray-600 cursor-pointer select-none">
           <input
@@ -266,7 +274,7 @@ function SecurityTab() {
             onChange={(e) => setOnlyOpen(e.target.checked)}
             className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
           />
-          Afficher uniquement les items ouverts
+          {t("adm_sys_only_open")}
         </label>
       </div>
 
@@ -279,7 +287,7 @@ function SecurityTab() {
         })}
         {filtered.length === 0 && (
           <div className="bg-green-50 border border-green-100 rounded-2xl px-5 py-8 text-center">
-            <p className="text-green-700 font-semibold">🎉 Rien à faire ici — tout est vert.</p>
+            <p className="text-green-700 font-semibold">{t("adm_sys_all_green")}</p>
           </div>
         )}
       </div>
@@ -288,13 +296,14 @@ function SecurityTab() {
 }
 
 function SecuritySection({ severity, items }: { severity: IssueSeverity; items: SecurityItem[] }) {
+  const { t } = useAdminT();
   const sevStyle = SEVERITY_STYLES[severity];
   return (
     <section>
       <div className="flex items-center gap-2 mb-2">
         <span className={`w-2 h-2 rounded-full ${sevStyle.dot}`} />
         <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wide">
-          {sevStyle.label} · {items.length}
+          {t(sevStyle.key)} · {items.length}
         </h4>
       </div>
       <div className="bg-white border border-gray-100 rounded-2xl divide-y divide-gray-50 overflow-hidden">
@@ -309,7 +318,7 @@ function SecuritySection({ severity, items }: { severity: IssueSeverity; items: 
                 <code className="block text-[11px] text-gray-500 mt-1 break-all">{it.where}</code>
                 <p className="text-sm text-gray-600 mt-2">{it.note}</p>
               </div>
-              <Chip className={STATUS_STYLES[it.status].chip}>{STATUS_STYLES[it.status].label}</Chip>
+              <Chip className={STATUS_STYLES[it.status].chip}>{t(STATUS_STYLES[it.status].key)}</Chip>
             </div>
           </div>
         ))}
@@ -321,6 +330,7 @@ function SecuritySection({ severity, items }: { severity: IssueSeverity; items: 
 /* ─── Tab 3 — features ────────────────────────────────────────────── */
 
 function FeaturesTab() {
+  const { t } = useAdminT();
   const totalProgress = useMemo(() => {
     if (FEATURE_ITEMS.length === 0) return 0;
     const sum = FEATURE_ITEMS.reduce((s, f) => s + (f.progress ?? 0), 0);
@@ -331,7 +341,7 @@ function FeaturesTab() {
     <div className="space-y-4">
       <div className="bg-white border border-gray-100 rounded-2xl p-5">
         <div className="flex items-center justify-between mb-2">
-          <h4 className="text-sm font-semibold text-gray-900">Progression globale</h4>
+          <h4 className="text-sm font-semibold text-gray-900">{t("adm_sys_f_global")}</h4>
           <span className="text-sm font-bold text-gray-900">{totalProgress}%</span>
         </div>
         <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
@@ -341,7 +351,7 @@ function FeaturesTab() {
           />
         </div>
         <p className="text-xs text-gray-400 mt-2">
-          Moyenne sur {FEATURE_ITEMS.length} fonctionnalités suivies.
+          {t("adm_sys_f_avg_prefix")} {FEATURE_ITEMS.length} {t("adm_sys_f_avg_suffix")}
         </p>
       </div>
 
@@ -355,6 +365,7 @@ function FeaturesTab() {
 }
 
 function FeatureRow({ item }: { item: FeatureItem }) {
+  const { t } = useAdminT();
   const st = FEATURE_STATUS_STYLES[item.status];
   return (
     <div className="p-4">
@@ -366,7 +377,7 @@ function FeatureRow({ item }: { item: FeatureItem }) {
           </div>
           <p className="text-sm text-gray-600 mt-1">{item.note}</p>
         </div>
-        <Chip className={st.chip}>{st.label}</Chip>
+        <Chip className={st.chip}>{t(st.key)}</Chip>
       </div>
       <div className="flex items-center gap-3">
         <div className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
@@ -375,7 +386,7 @@ function FeatureRow({ item }: { item: FeatureItem }) {
             style={{ width: `${item.progress}%` }}
           />
         </div>
-        <span className="text-xs font-semibold text-gray-500 tabular-nums w-10 text-right">
+        <span className="text-xs font-semibold text-gray-500 tabular-nums w-10 text-end">
           {item.progress}%
         </span>
       </div>
@@ -386,13 +397,10 @@ function FeatureRow({ item }: { item: FeatureItem }) {
 /* ─── Tab 4 — infra ───────────────────────────────────────────────── */
 
 function InfraTab() {
+  const { t } = useAdminT();
   return (
     <div className="space-y-4">
-      <p className="text-sm text-gray-600">
-        Checklist d&apos;infrastructure et d&apos;opérations. À cocher manuellement dans
-        <code className="mx-1 px-1.5 py-0.5 bg-gray-100 rounded text-xs">audit-data.ts</code>
-        une fois l&apos;action réalisée.
-      </p>
+      <p className="text-sm text-gray-600">{t("adm_sys_infra_intro")}</p>
 
       <div className="bg-white border border-gray-100 rounded-2xl divide-y divide-gray-50 overflow-hidden">
         {INFRA_ITEMS.map((it) => (
@@ -404,6 +412,7 @@ function InfraTab() {
 }
 
 function InfraRow({ item }: { item: InfraItem }) {
+  const { t } = useAdminT();
   const sev = INFRA_SEVERITY_STYLES[item.severity];
   const status = STATUS_STYLES[item.status];
   return (
@@ -417,8 +426,8 @@ function InfraRow({ item }: { item: InfraItem }) {
           <p className="text-sm text-gray-600 mt-1">{item.note}</p>
         </div>
         <div className="flex items-center gap-2 flex-shrink-0">
-          <Chip className={`border ${sev.chip}`}>{sev.label}</Chip>
-          <Chip className={status.chip}>{status.label}</Chip>
+          <Chip className={`border ${sev.chip}`}>{t(sev.key)}</Chip>
+          <Chip className={status.chip}>{t(status.key)}</Chip>
         </div>
       </div>
     </div>
@@ -427,14 +436,17 @@ function InfraRow({ item }: { item: InfraItem }) {
 
 /* ─── Root ────────────────────────────────────────────────────────── */
 
-const TABS: { key: Tab; label: string; count?: number }[] = [
-  { key: "sante",     label: "Santé" },
-  { key: "securite",  label: "Sécurité",       count: SECURITY_ITEMS.filter((i) => i.status !== "fixed" && i.status !== "wontfix").length },
-  { key: "features",  label: "Fonctionnalités",count: FEATURE_ITEMS.filter((f) => f.status !== "done").length },
-  { key: "infra",     label: "Infra",          count: INFRA_ITEMS.filter((i) => i.status !== "fixed" && i.status !== "wontfix").length },
+interface TabDef { key: Tab; labelKey: AdminKey; count?: number }
+
+const TABS: TabDef[] = [
+  { key: "sante",     labelKey: "adm_sys_tab_health" },
+  { key: "securite",  labelKey: "adm_sys_tab_security",   count: SECURITY_ITEMS.filter((i) => i.status !== "fixed" && i.status !== "wontfix").length },
+  { key: "features",  labelKey: "adm_sys_tab_features",   count: FEATURE_ITEMS.filter((f) => f.status !== "done").length },
+  { key: "infra",     labelKey: "adm_sys_tab_infra",      count: INFRA_ITEMS.filter((i) => i.status !== "fixed" && i.status !== "wontfix").length },
 ];
 
 export default function SystemePage() {
+  const { t } = useAdminT();
   const [tab, setTab] = useState<Tab>("sante");
 
   return (
@@ -442,36 +454,34 @@ export default function SystemePage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Système</h2>
-          <p className="text-gray-500 text-sm mt-1">
-            État des services, audit sécurité et chantiers en cours.
-          </p>
+          <h2 className="text-2xl font-bold text-gray-900">{t("adm_sys_title")}</h2>
+          <p className="text-gray-500 text-sm mt-1">{t("adm_sys_subtitle")}</p>
         </div>
         <span className="text-[11px] font-medium text-gray-400 px-2.5 py-1 rounded-full bg-gray-100">
-          Audit : {AUDIT_UPDATED_AT}
+          {t("adm_sys_audit_date")} : {AUDIT_UPDATED_AT}
         </span>
       </div>
 
       {/* Tabs */}
       <div className="flex items-center gap-1 border-b border-gray-200 overflow-x-auto">
-        {TABS.map((t) => {
-          const active = tab === t.key;
+        {TABS.map((tb) => {
+          const active = tab === tb.key;
           return (
             <button
-              key={t.key}
-              onClick={() => setTab(t.key)}
+              key={tb.key}
+              onClick={() => setTab(tb.key)}
               className={`flex items-center gap-2 px-4 py-3 text-sm font-medium whitespace-nowrap border-b-2 -mb-px transition-colors ${
                 active
                   ? "border-blue-600 text-blue-600"
                   : "border-transparent text-gray-500 hover:text-gray-900"
               }`}
             >
-              {t.label}
-              {t.count != null && t.count > 0 && (
+              {t(tb.labelKey)}
+              {tb.count != null && tb.count > 0 && (
                 <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full ${
                   active ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-500"
                 }`}>
-                  {t.count}
+                  {tb.count}
                 </span>
               )}
             </button>

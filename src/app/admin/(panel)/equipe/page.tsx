@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
+import { useAdminT, type AdminKey } from "@/lib/admin-i18n";
 
 type Role = "viewer" | "support" | "moderator" | "admin" | "super_admin";
 
@@ -14,12 +15,20 @@ interface AdminMember {
   created_at: string;
 }
 
-const ROLE_LABEL: Record<Role, string> = {
-  viewer: "Observateur",
-  support: "Support",
-  moderator: "Modérateur",
-  admin: "Admin",
-  super_admin: "Super Admin",
+const ROLE_I18N_KEY: Record<Role, AdminKey> = {
+  viewer: "adm_role_viewer",
+  support: "adm_role_support",
+  moderator: "adm_role_moderator",
+  admin: "adm_role_admin",
+  super_admin: "adm_role_super_admin",
+};
+
+const ROLE_DESC_KEY: Record<Role, AdminKey> = {
+  viewer: "adm_eq_desc_viewer",
+  support: "adm_eq_desc_support",
+  moderator: "adm_eq_desc_moderator",
+  admin: "adm_eq_desc_admin",
+  super_admin: "adm_eq_desc_super_admin",
 };
 
 const ROLE_COLOR: Record<Role, string> = {
@@ -30,21 +39,19 @@ const ROLE_COLOR: Record<Role, string> = {
   super_admin: "bg-red-100 text-red-700",
 };
 
-const ROLE_DESCRIPTIONS: Record<Role, string> = {
-  viewer: "Lecture seule de toutes les sections.",
-  support: "Peut résoudre les litiges et répondre aux utilisateurs.",
-  moderator: "Support + approuver KYC & candidatures livreurs.",
-  admin: "Modérateur + paramètres plateforme, remboursements.",
-  super_admin: "Accès complet, gère les autres administrateurs.",
-};
-
-function formatDate(iso: string | null) {
-  if (!iso) return "Jamais";
+function formatDate(iso: string | null, lang: "fr" | "en" | "ar", neverLabel: string) {
+  if (!iso) return neverLabel;
+  const tag = lang === "ar" ? "ar-DZ" : lang === "en" ? "en-US" : "fr-FR";
   const d = new Date(iso);
-  return d.toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  try {
+    return d.toLocaleString(tag, { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  } catch {
+    return d.toLocaleString("fr-FR", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" });
+  }
 }
 
 export default function EquipePage() {
+  const { t, lang } = useAdminT();
   const [members, setMembers] = useState<AdminMember[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -73,11 +80,11 @@ export default function EquipePage() {
       }
       if (!listRes.ok) {
         const body = await listRes.json().catch(() => ({}));
-        throw new Error(body?.error ?? "Erreur de chargement");
+        throw new Error(body?.error ?? "Load error");
       }
       setMembers(await listRes.json());
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Erreur inconnue");
+      setError(e instanceof Error ? e.message : "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -93,7 +100,7 @@ export default function EquipePage() {
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      setBanner(`❌ ${data?.error ?? "Échec de la mise à jour"}`);
+      setBanner(`❌ ${data?.error ?? t("adm_eq_err_generic")}`);
       return false;
     }
     setBanner(`✅ ${successMsg}`);
@@ -102,14 +109,14 @@ export default function EquipePage() {
   }
 
   async function deleteMember(id: string, email: string) {
-    if (!confirm(`Supprimer définitivement ${email} ?\n\nPour une désactivation réversible, utilisez plutôt le bouton "Désactiver".`)) return;
+    if (!confirm(`${t("adm_eq_confirm_delete")}\n\n${email}`)) return;
     const res = await fetch(`/api/admin/members/${id}`, { method: "DELETE" });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      setBanner(`❌ ${data?.error ?? "Échec de la suppression"}`);
+      setBanner(`❌ ${data?.error ?? t("adm_eq_err_generic")}`);
       return;
     }
-    setBanner(`🗑️ ${email} supprimé`);
+    setBanner(`🗑️ ${email}`);
     await load();
   }
 
@@ -120,10 +127,8 @@ export default function EquipePage() {
       {/* Header */}
       <div className="flex items-start justify-between flex-wrap gap-4">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Équipe & permissions</h2>
-          <p className="text-gray-500 text-sm mt-1">
-            Gestion des comptes administrateurs et de leurs rôles.
-          </p>
+          <h2 className="text-2xl font-bold text-gray-900">{t("adm_eq_title")}</h2>
+          <p className="text-gray-500 text-sm mt-1">{t("adm_eq_subtitle")}</p>
         </div>
         {isSuper && (
           <button
@@ -133,7 +138,7 @@ export default function EquipePage() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
             </svg>
-            Nouvel administrateur
+            {t("adm_eq_invite")}
           </button>
         )}
       </div>
@@ -147,14 +152,15 @@ export default function EquipePage() {
 
       {/* Role legend */}
       <div className="bg-white rounded-2xl border border-gray-100 p-5">
-        <h3 className="font-semibold text-gray-900 mb-3 text-sm">Rôles disponibles</h3>
+        <h3 className="font-semibold text-gray-900 mb-1 text-sm">{t("adm_eq_legend_title")}</h3>
+        <p className="text-xs text-gray-500 mb-3">{t("adm_eq_legend_subtitle")}</p>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3">
-          {(Object.keys(ROLE_LABEL) as Role[]).map((r) => (
+          {(Object.keys(ROLE_I18N_KEY) as Role[]).map((r) => (
             <div key={r} className="border border-gray-100 rounded-xl p-3">
               <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded ${ROLE_COLOR[r]}`}>
-                {ROLE_LABEL[r]}
+                {t(ROLE_I18N_KEY[r])}
               </span>
-              <p className="text-xs text-gray-500 mt-2 leading-relaxed">{ROLE_DESCRIPTIONS[r]}</p>
+              <p className="text-xs text-gray-500 mt-2 leading-relaxed">{t(ROLE_DESC_KEY[r])}</p>
             </div>
           ))}
         </div>
@@ -163,25 +169,33 @@ export default function EquipePage() {
       {/* Members table */}
       <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
         <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-          <h3 className="font-semibold text-gray-900">{members.length} administrateur{members.length > 1 ? "s" : ""}</h3>
+          <h3 className="font-semibold text-gray-900">{t("adm_eq_members_title")} <span className="text-gray-400 font-normal">· {members.length}</span></h3>
           {!loading && (
-            <button onClick={load} className="text-xs text-gray-400 hover:text-gray-600">Actualiser</button>
+            <button onClick={load} className="text-xs text-gray-400 hover:text-gray-600">{t("adm_jnl_refresh")}</button>
           )}
         </div>
 
         {loading ? (
-          <div className="py-10 text-center text-gray-400 text-sm">Chargement…</div>
+          <div className="py-10 text-center text-gray-400 text-sm">{t("adm_home_loading")}</div>
         ) : error ? (
           <div className="py-10 px-6 text-center text-red-600 text-sm">{error}</div>
         ) : members.length === 0 ? (
-          <div className="py-10 text-center text-gray-400 text-sm">Aucun administrateur.</div>
+          <div className="py-10 text-center text-gray-400 text-sm">{t("adm_eq_empty")}</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-gray-50">
                 <tr>
-                  {["Membre", "Rôle", "Statut", "Dernière connexion", "Créé le", ""].map((h) => (
-                    <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">{h}</th>
+                  {(
+                    [
+                      "adm_eq_col_member",
+                      "adm_eq_col_role",
+                      "adm_eq_col_status",
+                      "adm_eq_col_last_login",
+                      "adm_eq_col_actions",
+                    ] as const
+                  ).map((k) => (
+                    <th key={k} className="px-4 py-3 text-start text-xs font-semibold text-gray-500 uppercase tracking-wide">{t(k)}</th>
                   ))}
                 </tr>
               </thead>
@@ -198,7 +212,7 @@ export default function EquipePage() {
                           <div>
                             <p className="font-medium text-gray-900">
                               {m.full_name ?? "—"}
-                              {isSelf && <span className="ml-2 text-[10px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded-full">Vous</span>}
+                              {isSelf && <span className="ms-2 text-[10px] bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded-full">{t("adm_eq_you_tag")}</span>}
                             </p>
                             <p className="text-xs text-gray-500">{m.email}</p>
                           </div>
@@ -206,38 +220,37 @@ export default function EquipePage() {
                       </td>
                       <td className="px-4 py-3">
                         <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded ${ROLE_COLOR[m.role]}`}>
-                          {ROLE_LABEL[m.role]}
+                          {t(ROLE_I18N_KEY[m.role])}
                         </span>
                       </td>
                       <td className="px-4 py-3">
                         {m.is_active ? (
                           <span className="inline-flex items-center gap-1.5 text-xs text-green-700">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> Actif
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500" /> {t("adm_eq_status_active")}
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1.5 text-xs text-gray-400">
-                            <span className="w-1.5 h-1.5 rounded-full bg-gray-300" /> Désactivé
+                            <span className="w-1.5 h-1.5 rounded-full bg-gray-300" /> {t("adm_eq_status_inactive")}
                           </span>
                         )}
                       </td>
-                      <td className="px-4 py-3 text-xs text-gray-500">{formatDate(m.last_login_at)}</td>
-                      <td className="px-4 py-3 text-xs text-gray-500">{formatDate(m.created_at)}</td>
+                      <td className="px-4 py-3 text-xs text-gray-500">{formatDate(m.last_login_at, lang, t("adm_eq_last_never"))}</td>
                       <td className="px-4 py-3">
                         {isSuper && (
-                          <div className="flex items-center gap-1 justify-end">
+                          <div className="flex items-center gap-1 justify-end flex-wrap">
                             <button
                               onClick={() => setEditRoleId(m.id)}
                               className="text-xs px-2 py-1 rounded text-gray-600 hover:bg-gray-100"
-                              title="Changer le rôle"
+                              title={t("adm_eq_act_change_role")}
                             >
-                              Rôle
+                              {t("adm_eq_act_change_role")}
                             </button>
                             <button
                               onClick={() => setEditPwdId(m.id)}
                               className="text-xs px-2 py-1 rounded text-gray-600 hover:bg-gray-100"
-                              title="Réinitialiser le mot de passe"
+                              title={t("adm_eq_act_reset_pwd")}
                             >
-                              Mot de passe
+                              {t("adm_eq_act_reset_pwd")}
                             </button>
                             {!isSelf && (
                               <button
@@ -245,23 +258,23 @@ export default function EquipePage() {
                                   patchMember(
                                     m.id,
                                     { is_active: !m.is_active },
-                                    m.is_active ? "Compte désactivé" : "Compte réactivé"
+                                    m.is_active ? t("adm_eq_act_deactivate") : t("adm_eq_act_activate")
                                   )
                                 }
                                 className={`text-xs px-2 py-1 rounded ${
                                   m.is_active ? "text-amber-700 hover:bg-amber-50" : "text-green-700 hover:bg-green-50"
                                 }`}
                               >
-                                {m.is_active ? "Désactiver" : "Réactiver"}
+                                {m.is_active ? t("adm_eq_act_deactivate") : t("adm_eq_act_activate")}
                               </button>
                             )}
                             {!isSelf && (
                               <button
                                 onClick={() => deleteMember(m.id, m.email)}
                                 className="text-xs px-2 py-1 rounded text-red-600 hover:bg-red-50"
-                                title="Supprimer définitivement"
+                                title={t("adm_eq_act_delete")}
                               >
-                                Suppr.
+                                {t("adm_eq_act_delete")}
                               </button>
                             )}
                           </div>
@@ -315,6 +328,7 @@ function ModalFrame({ title, onClose, children }: { title: string; onClose: () =
 }
 
 function InviteModal({ onClose, onDone }: { onClose: () => void; onDone: () => void }) {
+  const { t } = useAdminT();
   const [email, setEmail] = useState("");
   const [fullName, setFullName] = useState("");
   const [role, setRole] = useState<Role>("moderator");
@@ -333,48 +347,48 @@ function InviteModal({ onClose, onDone }: { onClose: () => void; onDone: () => v
         body: JSON.stringify({ email, fullName, role, password }),
       });
       const body = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(body?.error ?? "Échec de création");
+      if (!res.ok) throw new Error(body?.error ?? t("adm_eq_err_generic"));
       onDone();
       onClose();
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Erreur");
+      setErr(e instanceof Error ? e.message : t("adm_eq_err_generic"));
     } finally {
       setSaving(false);
     }
   }
 
   return (
-    <ModalFrame title="Nouvel administrateur" onClose={onClose}>
+    <ModalFrame title={t("adm_eq_modal_invite_title")} onClose={onClose}>
+      <p className="text-xs text-gray-500 mb-3">{t("adm_eq_modal_invite_subtitle")}</p>
       <form onSubmit={submit} className="space-y-3 text-sm">
-        <Field label="Nom complet">
+        <Field label={t("adm_eq_modal_name")}>
           <input required value={fullName} onChange={(e) => setFullName(e.target.value)} className="input" />
         </Field>
-        <Field label="Email">
+        <Field label={t("adm_eq_modal_email")}>
           <input required type="email" value={email} onChange={(e) => setEmail(e.target.value)} className="input" />
         </Field>
-        <Field label="Rôle">
+        <Field label={t("adm_eq_modal_role")}>
           <select value={role} onChange={(e) => setRole(e.target.value as Role)} className="input">
-            {(Object.keys(ROLE_LABEL) as Role[]).map((r) => (
-              <option key={r} value={r}>{ROLE_LABEL[r]}</option>
+            {(Object.keys(ROLE_I18N_KEY) as Role[]).map((r) => (
+              <option key={r} value={r}>{t(ROLE_I18N_KEY[r])}</option>
             ))}
           </select>
-          <p className="text-xs text-gray-500 mt-1">{ROLE_DESCRIPTIONS[role]}</p>
+          <p className="text-xs text-gray-500 mt-1">{t(ROLE_DESC_KEY[role])}</p>
         </Field>
-        <Field label="Mot de passe initial (10 caractères min.)">
+        <Field label={t("adm_eq_modal_password")}>
           <input
             required
             type="text"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             className="input font-mono"
-            placeholder="À transmettre au nouvel admin, puis à changer"
           />
         </Field>
         {err && <p className="text-red-600 bg-red-50 rounded-lg px-3 py-2 text-xs">{err}</p>}
         <div className="flex justify-end gap-2 pt-2">
-          <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 text-sm">Annuler</button>
+          <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 text-sm">{t("adm_eq_modal_cancel")}</button>
           <button type="submit" disabled={saving} className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-60">
-            {saving ? "Création…" : "Créer"}
+            {saving ? t("adm_eq_saving") : t("adm_eq_modal_submit_invite")}
           </button>
         </div>
       </form>
@@ -401,6 +415,7 @@ function RoleModal({
 }: {
   member: AdminMember; onClose: () => void; onDone: () => void;
 }) {
+  const { t } = useAdminT();
   const [role, setRole] = useState<Role>(member.role);
   const [err, setErr] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -416,21 +431,24 @@ function RoleModal({
         body: JSON.stringify({ role }),
       });
       const body = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(body?.error ?? "Échec");
+      if (!res.ok) throw new Error(body?.error ?? t("adm_eq_err_generic"));
       onDone();
       onClose();
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Erreur");
+      setErr(e instanceof Error ? e.message : t("adm_eq_err_generic"));
     } finally {
       setSaving(false);
     }
   }
 
   return (
-    <ModalFrame title={`Rôle de ${member.full_name ?? member.email}`} onClose={onClose}>
+    <ModalFrame title={t("adm_eq_modal_role_title")} onClose={onClose}>
+      <p className="text-xs text-gray-500 mb-3">
+        {t("adm_eq_modal_role_subtitle")} <span className="font-medium text-gray-700">{member.full_name ?? member.email}</span>
+      </p>
       <form onSubmit={submit} className="space-y-3 text-sm">
         <div className="space-y-2">
-          {(Object.keys(ROLE_LABEL) as Role[]).map((r) => (
+          {(Object.keys(ROLE_I18N_KEY) as Role[]).map((r) => (
             <label key={r} className={`block border rounded-xl px-3 py-2.5 cursor-pointer transition-colors ${role === r ? "border-blue-500 bg-blue-50" : "border-gray-200 hover:bg-gray-50"}`}>
               <div className="flex items-center gap-3">
                 <input
@@ -443,9 +461,9 @@ function RoleModal({
                 />
                 <div className="flex-1">
                   <span className={`inline-block text-[10px] font-bold uppercase tracking-wide px-2 py-0.5 rounded ${ROLE_COLOR[r]}`}>
-                    {ROLE_LABEL[r]}
+                    {t(ROLE_I18N_KEY[r])}
                   </span>
-                  <p className="text-xs text-gray-500 mt-1">{ROLE_DESCRIPTIONS[r]}</p>
+                  <p className="text-xs text-gray-500 mt-1">{t(ROLE_DESC_KEY[r])}</p>
                 </div>
               </div>
             </label>
@@ -453,9 +471,9 @@ function RoleModal({
         </div>
         {err && <p className="text-red-600 bg-red-50 rounded-lg px-3 py-2 text-xs">{err}</p>}
         <div className="flex justify-end gap-2 pt-1">
-          <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 text-sm">Annuler</button>
+          <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 text-sm">{t("adm_eq_modal_cancel")}</button>
           <button type="submit" disabled={saving || role === member.role} className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-60">
-            {saving ? "Enregistrement…" : "Enregistrer"}
+            {saving ? t("adm_eq_saving") : t("adm_eq_modal_role_submit")}
           </button>
         </div>
       </form>
@@ -468,6 +486,7 @@ function PasswordModal({
 }: {
   member: AdminMember; onClose: () => void; onDone: () => void;
 }) {
+  const { t } = useAdminT();
   const [pwd, setPwd] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
@@ -483,20 +502,21 @@ function PasswordModal({
         body: JSON.stringify({ password: pwd }),
       });
       const body = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(body?.error ?? "Échec");
+      if (!res.ok) throw new Error(body?.error ?? t("adm_eq_err_generic"));
       onDone();
       onClose();
     } catch (e) {
-      setErr(e instanceof Error ? e.message : "Erreur");
+      setErr(e instanceof Error ? e.message : t("adm_eq_err_generic"));
     } finally {
       setSaving(false);
     }
   }
 
   return (
-    <ModalFrame title={`Nouveau mot de passe pour ${member.email}`} onClose={onClose}>
+    <ModalFrame title={t("adm_eq_modal_pwd_title")} onClose={onClose}>
+      <p className="text-xs text-gray-500 mb-3">{member.email}</p>
       <form onSubmit={submit} className="space-y-3 text-sm">
-        <Field label="Nouveau mot de passe (10 caractères min.)">
+        <Field label={t("adm_eq_modal_pwd_new")}>
           <input
             required
             type="text"
@@ -505,14 +525,11 @@ function PasswordModal({
             className="w-full px-3 py-2.5 border border-gray-200 rounded-xl font-mono text-sm"
           />
         </Field>
-        <p className="text-xs text-gray-500 bg-gray-50 rounded-lg px-3 py-2">
-          Transmettez ce mot de passe par un canal sûr. L&apos;utilisateur devra le changer à sa première connexion (bientôt).
-        </p>
         {err && <p className="text-red-600 bg-red-50 rounded-lg px-3 py-2 text-xs">{err}</p>}
         <div className="flex justify-end gap-2 pt-1">
-          <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 text-sm">Annuler</button>
+          <button type="button" onClick={onClose} className="px-4 py-2 rounded-lg text-gray-600 hover:bg-gray-100 text-sm">{t("adm_eq_modal_cancel")}</button>
           <button type="submit" disabled={saving} className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 disabled:opacity-60">
-            {saving ? "Enregistrement…" : "Réinitialiser"}
+            {saving ? t("adm_eq_saving") : t("adm_eq_modal_pwd_submit")}
           </button>
         </div>
       </form>

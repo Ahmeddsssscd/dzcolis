@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, useCallback } from "react";
+import { useAdminT, type AdminKey } from "@/lib/admin-i18n";
 
 /*
  * /admin/journal — audit log viewer.
@@ -12,6 +13,10 @@ import { useEffect, useMemo, useState, useCallback } from "react";
  *
  * Filters are applied server-side so we don't over-fetch when the log
  * has grown to thousands of rows.
+ *
+ * Action codes ("admin.login", "kyc.approve", …) are kept as raw
+ * strings — they're operator/audit jargon, never translated. The
+ * category headings and UI chrome around them are translated.
  */
 
 interface AuditRow {
@@ -32,13 +37,13 @@ interface AuditRow {
  * still renders fine (falls through to the neutral "autre" style) but
  * won't appear in the dropdown. Add new actions as new routes emit them.
  */
-const ACTION_CATEGORIES: { group: string; actions: string[] }[] = [
+const ACTION_CATEGORIES: { groupKey: AdminKey; actions: string[] }[] = [
   {
-    group: "Authentification",
+    groupKey: "adm_jnl_grp_auth",
     actions: ["admin.login", "admin.logout", "admin.bootstrap"],
   },
   {
-    group: "Gestion des admins",
+    groupKey: "adm_jnl_grp_admins",
     actions: [
       "admin.create",
       "admin.delete",
@@ -50,7 +55,7 @@ const ACTION_CATEGORIES: { group: string; actions: string[] }[] = [
     ],
   },
   {
-    group: "Modération",
+    groupKey: "adm_jnl_grp_mod",
     actions: [
       "kyc.approve",
       "kyc.reject",
@@ -61,15 +66,15 @@ const ACTION_CATEGORIES: { group: string; actions: string[] }[] = [
     ],
   },
   {
-    group: "Paiements",
+    groupKey: "adm_jnl_grp_pay",
     actions: ["payments.refund", "payments.manual_confirm"],
   },
   {
-    group: "Litiges",
+    groupKey: "adm_jnl_grp_disp",
     actions: ["disputes.resolve", "disputes.comment"],
   },
   {
-    group: "Configuration",
+    groupKey: "adm_jnl_grp_cfg",
     actions: ["settings.update"],
   },
 ];
@@ -110,14 +115,19 @@ function fmtDateTime(iso: string) {
   return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
 }
 
-function timeAgo(iso: string) {
-  const diff = Date.now() - new Date(iso).getTime();
-  const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "à l'instant";
-  if (mins < 60) return `il y a ${mins}min`;
-  const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `il y a ${hrs}h`;
-  return `il y a ${Math.floor(hrs / 24)}j`;
+function useTimeAgo() {
+  const { t } = useAdminT();
+  return (iso: string) => {
+    const diff = Date.now() - new Date(iso).getTime();
+    const mins = Math.floor(diff / 60000);
+    if (mins < 1) return t("adm_time_ago_now");
+    const prefix = t("adm_time_prefix");
+    const space = prefix ? prefix + " " : "";
+    if (mins < 60) return `${space}${mins}${t("adm_time_min")}`;
+    const hrs = Math.floor(mins / 60);
+    if (hrs < 24) return `${space}${hrs}${t("adm_time_hour")}`;
+    return `${space}${Math.floor(hrs / 24)}${t("adm_time_day")}`;
+  };
 }
 
 /*
@@ -138,15 +148,8 @@ function sinceFromPreset(preset: SincePreset): string {
 
 type SincePreset = "1h" | "24h" | "7d" | "30d" | "all";
 
-const SINCE_OPTIONS: { key: SincePreset; label: string }[] = [
-  { key: "1h",  label: "1h" },
-  { key: "24h", label: "24h" },
-  { key: "7d",  label: "7j" },
-  { key: "30d", label: "30j" },
-  { key: "all", label: "Tout" },
-];
-
 export default function JournalPage() {
+  const { t } = useAdminT();
   const [rows, setRows] = useState<AuditRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -156,6 +159,14 @@ export default function JournalPage() {
   const [search, setSearch] = useState("");
   const [limit, setLimit] = useState(100);
   const [expanded, setExpanded] = useState<string | null>(null);
+
+  const SINCE_OPTIONS: { key: SincePreset; label: string }[] = [
+    { key: "1h",  label: `1${t("adm_time_hour")}` },
+    { key: "24h", label: `24${t("adm_time_hour")}` },
+    { key: "7d",  label: `7${t("adm_time_day")}` },
+    { key: "30d", label: `30${t("adm_time_day")}` },
+    { key: "all", label: t("adm_jnl_period_all") },
+  ];
 
   const fetchLog = useCallback(async () => {
     setLoading(true);
@@ -172,12 +183,12 @@ export default function JournalPage() {
       const data: AuditRow[] = await res.json();
       setRows(data);
     } catch {
-      setError("Impossible de charger le journal.");
+      setError(t("adm_jnl_err"));
       setRows([]);
     } finally {
       setLoading(false);
     }
-  }, [actionFilter, sincePreset, limit]);
+  }, [actionFilter, sincePreset, limit, t]);
 
   useEffect(() => {
     fetchLog();
@@ -207,32 +218,29 @@ export default function JournalPage() {
       {/* Header */}
       <div className="flex items-start justify-between gap-4 flex-wrap">
         <div>
-          <h2 className="text-2xl font-bold text-gray-900">Journal d&apos;audit</h2>
-          <p className="text-gray-500 text-sm mt-1">
-            Chaque action administrateur est enregistrée. Consultez-la pour comprendre ce qui
-            s&apos;est passé, quand, et par qui.
-          </p>
+          <h2 className="text-2xl font-bold text-gray-900">{t("adm_jnl_title")}</h2>
+          <p className="text-gray-500 text-sm mt-1">{t("adm_jnl_subtitle")}</p>
         </div>
         <button
           onClick={fetchLog}
           disabled={loading}
           className="text-xs font-medium text-blue-600 hover:text-blue-700 disabled:text-gray-400 px-3 py-2 rounded-lg hover:bg-blue-50 transition-colors"
         >
-          {loading ? "Chargement…" : "Actualiser"}
+          {loading ? t("adm_jnl_loading_short") : t("adm_jnl_refresh")}
         </button>
       </div>
 
       {/* Stats row */}
       <div className="grid grid-cols-3 gap-4">
-        <StatBox label="Événements" value={String(stats.rows)} />
-        <StatBox label="Acteurs uniques" value={String(stats.actors)} />
-        <StatBox label="Types d'action" value={String(stats.actions)} />
+        <StatBox label={t("adm_jnl_stat_events")} value={String(stats.rows)} />
+        <StatBox label={t("adm_jnl_stat_actors")} value={String(stats.actors)} />
+        <StatBox label={t("adm_jnl_stat_actions")} value={String(stats.actions)} />
       </div>
 
       {/* Filters */}
       <div className="bg-white border border-gray-100 rounded-2xl p-5 space-y-4">
         <div className="flex items-center justify-between gap-3 flex-wrap">
-          <h3 className="text-sm font-semibold text-gray-900">Filtres</h3>
+          <h3 className="text-sm font-semibold text-gray-900">{t("adm_jnl_filters")}</h3>
           <button
             onClick={() => {
               setActionFilter("");
@@ -242,13 +250,13 @@ export default function JournalPage() {
             }}
             className="text-xs text-gray-500 hover:text-gray-900"
           >
-            Réinitialiser
+            {t("adm_jnl_reset")}
           </button>
         </div>
 
         {/* Period presets */}
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1.5">Période</label>
+          <label className="block text-xs font-medium text-gray-500 mb-1.5">{t("adm_jnl_period")}</label>
           <div className="flex gap-1 flex-wrap">
             {SINCE_OPTIONS.map((opt) => {
               const active = sincePreset === opt.key;
@@ -272,15 +280,15 @@ export default function JournalPage() {
         {/* Action filter + search + limit */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Action</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">{t("adm_jnl_action")}</label>
             <select
               value={actionFilter}
               onChange={(e) => setActionFilter(e.target.value)}
               className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             >
-              <option value="">Toutes les actions</option>
+              <option value="">{t("adm_jnl_action_all")}</option>
               {ACTION_CATEGORIES.map((cat) => (
-                <optgroup key={cat.group} label={cat.group}>
+                <optgroup key={cat.groupKey} label={t(cat.groupKey)}>
                   {cat.actions.map((a) => (
                     <option key={a} value={a}>{a}</option>
                   ))}
@@ -291,26 +299,26 @@ export default function JournalPage() {
 
           <div>
             <label className="block text-xs font-medium text-gray-500 mb-1.5">
-              Recherche (email, IP, cible)
+              {t("adm_jnl_search")}
             </label>
             <input
               type="search"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="alice@waselli.com, 192.168…"
+              placeholder={t("adm_jnl_search_ph")}
               className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-gray-500 mb-1.5">Limite</label>
+            <label className="block text-xs font-medium text-gray-500 mb-1.5">{t("adm_jnl_limit")}</label>
             <select
               value={limit}
               onChange={(e) => setLimit(Number(e.target.value))}
               className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
             >
               {[50, 100, 250, 500].map((n) => (
-                <option key={n} value={n}>{n} dernières</option>
+                <option key={n} value={n}>{n} {t("adm_jnl_limit_suffix")}</option>
               ))}
             </select>
           </div>
@@ -329,23 +337,23 @@ export default function JournalPage() {
         <div className="px-5 py-3 border-b border-gray-100 flex items-center justify-between">
           <h3 className="text-sm font-semibold text-gray-900">
             {loading
-              ? "Chargement…"
+              ? t("adm_jnl_loading_short")
               : visibleRows.length === rows.length
-              ? `${visibleRows.length} événement${visibleRows.length > 1 ? "s" : ""}`
-              : `${visibleRows.length} / ${rows.length} événements`}
+              ? `${visibleRows.length} ${visibleRows.length > 1 ? t("adm_jnl_events") : t("adm_jnl_event")}`
+              : `${visibleRows.length} / ${rows.length} ${t("adm_jnl_events")}`}
           </h3>
           {!loading && visibleRows.length > 0 && (
             <span className="text-xs text-gray-400">
-              Plus récent en premier
+              {t("adm_jnl_newest")}
             </span>
           )}
         </div>
 
         {loading ? (
-          <div className="py-16 text-center text-gray-400 text-sm">Chargement du journal…</div>
+          <div className="py-16 text-center text-gray-400 text-sm">{t("adm_jnl_loading")}</div>
         ) : visibleRows.length === 0 ? (
           <div className="py-16 text-center text-gray-400 text-sm">
-            Aucun événement pour ces filtres.
+            {t("adm_jnl_empty")}
           </div>
         ) : (
           <ul className="divide-y divide-gray-50">
@@ -380,6 +388,8 @@ function AuditRowView({
 }: {
   row: AuditRow; expanded: boolean; onToggle: () => void;
 }) {
+  const { t } = useAdminT();
+  const timeAgo = useTimeAgo();
   const actionStyle = ACTION_STYLES[row.action] ?? "bg-gray-100 text-gray-600";
   const hasDetails =
     (row.metadata && Object.keys(row.metadata).length > 0) || row.target_id || row.ip;
@@ -391,7 +401,7 @@ function AuditRowView({
     <li>
       <button
         onClick={hasDetails ? onToggle : undefined}
-        className={`w-full flex items-start gap-3 px-5 py-3 text-left transition-colors ${
+        className={`w-full flex items-start gap-3 px-5 py-3 text-start transition-colors ${
           hasDetails ? "hover:bg-gray-50 cursor-pointer" : "cursor-default"
         }`}
       >
@@ -402,7 +412,7 @@ function AuditRowView({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="text-sm font-semibold text-gray-900 truncate max-w-[240px]">
-              {row.actor_email ?? "système"}
+              {row.actor_email ?? t("adm_jnl_system_actor")}
             </span>
             <span className={`text-[11px] font-mono font-semibold px-2 py-0.5 rounded ${actionStyle}`}>
               {row.action}
@@ -442,17 +452,17 @@ function AuditRowView({
       </button>
 
       {expanded && hasDetails && (
-        <div className="px-5 pb-4 pl-[4.25rem]">
+        <div className="px-5 pb-4 ps-[4.25rem]">
           <div className="bg-gray-50 border border-gray-100 rounded-xl p-3 space-y-2 text-xs">
             {row.target_id && (
-              <DetailLine label="Cible" value={`${row.target_type ?? "?"} / ${row.target_id}`} mono />
+              <DetailLine label={t("adm_jnl_target")} value={`${row.target_type ?? "?"} / ${row.target_id}`} mono />
             )}
-            {row.ip && <DetailLine label="IP" value={row.ip} mono />}
-            {row.actor_id && <DetailLine label="Actor ID" value={row.actor_id} mono />}
+            {row.ip && <DetailLine label={t("adm_jnl_ip")} value={row.ip} mono />}
+            {row.actor_id && <DetailLine label={t("adm_jnl_actor_id")} value={row.actor_id} mono />}
             {row.metadata && Object.keys(row.metadata).length > 0 && (
               <div>
                 <div className="text-gray-400 font-semibold uppercase tracking-wide text-[10px] mb-1">
-                  Metadata
+                  {t("adm_jnl_metadata")}
                 </div>
                 <pre className="bg-gray-900 text-gray-100 rounded-lg p-3 overflow-x-auto text-[11px] leading-relaxed">
                   {JSON.stringify(row.metadata, null, 2)}

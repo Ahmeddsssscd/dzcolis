@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAdminT } from "@/lib/admin-i18n";
 
 export default function AdminLoginForm() {
   const router = useRouter();
+  const { t } = useAdminT();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -27,21 +29,17 @@ export default function AdminLoginForm() {
         router.refresh();
         return;
       }
-      // Surface the real server error so operators can debug config
-      // problems. Default to a generic French message.
-      let msg = "Identifiants invalides.";
-      try {
-        const body = await res.json();
-        if (typeof body?.error === "string") msg = body.error;
-      } catch {/* non-JSON */}
+      // Default to generic invalid-credentials; narrow it for well-known
+      // status codes so operators get an actionable hint.
+      let msg = t("adm_login_err_invalid");
       if (res.status === 429) {
-        msg = "Trop de tentatives. Réessayez dans quelques minutes.";
+        msg = t("adm_login_err_rate");
       } else if (res.status === 500) {
-        msg = "Configuration serveur incomplète — prévenir l'administrateur.";
+        msg = t("adm_login_err_config");
       }
       setError(msg);
     } catch {
-      setError("Erreur de connexion. Réessayez.");
+      setError(t("adm_login_err_network"));
     } finally {
       setLoading(false);
     }
@@ -56,14 +54,14 @@ export default function AdminLoginForm() {
               W
             </div>
             <span className="text-xl font-bold text-gray-900">
-              Waselli <span className="text-blue-600">Admin</span>
+              Waselli <span className="text-blue-600">{t("adm_sidebar_brand_suffix")}</span>
             </span>
           </div>
-          <p className="text-gray-500 text-sm">Accès réservé aux administrateurs</p>
+          <p className="text-gray-500 text-sm">{t("adm_login_subtitle")}</p>
         </div>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t("adm_login_email")}</label>
             <input
               type="email"
               autoComplete="email"
@@ -76,7 +74,7 @@ export default function AdminLoginForm() {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Mot de passe</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">{t("adm_login_password")}</label>
             <input
               type="password"
               autoComplete="current-password"
@@ -96,11 +94,10 @@ export default function AdminLoginForm() {
             className="w-full py-3 rounded-xl text-white font-semibold text-sm transition-all hover:opacity-90 disabled:opacity-60 disabled:cursor-not-allowed"
             style={{ backgroundColor: "#1d4ed8" }}
           >
-            {loading ? "Connexion…" : "Se connecter"}
+            {loading ? t("adm_login_submitting") : t("adm_login_submit")}
           </button>
           <p className="text-[11px] text-gray-400 text-center leading-relaxed pt-2">
-            Première installation ? Utilisez l&apos;email et le mot de passe<br />
-            configurés dans <code>ADMIN_EMAIL</code> + <code>ADMIN_PASSWORD</code>.
+            {t("adm_login_hint")}
           </p>
         </form>
       </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useAdminT, type AdminKey } from "@/lib/admin-i18n";
 
 /* ─── Types mirroring /api/admin/me ────────────────────────────────── */
 
@@ -15,12 +16,12 @@ interface SessionProp {
   role: AdminRole;
 }
 
-const ROLE_LABEL: Record<AdminRole, string> = {
-  viewer: "Observateur",
-  support: "Support",
-  moderator: "Modérateur",
-  admin: "Admin",
-  super_admin: "Super Admin",
+const ROLE_I18N_KEY: Record<AdminRole, AdminKey> = {
+  viewer: "adm_role_viewer",
+  support: "adm_role_support",
+  moderator: "adm_role_moderator",
+  admin: "adm_role_admin",
+  super_admin: "adm_role_super_admin",
 };
 
 const ROLE_STYLES: Record<AdminRole, string> = {
@@ -119,34 +120,48 @@ const ICONS: Record<IconKey, React.ReactNode> = {
  * Nav items. `minRole` is the minimum role that sees the entry; items
  * a role can't access are HIDDEN (not just disabled). Server-side route
  * guards still enforce access — this is UX only.
+ *
+ * `labelKey` is resolved via `useAdminT()` at render time so switching
+ * language live updates every nav entry.
  */
 interface NavItem {
   href: string;
-  label: string;
+  labelKey: AdminKey;
   iconKey: IconKey;
   badgeKey?: "kyc" | "litiges" | "livreurs";
   minRole: AdminRole;
 }
 
 const NAV: NavItem[] = [
-  { href: "/admin",              label: "Tableau de bord", iconKey: "dashboard",    minRole: "viewer"      },
-  { href: "/admin/systeme",      label: "Système",         iconKey: "systeme",      minRole: "viewer"      },
-  { href: "/admin/utilisateurs", label: "Utilisateurs",    iconKey: "utilisateurs", minRole: "viewer"      },
-  { href: "/admin/annonces",     label: "Annonces",        iconKey: "annonces",     minRole: "viewer"      },
-  { href: "/admin/expeditions",  label: "Expéditions",     iconKey: "expeditions",  minRole: "viewer"      },
-  { href: "/admin/kyc",          label: "KYC",             iconKey: "kyc",          badgeKey: "kyc",      minRole: "moderator" },
-  { href: "/admin/litiges",      label: "Litiges",         iconKey: "litiges",      badgeKey: "litiges",  minRole: "support"   },
-  { href: "/admin/livreurs",     label: "Candidatures",    iconKey: "livreurs",     badgeKey: "livreurs", minRole: "moderator" },
-  { href: "/admin/paiements",    label: "Paiements",       iconKey: "paiements",    minRole: "viewer"      },
-  { href: "/admin/journal",      label: "Journal d'audit", iconKey: "journal",      minRole: "viewer"      },
-  { href: "/admin/equipe",       label: "Équipe",          iconKey: "equipe",       minRole: "super_admin" },
-  { href: "/admin/parametres",   label: "Paramètres",      iconKey: "parametres",   minRole: "admin"       },
+  { href: "/admin",              labelKey: "adm_nav_dashboard", iconKey: "dashboard",    minRole: "viewer"      },
+  { href: "/admin/systeme",      labelKey: "adm_nav_systeme",   iconKey: "systeme",      minRole: "viewer"      },
+  { href: "/admin/utilisateurs", labelKey: "adm_nav_users",     iconKey: "utilisateurs", minRole: "viewer"      },
+  { href: "/admin/annonces",     labelKey: "adm_nav_listings",  iconKey: "annonces",     minRole: "viewer"      },
+  { href: "/admin/expeditions",  labelKey: "adm_nav_shipments", iconKey: "expeditions",  minRole: "viewer"      },
+  { href: "/admin/kyc",          labelKey: "adm_nav_kyc",       iconKey: "kyc",          badgeKey: "kyc",      minRole: "moderator" },
+  { href: "/admin/litiges",      labelKey: "adm_nav_disputes",  iconKey: "litiges",      badgeKey: "litiges",  minRole: "support"   },
+  { href: "/admin/livreurs",     labelKey: "adm_nav_couriers",  iconKey: "livreurs",     badgeKey: "livreurs", minRole: "moderator" },
+  { href: "/admin/paiements",    labelKey: "adm_nav_payments",  iconKey: "paiements",    minRole: "viewer"      },
+  { href: "/admin/journal",      labelKey: "adm_nav_audit",     iconKey: "journal",      minRole: "viewer"      },
+  { href: "/admin/equipe",       labelKey: "adm_nav_team",      iconKey: "equipe",       minRole: "super_admin" },
+  { href: "/admin/parametres",   labelKey: "adm_nav_settings",  iconKey: "parametres",   minRole: "admin"       },
 ];
 
-function formatDate() {
-  return new Date().toLocaleDateString("fr-FR", {
-    weekday: "long", year: "numeric", month: "long", day: "numeric",
-  });
+/**
+ * Locale-aware date formatter. Falls back gracefully if the browser
+ * doesn't recognize the BCP-47 tag (very rare with modern engines).
+ */
+function formatDate(lang: "fr" | "en" | "ar") {
+  const tag = lang === "ar" ? "ar-DZ" : lang === "en" ? "en-US" : "fr-FR";
+  try {
+    return new Date().toLocaleDateString(tag, {
+      weekday: "long", year: "numeric", month: "long", day: "numeric",
+    });
+  } catch {
+    return new Date().toLocaleDateString("fr-FR", {
+      weekday: "long", year: "numeric", month: "long", day: "numeric",
+    });
+  }
 }
 
 function initialsOf(s: SessionProp): string {
@@ -170,6 +185,7 @@ export default function AdminShell({
   });
   const pathname = usePathname();
   const router = useRouter();
+  const { t, lang, isRTL } = useAdminT();
 
   const visibleNav = useMemo(
     () => NAV.filter((item) => hasRole(session.role, item.minRole)),
@@ -206,6 +222,17 @@ export default function AdminShell({
     }
   }
 
+  /*
+   * RTL layout: put the sidebar on the right and flip the mobile slide
+   * direction so the off-screen state is still off-screen. We keep all
+   * text alignment handled by the `dir="rtl"` attribute set by the
+   * global LanguageProvider — we only need to invert the horizontal
+   * axis for the fixed sidebar here.
+   */
+  const sidebarSideClass = isRTL
+    ? `right-0 ${sidebarOpen ? "translate-x-0" : "translate-x-full"}`
+    : `left-0 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}`;
+
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
       {sidebarOpen && (
@@ -217,9 +244,7 @@ export default function AdminShell({
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 h-full z-30 flex flex-col transition-transform duration-300 ${
-          sidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 lg:static lg:z-auto`}
+        className={`fixed top-0 h-full z-30 flex flex-col transition-transform duration-300 ${sidebarSideClass} lg:translate-x-0 lg:static lg:z-auto`}
         style={{ width: 260, backgroundColor: "#111827" }}
       >
         {/* Logo */}
@@ -230,14 +255,14 @@ export default function AdminShell({
           >
             W
           </div>
-          <div>
+          <div className="min-w-0">
             <span className="text-white font-bold text-base">Waselli</span>
-            <span className="text-blue-400 font-bold text-base"> Admin</span>
+            <span className="text-blue-400 font-bold text-base"> {t("adm_sidebar_brand_suffix")}</span>
           </div>
           <button
-            className="ml-auto text-gray-400 hover:text-white lg:hidden"
+            className="ms-auto text-gray-400 hover:text-white lg:hidden"
             onClick={() => setSidebarOpen(false)}
-            aria-label="Fermer le menu"
+            aria-label={t("adm_menu_close")}
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -265,7 +290,7 @@ export default function AdminShell({
                 }`}
               >
                 {ICONS[item.iconKey]}
-                <span className="flex-1">{item.label}</span>
+                <span className="flex-1">{t(item.labelKey)}</span>
                 {item.badgeKey && badgeCount > 0 && (
                   <span className={`${item.badgeKey === "kyc" ? "bg-red-500" : "bg-yellow-500"} text-white text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center`}>
                     {badgeCount > 99 ? "99+" : badgeCount}
@@ -276,9 +301,10 @@ export default function AdminShell({
           })}
         </nav>
 
-        {/* Identity card */}
-        <div className="px-4 py-4 border-t border-gray-700/50">
-          <div className="flex items-center gap-3 mb-2">
+        {/* Identity card + prominent logout. Kept as a single calm
+            footer block so the info isn't scattered across the chrome. */}
+        <div className="px-4 py-4 border-t border-gray-700/50 space-y-3">
+          <div className="flex items-center gap-3">
             <div className="w-9 h-9 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
               {initialsOf(session)}
             </div>
@@ -288,10 +314,21 @@ export default function AdminShell({
               </p>
               <p className="text-gray-500 text-[11px] truncate">{session.email}</p>
             </div>
+            <span className={`inline-block text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full whitespace-nowrap ${ROLE_STYLES[session.role]}`}>
+              {t(ROLE_I18N_KEY[session.role])}
+            </span>
           </div>
-          <span className={`inline-block text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full ${ROLE_STYLES[session.role]}`}>
-            {ROLE_LABEL[session.role]}
-          </span>
+
+          {/* Prominent logout — unmissable, full-width, destructive tone */}
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center justify-center gap-2 text-sm font-semibold text-white bg-red-600/90 hover:bg-red-600 active:bg-red-700 transition-colors px-3 py-2.5 rounded-xl shadow-sm"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            {t("adm_logout_prominent")}
+          </button>
         </div>
       </aside>
 
@@ -301,24 +338,30 @@ export default function AdminShell({
           <button
             className="lg:hidden text-gray-500 hover:text-gray-900 p-1"
             onClick={() => setSidebarOpen(true)}
-            aria-label="Ouvrir le menu"
+            aria-label={t("adm_menu_open")}
           >
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <div className="flex-1">
-            <h1 className="text-gray-900 font-semibold text-base">Admin Waselli</h1>
-            <p className="text-gray-400 text-xs capitalize">{formatDate()}</p>
+          <div className="flex-1 min-w-0">
+            <h1 className="text-gray-900 font-semibold text-base truncate">{t("adm_header_title")}</h1>
+            <p className="text-gray-400 text-xs capitalize truncate">{formatDate(lang)}</p>
           </div>
+          {/*
+            Secondary logout kept for muscle memory on the top-right,
+            but the primary one lives in the sidebar. On small screens
+            we hide this to avoid visual clutter — the sidebar button
+            is the canonical one.
+          */}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-all"
+            className="hidden sm:inline-flex items-center gap-2 text-sm text-gray-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-all"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
-            Déconnexion
+            {t("adm_logout")}
           </button>
         </header>
 
