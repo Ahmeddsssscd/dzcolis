@@ -10,6 +10,16 @@ function getServiceSupabase() {
   );
 }
 
+/**
+ * Match the authenticated user's application, checking user_id first and
+ * falling back to email for rows created before the user_id column was
+ * added. Once the DB backfill is done this fallback can be dropped.
+ */
+function ownerFilter(userId: string, email: string | null | undefined) {
+  if (email) return `user_id.eq.${userId},email.eq.${email}`;
+  return `user_id.eq.${userId}`;
+}
+
 // GET /api/courier-applications/mine — fetch the logged-in user's application
 export async function GET() {
   const authClient = await createServerClient();
@@ -20,7 +30,7 @@ export async function GET() {
   const { data, error } = await supabase
     .from("courier_applications")
     .select("*")
-    .eq("email", user.email)
+    .or(ownerFilter(user.id, user.email))
     .order("created_at", { ascending: false })
     .limit(1)
     .maybeSingle();
@@ -46,7 +56,7 @@ export async function PATCH(request: Request) {
   const { data, error } = await supabase
     .from("courier_applications")
     .update(updates)
-    .eq("email", user.email)
+    .or(ownerFilter(user.id, user.email))
     .select()
     .maybeSingle();
 
@@ -64,7 +74,7 @@ export async function DELETE() {
   const { error } = await supabase
     .from("courier_applications")
     .delete()
-    .eq("email", user.email);
+    .or(ownerFilter(user.id, user.email));
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   return NextResponse.json({ ok: true });

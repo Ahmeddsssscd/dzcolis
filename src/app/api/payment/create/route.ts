@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminSupabase } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const CHARGILY_BASE =
   process.env.CHARGILY_MODE === "live"
@@ -9,6 +10,15 @@ const CHARGILY_BASE =
 
 export async function POST(req: NextRequest) {
   try {
+    // Max 15 payment creations per IP per 15 minutes — enough to let users
+    // retry failed payments, tight enough to stop card-testing abuse.
+    const limited = checkRateLimit(req, {
+      bucket: "payment-create",
+      max: 15,
+      windowMs: 15 * 60 * 1000,
+    });
+    if (limited) return limited;
+
     // ── Auth check ──────────────────────────────────────────────────────────
     const supabase = await createClient();
     const { data: { user } } = await supabase.auth.getUser();

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { createClient as createServerClient } from "@/lib/supabase/server";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const BUCKET = "avatars";
 const MAX_MB = 5;
@@ -16,6 +17,15 @@ function getSupabase() {
 
 export async function POST(request: Request) {
   try {
+    // Max 20 avatar uploads per IP per 15 minutes — plenty for a user trying
+    // a few photos, tight enough to block storage-fill abuse.
+    const limited = checkRateLimit(request, {
+      bucket: "upload-avatar",
+      max: 20,
+      windowMs: 15 * 60 * 1000,
+    });
+    if (limited) return limited;
+
     // Auth check — get userId from session, never from request body
     const authClient = await createServerClient();
     const { data: { user } } = await authClient.auth.getUser();

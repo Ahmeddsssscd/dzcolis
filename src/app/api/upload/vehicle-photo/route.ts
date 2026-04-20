@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { createClient as createServerClient } from "@/lib/supabase/server";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const BUCKET = "vehicle-photos";
 const MAX_MB = 8;
@@ -15,6 +17,23 @@ function getSupabase() {
 
 export async function POST(request: Request) {
   try {
+    // Max 15 vehicle photo uploads per IP per 15 minutes
+    const limited = checkRateLimit(request, {
+      bucket: "upload-vehicle",
+      max: 15,
+      windowMs: 15 * 60 * 1000,
+    });
+    if (limited) return limited;
+
+    // Auth check — only logged-in users applying as couriers can upload.
+    // Previously this endpoint was wide open, letting anyone fill our
+    // Storage bucket with arbitrary images.
+    const authClient = await createServerClient();
+    const { data: { user } } = await authClient.auth.getUser();
+    if (!user) {
+      return NextResponse.json({ error: "Connexion requise." }, { status: 401 });
+    }
+
     const formData = await request.formData();
     const file = formData.get("file") as File | null;
 

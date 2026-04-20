@@ -1,7 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 export async function PATCH(req: NextRequest) {
+  // Max 60 status updates per IP per 15 minutes — prevents someone from
+  // hammering the endpoint to spam notifications/emails.
+  const limited = checkRateLimit(req, {
+    bucket: "booking-update",
+    max: 60,
+    windowMs: 15 * 60 * 1000,
+  });
+  if (limited) return limited;
+
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
