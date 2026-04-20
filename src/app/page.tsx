@@ -2,7 +2,20 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useI18n } from "@/lib/i18n";
+import { useI18n, type TranslationKey } from "@/lib/i18n";
+import RotatingTagline from "@/components/RotatingTagline";
+
+/** Keys that the hero cycles through. The FIRST one is the anchor —
+ *  it's what SSR renders and what Google indexes. Put your strongest
+ *  tagline there. */
+const HERO_TAGLINE_KEYS: TranslationKey[] = [
+  "hero_tagline_1",
+  "hero_tagline_2",
+  "hero_tagline_3",
+  "hero_tagline_4",
+  "hero_tagline_5",
+  "hero_tagline_6",
+];
 
 /* ─── hooks ─────────────────────────────── */
 
@@ -162,9 +175,11 @@ export default function Home() {
               </span>
               {t("hero_badge")}
             </p>
-            <h1 className="text-4xl md:text-6xl font-bold leading-[1.05] mb-6 tracking-[-0.03em]">
-              {t("hero_title")}
-            </h1>
+            <RotatingTagline
+              keys={HERO_TAGLINE_KEYS}
+              className="text-4xl md:text-6xl font-bold leading-[1.05] mb-6 tracking-[-0.03em] relative"
+              as="h1"
+            />
             <p className="text-lg text-white/80 mb-6 max-w-2xl leading-relaxed">
               {t("hero_subtitle")}
             </p>

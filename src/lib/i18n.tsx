@@ -51,6 +51,14 @@ const translations = {
     hero_transporter_cta: "Proposez votre trajet et gagnez de l'argent →",
     hero_find_carrier:    "Trouver un transporteur →",
 
+    // ── Rotating hero taglines (warm, human, Algerian-local) ──
+    hero_tagline_1:    "Votre voisin livre votre colis.",
+    hero_tagline_2:    "Parce qu'on connaît toujours quelqu'un qui y va.",
+    hero_tagline_3:    "Pas d'agence. Pas d'attente. Juste un trajet déjà prévu.",
+    hero_tagline_4:    "Le covoiturage, mais pour vos colis.",
+    hero_tagline_5:    "D'Alger à Paris, il y a toujours un voisin qui passe.",
+    hero_tagline_6:    "L'Algérie qui livre l'Algérie.",
+
     // ── Carriers section (homepage) ──
     carriers_badge:       "Transporteurs vérifiés",
     carriers_title:       "Trouvez votre transporteur idéal",
@@ -671,6 +679,14 @@ const translations = {
     hero_transporter_cta: "Offer your route and earn money →",
     hero_find_carrier:    "Find a carrier →",
 
+    // ── Rotating hero taglines (warm, human, Algerian-local) ──
+    hero_tagline_1:    "Your neighbor delivers your parcel.",
+    hero_tagline_2:    "Because someone you know is always headed there.",
+    hero_tagline_3:    "No agency. No waiting. Just a trip already planned.",
+    hero_tagline_4:    "Like ride-sharing — but for your parcels.",
+    hero_tagline_5:    "From Algiers to Paris, a neighbor's always on the way.",
+    hero_tagline_6:    "Algeria delivering to Algeria.",
+
     // ── Carriers section (homepage) ──
     carriers_badge:       "Verified carriers",
     carriers_title:       "Find your ideal carrier",
@@ -1280,6 +1296,14 @@ const translations = {
     hero_transporter:  "هل أنت سائق؟",
     hero_transporter_cta: "اعرض رحلتك واكسب المال →",
     hero_find_carrier:    "ابحث عن سائق →",
+
+    // ── Rotating hero taglines (warm, human, Algerian-local) ──
+    hero_tagline_1:    "جارك هو من يوصّل طردك.",
+    hero_tagline_2:    "لأنّ هناك دائمًا من يمرّ من هناك.",
+    hero_tagline_3:    "بدون وكالة، بدون انتظار. فقط رحلة مبرمجة.",
+    hero_tagline_4:    "مثل النقل التشاركي، لكن للطرود.",
+    hero_tagline_5:    "من الجزائر إلى باريس، هناك دائمًا جار في الطريق.",
+    hero_tagline_6:    "الجزائر توصّل للجزائر.",
 
     // ── Carriers section (homepage) ──
     carriers_badge:       "سائقون موثقون",
