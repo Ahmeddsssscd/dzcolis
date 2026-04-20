@@ -2,6 +2,7 @@
 import Link from "next/link";
 import WaselliLogo from "@/components/WaselliLogo";
 import { useI18n } from "@/lib/i18n";
+import { usePublicSettings, whatsappNumber } from "@/lib/usePublicSettings";
 
 /**
  * Footer design notes:
@@ -16,6 +17,9 @@ import { useI18n } from "@/lib/i18n";
  */
 export default function Footer() {
   const { t } = useI18n();
+  const { email_contact, whatsapp, adresse } = usePublicSettings();
+  const waMsg = encodeURIComponent("Bonjour Waselli, j'ai besoin d'aide.");
+  const waUrl = `https://wa.me/${whatsappNumber(whatsapp)}?text=${waMsg}`;
 
   return (
     <footer className="bg-dz-gray-900 text-dz-gray-300 relative overflow-hidden">
@@ -67,7 +71,7 @@ export default function Footer() {
                 </svg>
               </SocialLink>
               <SocialLink
-                href="https://wa.me/40725028189?text=Bonjour%20Waselli%2C%20j%27ai%20besoin%20d%27aide."
+                href={waUrl}
                 label="WhatsApp Waselli"
                 hoverBg="#25D366"
               >
@@ -104,22 +108,22 @@ export default function Footer() {
                 button, not an e-mail. */}
             <li>
               <a
-                href="mailto:contact@waselli.com"
+                href={`mailto:${email_contact}`}
                 className="text-sm text-dz-gray-400 hover:text-white transition-colors inline-flex items-center gap-2"
               >
                 <svg className="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.6}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                contact@waselli.com
+                {email_contact}
               </a>
             </li>
             <FooterLink href="/contact">{t("footer_contact_form") || "Formulaire de contact"}</FooterLink>
-            <li className="text-sm text-dz-gray-400">Alger, Algérie</li>
+            <li className="text-sm text-dz-gray-400">{adresse}</li>
             <FooterLink href="/a-propos">{t("footer_about")}</FooterLink>
 
             <li className="pt-3">
               <a
-                href="https://wa.me/40725028189?text=Bonjour%20Waselli%2C%20j%27ai%20besoin%20d%27aide."
+                href={waUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-[#25D366] hover:bg-[#20B954] text-white text-sm font-semibold px-4 py-2 rounded-lg transition-colors"
@@ -140,12 +144,12 @@ export default function Footer() {
         <div className="border-t border-dz-gray-800 mt-14 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <p className="text-sm text-dz-gray-400">
             {t("footer_support_prefix") || "Besoin d'aide ? Écrivez-nous à"}{" "}
-            <a href="mailto:contact@waselli.com" className="font-semibold text-white hover:text-dz-green transition-colors">
-              contact@waselli.com
+            <a href={`mailto:${email_contact}`} className="font-semibold text-white hover:text-dz-green transition-colors">
+              {email_contact}
             </a>
           </p>
           <a
-            href="mailto:contact@waselli.com?subject=Support%20Waselli"
+            href={`mailto:${email_contact}?subject=Support%20Waselli`}
             className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.7}>
