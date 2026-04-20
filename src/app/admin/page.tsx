@@ -27,6 +27,16 @@ interface ChartDay {
   amount: number;
 }
 
+interface NotableEvent {
+  id: string;
+  type: "kyc" | "dispute" | "refund" | "high_value";
+  severity: "info" | "warning" | "danger";
+  title: string;
+  message: string;
+  href: string;
+  at: string;
+}
+
 interface StatsData {
   total_users: number;
   active_listings: number;
@@ -38,6 +48,7 @@ interface StatsData {
   revenue_chart: ChartDay[];
   new_users_today: number;
   new_users_week: number;
+  notable_events: NotableEvent[];
 }
 
 interface HealthData {
@@ -120,6 +131,77 @@ function HealthDot({ ok }: { ok: boolean }) {
     <span
       className={`w-2.5 h-2.5 rounded-full flex-shrink-0 ${ok ? "bg-green-500" : "bg-red-500"}`}
     />
+  );
+}
+
+const EVENT_STYLES: Record<
+  NotableEvent["severity"],
+  { dot: string; chip: string; border: string }
+> = {
+  danger:  { dot: "bg-red-500",    chip: "bg-red-50 text-red-700",       border: "border-red-100"    },
+  warning: { dot: "bg-yellow-500", chip: "bg-yellow-50 text-yellow-700", border: "border-yellow-100" },
+  info:    { dot: "bg-blue-500",   chip: "bg-blue-50 text-blue-700",     border: "border-blue-100"   },
+};
+
+const EVENT_TYPE_LABELS: Record<NotableEvent["type"], string> = {
+  kyc:        "KYC",
+  dispute:    "Litige",
+  refund:     "Remboursement",
+  high_value: "Forte valeur",
+};
+
+function NotableEventsCard({ events, loading }: { events: NotableEvent[]; loading: boolean }) {
+  return (
+    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+      <div className="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <div>
+          <h3 className="font-semibold text-gray-900">Évènements à surveiller</h3>
+          <p className="text-xs text-gray-400 mt-0.5">
+            KYC, litiges, remboursements & colis de forte valeur (7 derniers jours)
+          </p>
+        </div>
+        {!loading && events.length > 0 && (
+          <span className="bg-gray-900 text-white text-xs font-semibold px-2 py-0.5 rounded-full">
+            {events.length}
+          </span>
+        )}
+      </div>
+      {loading ? (
+        <div className="py-10 text-center text-gray-400 text-sm">Chargement…</div>
+      ) : events.length === 0 ? (
+        <div className="py-10 text-center text-gray-400 text-sm">
+          Aucun évènement notable — tout est calme 🌿
+        </div>
+      ) : (
+        <ul className="divide-y divide-gray-50">
+          {events.map((ev) => {
+            const st = EVENT_STYLES[ev.severity];
+            return (
+              <li key={ev.id}>
+                <Link
+                  href={ev.href}
+                  className="flex items-start gap-3 px-6 py-3 hover:bg-gray-50 transition-colors"
+                >
+                  <span className={`w-2 h-2 rounded-full mt-2 flex-shrink-0 ${st.dot}`} />
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-sm font-semibold text-gray-900">{ev.title}</span>
+                      <span className={`text-[10px] font-medium uppercase tracking-wide px-1.5 py-0.5 rounded ${st.chip}`}>
+                        {EVENT_TYPE_LABELS[ev.type]}
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-500 mt-0.5 truncate">{ev.message}</p>
+                  </div>
+                  <span className="text-xs text-gray-400 flex-shrink-0 whitespace-nowrap">
+                    {timeAgo(ev.at)}
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
   );
 }
 
@@ -406,6 +488,11 @@ export default function AdminDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Notable events — unified feed of KYC submissions, disputes,
+          refunds and high-value bookings. Everything here wants a human
+          decision; routine activity stays in the tables below. */}
+      <NotableEventsCard events={stats?.notable_events ?? []} loading={loadingStats} />
 
       {/* Bottom row: recent bookings + recent signups */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
