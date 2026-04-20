@@ -47,6 +47,19 @@ function parseZones(z?: string) {
   return z ? z.split(",").map(s => s.trim()).filter(Boolean) : [];
 }
 
+/**
+ * Vehicle photos — stored as a single text field for schema compatibility.
+ * Carriers can paste one URL, or several separated by comma / pipe / newline.
+ * A gallery appears automatically as soon as there are 2+ URLs.
+ */
+function parseVehiclePhotos(v?: string): string[] {
+  if (!v) return [];
+  return v
+    .split(/[,|\n]/)
+    .map(s => s.trim())
+    .filter(s => /^https?:\/\//i.test(s));
+}
+
 function avg(reviews: Review[]) {
   if (!reviews.length) return 0;
   return reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
@@ -81,11 +94,20 @@ export default function LivreurProfileClient({ id }: { id: string }) {
   const [copied, setCopied] = useState(false);
 
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   useEffect(() => {
     fetch(`/api/livreurs/${id}`).then(r => r.json()).then(d => { setData(d); setLoading(false); }).catch(() => setLoading(false));
     fetch(`/api/livreurs/${id}/reviews`).then(r => r.json()).then(d => { if (Array.isArray(d)) setReviews(d); }).catch(() => {});
   }, [id]);
+
+  // Close lightbox with Escape
+  useEffect(() => {
+    if (lightboxIndex === null) return;
+    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setLightboxIndex(null); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightboxIndex]);
 
   function copyLink() {
     navigator.clipboard.writeText(`https://www.waselli.com/livreurs/${id}`);
@@ -118,22 +140,36 @@ export default function LivreurProfileClient({ id }: { id: string }) {
   const isAvail    = data.is_available !== false;
   const zones      = parseZones(data.zones);
   const rating     = avg(reviews);
+  const photos     = parseVehiclePhotos(data.vehicle_photo_url);
+  const heroPhoto  = photos[0];
 
   return (
     <div className="min-h-screen bg-slate-50">
 
-      {/* Vehicle photo as top banner, or solid navy bar */}
-      {data.vehicle_photo_url ? (
-        <div className="relative h-52 md:h-64 overflow-hidden bg-[#0f172a]">
+      {/* Vehicle photo as top banner — uses the first photo from the gallery.
+          The full gallery (with thumbnails + lightbox) appears below in its
+          own card when 2+ photos are on file. */}
+      {heroPhoto ? (
+        <button
+          type="button"
+          onClick={() => setLightboxIndex(0)}
+          className="group relative block w-full h-52 md:h-64 overflow-hidden bg-[#0f172a] text-left"
+          aria-label="Agrandir la photo du véhicule"
+        >
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={data.vehicle_photo_url} alt="" className="w-full h-full object-cover opacity-70" />
+          <img src={heroPhoto} alt="" className="w-full h-full object-cover opacity-70 group-hover:opacity-80 transition-opacity" />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/80 via-transparent to-transparent" />
-          <div className="absolute bottom-4 left-6">
+          <div className="absolute bottom-4 left-6 flex items-center gap-3">
             <span className="text-xs font-semibold text-white/70 uppercase tracking-widest">
               {TRANSPORT_LABELS[transport] ?? transport}
             </span>
+            {photos.length > 1 && (
+              <span className="text-[11px] font-semibold text-white bg-black/40 backdrop-blur px-2 py-0.5 rounded-md">
+                {photos.length} photos
+              </span>
+            )}
           </div>
-        </div>
+        </button>
       ) : (
         <div className="h-28 bg-[#0f172a]" />
       )}
@@ -216,6 +252,29 @@ export default function LivreurProfileClient({ id }: { id: string }) {
             </button>
           </div>
         </Card>
+
+        {/* ── Vehicle gallery ── */}
+        {photos.length >= 2 && (
+          <Card className="p-6">
+            <SectionHead label="Photos du véhicule" />
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+              {photos.map((url, i) => (
+                <button
+                  key={url + i}
+                  type="button"
+                  onClick={() => setLightboxIndex(i)}
+                  className="group relative aspect-square overflow-hidden rounded-xl border border-slate-100 bg-slate-50"
+                  aria-label={`Agrandir la photo ${i + 1}`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
+                </button>
+              ))}
+            </div>
+            <p className="text-[11px] text-slate-400 mt-3">Cliquez sur une photo pour l&apos;agrandir.</p>
+          </Card>
+        )}
 
         {/* ── Zones ── */}
         {zones.length > 0 && (
@@ -357,6 +416,62 @@ export default function LivreurProfileClient({ id }: { id: string }) {
           </Link>
         </div>
       </div>
+
+      {/* ── Lightbox ── */}
+      {lightboxIndex !== null && photos[lightboxIndex] && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4 animate-fade-in"
+          onClick={() => setLightboxIndex(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setLightboxIndex(null); }}
+            className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+            aria-label="Fermer"
+          >
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          {photos.length > 1 && (
+            <>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex - 1 + photos.length) % photos.length); }}
+                className="absolute left-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+                aria-label="Photo précédente"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+              </button>
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setLightboxIndex((lightboxIndex + 1) % photos.length); }}
+                className="absolute right-4 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors"
+                aria-label="Photo suivante"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
+            </>
+          )}
+
+          <div className="relative max-w-5xl max-h-[85vh]" onClick={(e) => e.stopPropagation()}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={photos[lightboxIndex]} alt="" className="max-w-full max-h-[85vh] object-contain rounded-lg" />
+            {photos.length > 1 && (
+              <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-white/70 text-xs font-medium">
+                {lightboxIndex + 1} / {photos.length}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
