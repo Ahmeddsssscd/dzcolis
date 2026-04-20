@@ -44,14 +44,34 @@ try {
   usingSvg = true;
 }
 
-async function png(outPath, size, opts = {}) {
+// Flatten the source onto a solid blue background so transparent corners
+// (outside the logo's rounded rect) never bleed as white in browsers/OS.
+// We derive the canvas size from the source image metadata.
+const BLUE_BG = { r: 42, g: 80, b: 214, alpha: 1 }; // matches icon edge colour
+let flatBuffer;
+if (usingSvg) {
+  // SVG: render at 512 density, already opaque
+  flatBuffer = await sharp(srcBuffer, { density: 384 })
+    .resize(512, 512)
+    .png()
+    .toBuffer();
+} else {
+  const meta = await sharp(srcBuffer).metadata();
+  const sz = meta.width ?? 512;
+  const logoLayer = await sharp(srcBuffer).resize(sz, sz).png().toBuffer();
+  flatBuffer = await sharp({
+    create: { width: sz, height: sz, channels: 4, background: BLUE_BG },
+  })
+    .composite([{ input: logoLayer }])
+    .png()
+    .toBuffer();
+}
+
+async function png(outPath, size) {
   const abs = resolve(ROOT, outPath);
   await mkdir(dirname(abs), { recursive: true });
-  const sharpInstance = usingSvg
-    ? sharp(srcBuffer, { density: 384 })
-    : sharp(srcBuffer);
-  await sharpInstance
-    .resize(size, size, { fit: "contain", background: opts.bg ?? { r: 0, g: 0, b: 0, alpha: 0 } })
+  await sharp(flatBuffer)
+    .resize(size, size)
     .png({ compressionLevel: 9 })
     .toFile(abs);
   console.log(`  ✓ ${outPath}  (${size}×${size})`);
@@ -69,8 +89,7 @@ async function pngMaskable(outPath, size) {
   // Render the logo at the inner size, then composite onto a solid blue
   // square at the full size — OS can crop to a circle and the W stays
   // well inside the safe zone.
-  const sharpSrc = usingSvg ? sharp(srcBuffer, { density: 384 }) : sharp(srcBuffer);
-  const logo = await sharpSrc
+  const logo = await sharp(flatBuffer)
     .resize(inner, inner)
     .png()
     .toBuffer();
@@ -97,10 +116,7 @@ async function favicon(outPath) {
   const sizes = [16, 32, 48];
   const buffers = await Promise.all(
     sizes.map((s) =>
-      (usingSvg ? sharp(srcBuffer, { density: 384 }) : sharp(srcBuffer))
-        .resize(s, s)
-        .png()
-        .toBuffer(),
+      sharp(flatBuffer).resize(s, s).png().toBuffer(),
     ),
   );
   // Build an ICO container manually (no extra dependency).
