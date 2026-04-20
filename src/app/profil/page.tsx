@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useAuth } from "@/lib/context";
+import { useAuth, useListings } from "@/lib/context";
 import { useToast } from "@/lib/context";
 import { useI18n } from "@/lib/i18n";
 import { ALGERIAN_CITIES } from "@/lib/data";
@@ -48,6 +48,7 @@ interface CourierApplication {
 
 export default function ProfilPage() {
   const { user, authLoading, updateUser, logout } = useAuth();
+  const { listings } = useListings();
   const { addToast } = useToast();
   const { t } = useI18n();
   const router = useRouter();
@@ -212,6 +213,17 @@ export default function ProfilPage() {
     year: "numeric", month: "long",
   });
 
+  // Real activity summary pulled from the listings feed.
+  const myListings   = listings.filter((l) => l.user_id === user.id);
+  const myTrajets    = myListings.filter((l) => l.listing_type === "trajet").length;
+  const myDemandes   = myListings.filter((l) => l.listing_type === "demande").length;
+  const myActive     = myListings.filter((l) => l.status === "active").length;
+  const myCompleted  = myListings.filter((l) => l.status === "completed").length;
+  const latestListing = myListings[0]; // listings are ordered by created_at desc
+  const latestListingDate = latestListing
+    ? new Date(latestListing.created_at).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })
+    : null;
+
   const hasReviews = user.reviews > 0;
   const score = hasReviews ? Math.min(100, 20 + user.rating * 10 + Math.min(user.reviews, 30)) : 0;
   const level = score >= 80 ? { label: t("profil_level_elite"), color: "text-dz-green", bg: "bg-green-100" }
@@ -315,18 +327,45 @@ export default function ProfilPage() {
         <div className="space-y-4">
           <div className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-5">
             <h3 className="font-semibold text-dz-gray-900 mb-4 text-sm">{t("profil_activity")}</h3>
-            <div className="space-y-3">
-              {[
-                { label: t("profil_packages_sent"), value: user.reviews > 0 ? user.reviews : "—" },
-                { label: t("profil_avg_rating"), value: hasReviews ? `${user.rating.toFixed(1)}/5` : "—" },
-                { label: t("profil_reviews_received"), value: user.reviews > 0 ? user.reviews : "—" },
-              ].map((s) => (
-                <div key={s.label} className="flex items-center justify-between">
-                  <span className="text-xs text-dz-gray-500">{s.label}</span>
-                  <span className="text-sm font-semibold text-dz-gray-900">{s.value}</span>
-                </div>
-              ))}
+
+            {/* Top-line grid: real counts, not vanity. Dashes until the user has any activity. */}
+            <div className="grid grid-cols-2 gap-3 mb-4">
+              <div className="bg-dz-gray-50 rounded-xl p-3 text-center">
+                <div className="text-lg font-bold text-dz-green">{myTrajets || "—"}</div>
+                <div className="text-[11px] text-dz-gray-500 mt-0.5 leading-tight">{t("profil_my_trajets") || "Trajets proposés"}</div>
+              </div>
+              <div className="bg-dz-gray-50 rounded-xl p-3 text-center">
+                <div className="text-lg font-bold text-blue-600">{myDemandes || "—"}</div>
+                <div className="text-[11px] text-dz-gray-500 mt-0.5 leading-tight">{t("profil_my_demandes") || "Colis à envoyer"}</div>
+              </div>
             </div>
+
+            <div className="space-y-2.5 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="text-dz-gray-500">{t("profil_active_listings") || "Annonces actives"}</span>
+                <span className="font-semibold text-dz-gray-900">{myActive || "—"}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-dz-gray-500">{t("profil_completed_listings") || "Annonces terminées"}</span>
+                <span className="font-semibold text-dz-gray-900">{myCompleted || "—"}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-dz-gray-500">{t("profil_avg_rating")}</span>
+                <span className="font-semibold text-dz-gray-900">{hasReviews ? `${user.rating.toFixed(1)}/5` : "—"}</span>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-dz-gray-500">{t("profil_reviews_received")}</span>
+                <span className="font-semibold text-dz-gray-900">{user.reviews > 0 ? user.reviews : "—"}</span>
+              </div>
+            </div>
+
+            {latestListing && latestListingDate && (
+              <div className="mt-4 pt-3 border-t border-dz-gray-100">
+                <p className="text-[11px] text-dz-gray-400 mb-1">{t("profil_latest_activity") || "Dernière annonce"}</p>
+                <p className="text-xs text-dz-gray-700 font-medium truncate">{latestListing.from_city} → {latestListing.to_city}</p>
+                <p className="text-[11px] text-dz-gray-400">{latestListingDate}</p>
+              </div>
+            )}
           </div>
 
           <div className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-5">
