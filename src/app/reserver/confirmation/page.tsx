@@ -105,12 +105,18 @@ export default function ConfirmationPage() {
           </div>
         </div>
 
-        {/* CTAs */}
+        {/* CTAs — we push the sender into the messaging thread first.
+            The live chat with the transporter is where the real
+            coordination happens (address confirmation, timing, photos),
+            and we want them to treat it as the default next step. */}
         <div className="flex flex-col gap-3">
-          <Link href="/tableau-de-bord" className="block text-center bg-dz-green hover:opacity-90 text-white py-3.5 rounded-xl font-semibold transition-opacity">
+          <Link href="/messages" className="block text-center bg-dz-green hover:opacity-90 text-white py-3.5 rounded-xl font-semibold transition-opacity">
+            💬 Discuter avec le transporteur
+          </Link>
+          <Link href="/tableau-de-bord" className="block text-center border border-dz-gray-200 text-dz-gray-700 hover:bg-dz-gray-50 py-3.5 rounded-xl font-semibold transition-colors">
             Voir mes réservations
           </Link>
-          <Link href="/suivi" className="block text-center border border-dz-gray-200 text-dz-gray-700 hover:bg-dz-gray-50 py-3.5 rounded-xl font-semibold transition-colors">
+          <Link href="/suivi" className="block text-center text-dz-gray-500 hover:text-dz-green py-2.5 text-sm transition-colors">
             Suivre mon colis
           </Link>
           <Link href="/annonces" className="block text-center text-dz-gray-400 hover:text-dz-green text-sm transition-colors py-2">

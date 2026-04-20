@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useRef, useEffect } from "react";
-import { useAuth } from "@/lib/context";
+import { useAuth, useNotifications } from "@/lib/context";
 import { useI18n, type Lang } from "@/lib/i18n";
 import ThemeToggle from "@/components/ThemeToggle";
 import PushNotifications from "@/components/PushNotifications";
@@ -140,6 +140,7 @@ export default function Header() {
 
           {/* ── Desktop right actions ─────────────────────────────── */}
           <div className="hidden md:flex items-center gap-1">
+            {user && <NotificationsBell />}
             <PushNotifications />
             <ThemeToggle />
 
@@ -332,6 +333,125 @@ function MobileLink({
     >
       {children}
     </Link>
+  );
+}
+
+/**
+ * Bell + counter + dropdown list of recent notifications.
+ *
+ * Visibility rules:
+ *  - Rendered only for authenticated users (the parent gates it).
+ *  - Counter badge hidden when `unreadCount === 0` to keep the chrome
+ *    calm when the user is caught up.
+ *  - Dropdown caps at 6 rows + a "Tout voir" link to the dashboard,
+ *    because this is a peek, not a full inbox.
+ *
+ * Clicking a notification marks it as read before navigating — we
+ * optimistically update the counter so the UX feels instant even if
+ * the PATCH is still in flight.
+ */
+function NotificationsBell() {
+  const { notifications, unreadCount, markRead } = useNotifications();
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClick(e: MouseEvent) {
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  const recent = notifications.slice(0, 6);
+
+  function hrefFor(n: { type: string; data: unknown }): string {
+    const d = (n.data ?? {}) as Record<string, unknown>;
+    if (n.type === "new_booking" || n.type === "booking_status") return "/tableau-de-bord";
+    if (n.type === "new_message") return "/messages";
+    if (typeof d.href === "string") return d.href;
+    return "/tableau-de-bord";
+  }
+
+  return (
+    <div className="relative" ref={wrapRef}>
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="relative p-2 rounded-lg text-dz-gray-500 dark:text-dz-gray-300 hover:bg-dz-gray-100 dark:hover:bg-dz-gray-100/5 transition-colors"
+        aria-label="Notifications"
+        aria-expanded={open}
+      >
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+        </svg>
+        {unreadCount > 0 && (
+          <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 bg-dz-red text-white text-[10px] font-bold rounded-full flex items-center justify-center ring-2 ring-white dark:ring-[color:var(--card-bg)]">
+            {unreadCount > 9 ? "9+" : unreadCount}
+          </span>
+        )}
+      </button>
+
+      {open && (
+        <div
+          className="absolute right-0 mt-2 w-80 card overflow-hidden animate-fade-up z-50"
+          style={{ boxShadow: "var(--shadow-lg)" }}
+          role="menu"
+        >
+          <div className="px-4 py-3 border-b border-dz-gray-100 dark:border-dz-gray-200/10 flex items-center justify-between">
+            <p className="text-sm font-semibold text-dz-gray-900 dark:text-dz-gray-100">Notifications</p>
+            {unreadCount > 0 && (
+              <span className="text-[10px] font-bold uppercase tracking-wide bg-dz-green/10 text-dz-green px-2 py-0.5 rounded-full">
+                {unreadCount} nouveau{unreadCount > 1 ? "x" : ""}
+              </span>
+            )}
+          </div>
+
+          {recent.length === 0 ? (
+            <div className="py-8 px-4 text-center text-xs text-dz-gray-400">
+              Pas de notification pour le moment.
+            </div>
+          ) : (
+            <ul className="max-h-80 overflow-y-auto divide-y divide-dz-gray-100 dark:divide-dz-gray-200/10">
+              {recent.map((n) => (
+                <li key={n.id}>
+                  <Link
+                    href={hrefFor(n)}
+                    onClick={() => {
+                      if (!n.read) markRead(n.id);
+                      setOpen(false);
+                    }}
+                    className={[
+                      "block px-4 py-3 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-100/5 transition-colors",
+                      n.read ? "" : "bg-dz-green/5",
+                    ].join(" ")}
+                  >
+                    <div className="flex items-start gap-2">
+                      {!n.read && <span className="w-1.5 h-1.5 mt-1.5 rounded-full bg-dz-green flex-shrink-0" />}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-semibold text-dz-gray-800 dark:text-dz-gray-100 truncate">{n.title}</p>
+                        <p className="text-xs text-dz-gray-500 dark:text-dz-gray-400 line-clamp-2 mt-0.5">{n.message}</p>
+                      </div>
+                    </div>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div className="border-t border-dz-gray-100 dark:border-dz-gray-200/10">
+            <Link
+              href="/tableau-de-bord"
+              onClick={() => setOpen(false)}
+              className="block text-center text-xs font-semibold text-dz-green py-2.5 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-100/5 transition-colors"
+            >
+              Tout voir →
+            </Link>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
 

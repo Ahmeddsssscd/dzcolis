@@ -87,6 +87,34 @@ export async function POST(req: NextRequest) {
           read: false,
         });
 
+        // Notify the transporter too — payment succeeded means the booking
+        // is "live", and they should move from prospect-mode to
+        // ready-to-collect. We resolve their user_id via the listing so
+        // the notifications table stays the single source of truth for
+        // per-user alerts.
+        const { data: bookingFull } = await adminSupabase
+          .from("bookings")
+          .select("listing_id")
+          .eq("id", bookingId)
+          .single();
+        if (bookingFull?.listing_id) {
+          const { data: listing } = await adminSupabase
+            .from("listings")
+            .select("user_id, from_city, to_city")
+            .eq("id", bookingFull.listing_id)
+            .single();
+          if (listing?.user_id) {
+            await adminSupabase.from("notifications").insert({
+              user_id: listing.user_id,
+              type: "booking_paid",
+              title: "Réservation payée 💰",
+              message: `La réservation ${booking.booking_ref} (${listing.from_city} → ${listing.to_city}) est payée. Préparez la collecte.`,
+              read: false,
+              data: { booking_id: bookingId, booking_ref: booking.booking_ref },
+            });
+          }
+        }
+
         const { data: profile } = await adminSupabase
           .from("profiles")
           .select("first_name")

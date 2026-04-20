@@ -380,6 +380,23 @@ export function AppProvider({ children }: { children: ReactNode }) {
         read: false,
         data: { booking_id: booking.id, booking_ref: booking.booking_ref },
       });
+
+      // Auto-open a conversation between sender and transporter and seed it
+      // with the booking reference. This is the hinge between "commerce" and
+      // "coordination": without a live thread the parties fall back to
+      // phone calls that Waselli can't audit if something goes wrong.
+      // Fire-and-forget: never block the booking on the message side-effect.
+      if (listing.user_id && listing.user_id !== user.id) {
+        fetch("/api/messages", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            other_user_id: listing.user_id,
+            listing_id:    data.listing_id,
+            text:          `Bonjour 👋 Je viens de réserver votre trajet ${listing.from_city} → ${listing.to_city} (réf. ${booking.booking_ref}). Peut-on organiser la collecte ?`,
+          }),
+        }).catch(() => {});
+      }
     }
 
     await fetchBookings();
