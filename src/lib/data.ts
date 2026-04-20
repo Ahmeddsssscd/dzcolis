@@ -200,38 +200,85 @@ export const CATEGORIES = [
   "Autre",
 ];
 
+// Countries with significant Algerian diaspora. France is expanded to cover
+// major diaspora hubs (Seine-Saint-Denis, banlieue lyonnaise, Nord, PACA)
+// so senders see their actual town rather than only "Paris" or "Lyon".
 export const EUROPEAN_COUNTRIES = [
   {
     name: "France",
     flag: "🇫🇷",
     code: "FR",
-    cities: ["Paris", "Lyon", "Marseille", "Toulouse", "Nice", "Bordeaux", "Lille", "Strasbourg", "Nantes", "Montpellier", "Grenoble", "Rennes"],
+    cities: [
+      // Major metros
+      "Paris", "Lyon", "Marseille", "Toulouse", "Nice", "Bordeaux", "Lille",
+      "Strasbourg", "Nantes", "Montpellier", "Grenoble", "Rennes",
+      // Seine-Saint-Denis & Paris banlieue (strong Algerian presence)
+      "Saint-Denis", "Aubervilliers", "Bobigny", "Montreuil", "Nanterre",
+      "Argenteuil", "Créteil", "Vitry-sur-Seine", "Sarcelles",
+      // Lyon metropolitan area
+      "Villeurbanne", "Vénissieux", "Vaulx-en-Velin",
+      // North / industrial cities
+      "Roubaix", "Tourcoing", "Dunkerque", "Valenciennes",
+      // PACA & Rhône corridor
+      "Avignon", "Cannes", "Toulon", "Aix-en-Provence", "Saint-Étienne",
+      // Rest of France
+      "Reims", "Le Havre", "Rouen", "Metz", "Nancy", "Mulhouse", "Perpignan",
+      "Dijon", "Clermont-Ferrand", "Besançon", "Brest", "Limoges", "Tours",
+      "Angers", "Le Mans",
+    ],
   },
   {
     name: "Espagne",
     flag: "🇪🇸",
     code: "ES",
-    cities: ["Madrid", "Barcelone", "Valence", "Séville", "Saragosse", "Málaga", "Bilbao", "Alicante", "Murcie", "Las Palmas"],
+    cities: ["Madrid", "Barcelone", "Valence", "Séville", "Saragosse", "Málaga", "Bilbao", "Alicante", "Murcie", "Las Palmas", "Grenade", "Almería"],
   },
   {
     name: "Belgique",
     flag: "🇧🇪",
     code: "BE",
-    cities: ["Bruxelles", "Anvers", "Gand", "Liège", "Bruges", "Namur", "Louvain", "Mons"],
+    cities: ["Bruxelles", "Anvers", "Gand", "Liège", "Charleroi", "Bruges", "Namur", "Louvain", "Mons", "Molenbeek-Saint-Jean", "Schaerbeek"],
   },
   {
     name: "Allemagne",
     flag: "🇩🇪",
     code: "DE",
-    cities: ["Berlin", "Munich", "Hambourg", "Francfort", "Cologne", "Stuttgart", "Düsseldorf", "Dortmund", "Essen", "Leipzig"],
+    cities: ["Berlin", "Munich", "Hambourg", "Francfort", "Cologne", "Stuttgart", "Düsseldorf", "Dortmund", "Essen", "Leipzig", "Nuremberg", "Brême"],
   },
   {
     name: "Italie",
     flag: "🇮🇹",
     code: "IT",
-    cities: ["Rome", "Milan", "Naples", "Turin", "Palerme", "Gênes", "Bologne", "Florence", "Venise", "Catane"],
+    cities: ["Rome", "Milan", "Naples", "Turin", "Palerme", "Gênes", "Bologne", "Florence", "Venise", "Catane", "Bari", "Vérone"],
+  },
+  {
+    name: "Royaume-Uni",
+    flag: "🇬🇧",
+    code: "GB",
+    cities: ["Londres", "Manchester", "Birmingham", "Liverpool", "Leeds", "Glasgow", "Édimbourg", "Sheffield", "Bristol", "Newcastle"],
+  },
+  {
+    name: "Suisse",
+    flag: "🇨🇭",
+    code: "CH",
+    cities: ["Genève", "Zurich", "Lausanne", "Berne", "Bâle", "Lucerne", "Neuchâtel", "Fribourg"],
+  },
+  {
+    name: "Pays-Bas",
+    flag: "🇳🇱",
+    code: "NL",
+    cities: ["Amsterdam", "Rotterdam", "La Haye", "Utrecht", "Eindhoven", "Groningue"],
+  },
+  {
+    name: "Canada",
+    flag: "🇨🇦",
+    code: "CA",
+    cities: ["Montréal", "Laval", "Longueuil", "Québec", "Gatineau", "Ottawa", "Toronto", "Mississauga", "Brampton", "Calgary", "Edmonton", "Vancouver"],
   },
 ];
+
+// Alias kept for future non-EU expansion (Canada is already here).
+export const INTERNATIONAL_COUNTRIES = EUROPEAN_COUNTRIES;
 
 export const INTERNATIONAL_LISTINGS: Listing[] = [
   // --- Shipment requests (senders) ---

@@ -398,8 +398,8 @@ export default function Home() {
               facts about the product itself, verifiable today. */}
           <Fade className="grid grid-cols-3 gap-4 mb-10 max-w-lg mx-auto">
             {[
-              { value: "58", label: t("carriers_stat1_label") },
-              { value: "5",   label: t("carriers_stat2_label") },
+              { value: "58",  label: t("carriers_stat1_label") },
+              { value: "9",   label: t("carriers_stat2_label") },
               { value: "100%", label: t("carriers_stat3_label") },
             ].map((s) => (
               <div key={s.label} className="bg-dz-gray-50 rounded-2xl p-4 text-center border border-dz-gray-100">
