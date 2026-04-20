@@ -5,19 +5,28 @@ import { useI18n } from "@/lib/i18n";
 export default function TarifsPage() {
   const { t } = useI18n();
 
+  // Domestic grid — calibrated just above Yalidine's bureau-to-bureau
+  // reference (Alger→Oran ≈ 800 DA for a 5 kg parcel), because Waselli
+  // is a voyageur-hosted alternative, not an agency network, and the
+  // transporter needs headroom above fuel cost + Waselli's 10 %
+  // commission. Intentionally NOT undercut below street value.
   const domesticRoutes = [
-    { zone: "Trajet court (< 100 km)", examples: "Alger–Blida, Oran–Tlemcen", weight1: "800–1 500 DA", weight5: "1 200–2 000 DA", weight20: "2 000–3 500 DA" },
-    { zone: "Trajet moyen (100–300 km)", examples: "Alger–Sétif, Oran–Mascara", weight1: "1 000–2 000 DA", weight5: "1 800–3 000 DA", weight20: "3 000–5 000 DA" },
-    { zone: "Trajet long (300–600 km)", examples: "Alger–Oran, Alger–Constantine", weight1: "1 500–2 500 DA", weight5: "2 500–4 000 DA", weight20: "4 500–7 000 DA" },
-    { zone: "Trajet très long (> 600 km)", examples: "Alger–Tamanrasset, Alger–Béchar", weight1: "2 500–4 000 DA", weight5: "4 000–6 500 DA", weight20: "7 000–12 000 DA" },
+    { zone: "Même wilaya (< 50 km)",      examples: "Alger–Blida, Oran–Aïn Témouchent", weight1: "250–400 DA",   weight5: "400–600 DA",   weight20: "600–900 DA" },
+    { zone: "Wilayas voisines (50–200 km)", examples: "Alger–Tizi Ouzou, Alger–Béjaïa",  weight1: "350–550 DA",   weight5: "550–800 DA",   weight20: "800–1 200 DA" },
+    { zone: "Trajet moyen (200–500 km)",  examples: "Alger–Oran, Alger–Constantine",    weight1: "500–800 DA",   weight5: "800–1 200 DA", weight20: "1 200–2 000 DA" },
+    { zone: "Trajet long (500–1 000 km)", examples: "Alger–Annaba, Oran–Constantine",   weight1: "700–1 000 DA", weight5: "1 000–1 500 DA", weight20: "1 500–2 500 DA" },
+    { zone: "Grand Sud (> 1 000 km)",     examples: "Alger–Tamanrasset, Alger–Djanet",  weight1: "1 200–1 800 DA", weight5: "1 800–2 800 DA", weight20: "2 800–4 500 DA" },
   ];
 
+  // International grid — anchored on a 3 €/kg baseline (item 3), with
+  // a small margin for distance. Distance-to-Germany naturally carries
+  // the highest floor; Italy is closest so the cheapest.
   const internationalRoutes = [
-    { country: "France", flag: "🇫🇷", small: "20–30 €", medium: "35–55 €", large: "70–120 €", delay: "4–8 jours" },
-    { country: "Espagne", flag: "🇪🇸", small: "18–28 €", medium: "30–50 €", large: "60–100 €", delay: "5–9 jours" },
-    { country: "Belgique", flag: "🇧🇪", small: "20–30 €", medium: "33–52 €", large: "65–110 €", delay: "5–8 jours" },
-    { country: "Allemagne", flag: "🇩🇪", small: "28–40 €", medium: "45–70 €", large: "85–140 €", delay: "7–12 jours" },
-    { country: "Italie", flag: "🇮🇹", small: "16–25 €", medium: "28–45 €", large: "55–90 €", delay: "4–7 jours" },
+    { country: "France", flag: "🇫🇷", small: "10–18 €", medium: "20–35 €", large: "40–70 €", delay: "4–8 jours" },
+    { country: "Espagne", flag: "🇪🇸", small: "9–16 €",  medium: "18–32 €", large: "36–65 €", delay: "5–9 jours" },
+    { country: "Belgique", flag: "🇧🇪", small: "11–18 €", medium: "22–36 €", large: "42–72 €", delay: "5–8 jours" },
+    { country: "Allemagne", flag: "🇩🇪", small: "13–22 €", medium: "26–42 €", large: "48–80 €", delay: "7–12 jours" },
+    { country: "Italie", flag: "🇮🇹", small: "8–15 €",  medium: "16–28 €", large: "32–58 €", delay: "4–7 jours" },
   ];
 
   const trustItems = [
@@ -271,7 +280,7 @@ export default function TarifsPage() {
                 </div>
                 <h3 className="font-semibold text-dz-gray-800">{t("tarifs_domestic_cover")}</h3>
               </div>
-              <div className="text-3xl font-bold text-dz-green mb-2">50 000 DA</div>
+              <div className="text-3xl font-bold text-dz-green mb-2">20 000 DA <span className="text-sm font-medium text-dz-gray-400">→ 150 000 DA</span></div>
               <p className="text-sm text-dz-gray-500">{t("tarifs_domestic_cover_desc")}</p>
             </div>
 
@@ -287,7 +296,7 @@ export default function TarifsPage() {
                   <span className="text-xs bg-dz-green text-white px-2 py-0.5 rounded-full">{t("tarifs_intl_cover_badge")}</span>
                 </div>
               </div>
-              <div className="text-3xl font-bold text-dz-green mb-2">1 500 €</div>
+              <div className="text-3xl font-bold text-dz-green mb-2">500 € <span className="text-sm font-medium text-dz-gray-400">→ 5 000 €</span></div>
               <p className="text-sm text-dz-gray-500">{t("tarifs_intl_cover_desc")}</p>
             </div>
           </div>
