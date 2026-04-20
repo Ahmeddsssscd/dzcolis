@@ -91,10 +91,29 @@ export default function EnvoyerPage() {
     setForm((prev) => ({ ...prev, [field]: value }));
 
   const insurancePremium = calcInsurancePremium(form.insuranceTier, form.declaredValue);
-  const pricePerKg = parseInt(form.price) || 0;
+  // form.price is now a TOTAL budget in DA (senders think in totals, not per-kg).
+  // We still persist price_per_kg for schema compatibility — derived at submit time.
+  const transportTotal = parseInt(form.price) || 0;
   const weightKg = parseFloat(form.weight) || 0;
-  const transportTotal = pricePerKg * weightKg;
+  const derivedPricePerKg = weightKg > 0 ? Math.round(transportTotal / weightKg) : 0;
   const totalPrice = transportTotal + insurancePremium;
+
+  // Fairness band (per-kg). Anchored on Yalidine bureau rates (~180–220 DA/kg
+  // domestic) + a margin for P2P convenience. Below 200 DA/kg → very few
+  // transporters will bother. 200–600 → equitable. Above 600 → generous.
+  const FAIR_LOW = 250;
+  const FAIR_HIGH = 550;
+  const suggestedLow  = weightKg > 0 ? Math.round(weightKg * FAIR_LOW)  : 0;
+  const suggestedFair = weightKg > 0 ? Math.round(weightKg * ((FAIR_LOW + FAIR_HIGH) / 2)) : 0;
+  const suggestedHigh = weightKg > 0 ? Math.round(weightKg * FAIR_HIGH) : 0;
+  const fairness: "none" | "low" | "fair" | "high" =
+    transportTotal <= 0 || weightKg <= 0
+      ? "none"
+      : derivedPricePerKg < FAIR_LOW
+        ? "low"
+        : derivedPricePerKg > FAIR_HIGH
+          ? "high"
+          : "fair";
 
   const fromDisplay = form.from || "—";
   const toDisplay = form.to || "—";
@@ -145,14 +164,19 @@ export default function EnvoyerPage() {
       return;
     }
 
+    // Derive per-kg for schema compat. If weight is 0 we fall back to the
+    // total budget so the listing still has a meaningful price.
+    const w = parseFloat(form.weight) || 0;
+    const perKg = w > 0 ? Math.round((parseInt(form.price) || 0) / w) : parseInt(form.price) || 0;
+
     const result = await addListing({
       user_id: user.id,
       from_city: form.from,
       to_city: form.to,
       departure_date: form.date || new Date().toISOString().split("T")[0],
       arrival_date: null,
-      price_per_kg: parseInt(form.price),
-      available_weight: parseFloat(form.weight) || 0,
+      price_per_kg: perKg,
+      available_weight: w,
       description: `${form.title}${form.description ? " — " + form.description : ""}`,
       is_international: false,
       listing_type: "demande",
@@ -305,19 +329,71 @@ export default function EnvoyerPage() {
             </div>
           </div>
 
-          {/* Step 3: Budget */}
+          {/* Step 3: Budget — direct total picker with fairness hint */}
           <div className="bg-white rounded-2xl border border-dz-gray-200 p-6">
-            <h2 className="font-semibold text-dz-gray-800 mb-4 flex items-center gap-2">
+            <h2 className="font-semibold text-dz-gray-800 mb-1 flex items-center gap-2">
               <span className="w-7 h-7 bg-dz-green text-white rounded-lg flex items-center justify-center text-xs font-bold">3</span>
               {t("envoyer_step3")}
             </h2>
+            <p className="text-xs text-dz-gray-400 ml-9 mb-4">Dites simplement combien vous payez au total — pas de multiplication à faire.</p>
+
             <div>
-              <label className="block text-sm font-medium text-dz-gray-700 mb-1">Prix proposé (DA/kg) *</label>
+              <label className="block text-sm font-medium text-dz-gray-700 mb-1">Budget total proposé au transporteur *</label>
               <div className="relative">
-                <input type="number" min="1" value={form.price} onChange={(e) => update("price", e.target.value)} placeholder="Ex: 80" className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green pr-20" />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-dz-gray-400 font-medium pointer-events-none">DA/kg</span>
+                <input
+                  type="number"
+                  min="1"
+                  value={form.price}
+                  onChange={(e) => update("price", e.target.value)}
+                  placeholder={weightKg > 0 ? `Ex: ${suggestedFair.toLocaleString("fr-DZ")}` : "Ex: 2 500"}
+                  className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green pr-14"
+                />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-dz-gray-400 font-medium pointer-events-none">DA</span>
               </div>
-              <p className="text-xs text-dz-gray-400 mt-2">Prix par kilogramme offert au transporteur. Commission Waselli : 10 % — le transporteur reçoit 90 % du montant.</p>
+
+              {/* Quick-pick chips — only useful if weight was set in Step 1 */}
+              {weightKg > 0 ? (
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button type="button" onClick={() => update("price", String(suggestedLow))}
+                    className="text-xs px-3 py-1.5 rounded-lg border border-dz-gray-200 text-dz-gray-600 hover:border-dz-green hover:text-dz-green transition-colors">
+                    Tarif bas · {suggestedLow.toLocaleString("fr-DZ")} DA
+                  </button>
+                  <button type="button" onClick={() => update("price", String(suggestedFair))}
+                    className="text-xs px-3 py-1.5 rounded-lg border border-dz-green bg-dz-green/5 text-dz-green font-semibold hover:bg-dz-green/10 transition-colors">
+                    Tarif équitable · {suggestedFair.toLocaleString("fr-DZ")} DA
+                  </button>
+                  <button type="button" onClick={() => update("price", String(suggestedHigh))}
+                    className="text-xs px-3 py-1.5 rounded-lg border border-dz-gray-200 text-dz-gray-600 hover:border-dz-green hover:text-dz-green transition-colors">
+                    Tarif généreux · {suggestedHigh.toLocaleString("fr-DZ")} DA
+                  </button>
+                </div>
+              ) : (
+                <p className="text-xs text-dz-gray-400 mt-2 italic">Indiquez le poids du colis (étape 1) pour voir des suggestions calibrées.</p>
+              )}
+
+              {/* Fairness banner */}
+              {fairness !== "none" && (
+                <div className={`mt-3 px-4 py-3 rounded-xl text-sm flex items-start gap-2 ${
+                  fairness === "low"  ? "bg-amber-50 text-amber-800 border border-amber-200" :
+                  fairness === "fair" ? "bg-dz-green/5 text-dz-green border border-dz-green/20" :
+                                         "bg-blue-50 text-blue-800 border border-blue-200"
+                }`}>
+                  <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    {fairness === "low" ? (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    ) : (
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    )}
+                  </svg>
+                  <span>
+                    {fairness === "low"  && <>Offre basse — {derivedPricePerKg} DA/kg. Peu de transporteurs répondront. Suggestion : {suggestedFair.toLocaleString("fr-DZ")} DA pour {weightKg} kg.</>}
+                    {fairness === "fair" && <>Offre équitable — {derivedPricePerKg} DA/kg. Les transporteurs devraient répondre rapidement.</>}
+                    {fairness === "high" && <>Offre généreuse — {derivedPricePerKg} DA/kg. Vous aurez le choix du transporteur. Merci !</>}
+                  </span>
+                </div>
+              )}
+
+              <p className="text-xs text-dz-gray-400 mt-3">Commission Waselli : 10 % — le transporteur reçoit 90 % de votre budget.</p>
             </div>
           </div>
 
@@ -461,9 +537,11 @@ export default function EnvoyerPage() {
                   </span>
                 </span>
               </div>
-              {form.price && form.weight && (
+              {form.price && (
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-dz-gray-500">Transport ({pricePerKg} DA/kg × {weightKg} kg)</span>
+                  <span className="text-dz-gray-500">
+                    Transport{weightKg > 0 && derivedPricePerKg > 0 ? ` (≈ ${derivedPricePerKg} DA/kg × ${weightKg} kg)` : ""}
+                  </span>
                   <span className="font-medium text-dz-gray-800">{Math.round(transportTotal).toLocaleString("fr-DZ")} DA</span>
                 </div>
               )}
