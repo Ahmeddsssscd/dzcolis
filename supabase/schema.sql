@@ -89,11 +89,23 @@ create table if not exists public.bookings (
   updated_at       timestamptz not null default now()
 );
 
--- Auto-generate booking_ref
+-- Auto-generate booking_ref (serial, DHL-style)
+-- Shape: WSL-YY-NNNNNN (e.g. WSL-26-000147). The sequence resets conceptually
+-- via the 2-digit year prefix, but the underlying counter is monotonic so the
+-- reference stays globally unique. Senders can read it out over the phone
+-- without confusing letters (no hex noise, no O/0 ambiguity).
+create sequence if not exists public.bookings_serial_seq start 1;
+
 create or replace function public.generate_booking_ref()
 returns trigger language plpgsql as $$
+declare
+  serial_num bigint;
 begin
-  new.booking_ref := 'DZC-' || upper(substring(md5(new.id::text) from 1 for 6));
+  if new.booking_ref is null or new.booking_ref = '' then
+    serial_num := nextval('public.bookings_serial_seq');
+    new.booking_ref :=
+      'WSL-' || to_char(now(), 'YY') || '-' || lpad(serial_num::text, 6, '0');
+  end if;
   return new;
 end;
 $$;
