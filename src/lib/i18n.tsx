@@ -81,6 +81,22 @@ const translations = {
     carriers_verified:    "Vérifié",
     carriers_reviews_s:   "avis",
 
+    // ── Home: our commitments (trust section) ──
+    home_engage_badge:    "Nos engagements",
+    home_engage_title:    "Trois promesses claires, écrites noir sur blanc.",
+    home_engage_subtitle: "Aucun jargon, aucun astérisque. Voici ce que Waselli s'engage à faire à chaque envoi.",
+    home_engage_1_title:  "Votre argent reste à Waselli tant que le colis n'est pas livré",
+    home_engage_1_desc:   "Le paiement est séquestré dès la réservation. Il ne part chez le transporteur qu'après votre confirmation de réception — pas de délai caché, pas d'acompte versé à l'avance.",
+    home_engage_2_title:  "Aucun transporteur activé sans pièce d'identité vérifiée",
+    home_engage_2_desc:   "Carte d'identité, photo du véhicule et numéro de téléphone vérifié. Si vous voyez un badge Waselli vérifié, c'est qu'un humain a contrôlé le dossier — pas un algorithme.",
+    home_engage_3_title:  "En cas de litige, un humain tranche en 48 h ouvrées",
+    home_engage_3_desc:   "Nous examinons le bon de livraison signé, les photos de prise en charge et l'historique de messages. Libération, remboursement, ou médiation : la décision vous est expliquée.",
+
+    // ── Home: condensed FAQ ──
+    home_faq_title:       "Les questions qu'on nous pose le plus",
+    home_faq_subtitle:    "Trois réponses rapides avant de cliquer sur « Envoyer un colis ».",
+    home_faq_cta:         "Voir toutes les questions →",
+
     // ── Stats ──
     stat_users:     "Utilisateurs",
     stat_wilayas:   "Wilayas couvertes",
@@ -719,6 +735,22 @@ const translations = {
     carriers_verified:    "Verified",
     carriers_reviews_s:   "reviews",
 
+    // ── Home: our commitments (trust section) ──
+    home_engage_badge:    "Our commitments",
+    home_engage_title:    "Three clear promises, written in plain English.",
+    home_engage_subtitle: "No jargon, no asterisks. Here is what Waselli commits to on every shipment.",
+    home_engage_1_title:  "Your money stays with Waselli until the parcel is delivered",
+    home_engage_1_desc:   "Payment is held in escrow from the moment you book. It only moves to the carrier after you confirm delivery — no hidden delays, no upfront deposit.",
+    home_engage_2_title:  "No carrier goes live without a verified ID",
+    home_engage_2_desc:   "National ID, vehicle photo and a verified phone number. If you see the Waselli verified badge, a human reviewed the file — not an algorithm.",
+    home_engage_3_title:  "If there's a dispute, a human decides within 48 business hours",
+    home_engage_3_desc:   "We review the signed delivery note, the pickup photos and the chat history. Release, refund or mediation: the decision is explained to you.",
+
+    // ── Home: condensed FAQ ──
+    home_faq_title:       "The questions we hear the most",
+    home_faq_subtitle:    "Three quick answers before you click \"Send a parcel\".",
+    home_faq_cta:         "See all questions →",
+
     stat_users:     "Users",
     stat_wilayas:   "Provinces covered",
     stat_complaints:"Complaint rate",
@@ -1346,6 +1378,22 @@ const translations = {
     carriers_card3_loc:   "دولي 🌍",
     carriers_verified:    "موثق",
     carriers_reviews_s:   "تقييم",
+
+    // ── الصفحة الرئيسية: التزاماتنا ──
+    home_engage_badge:    "التزاماتنا",
+    home_engage_title:    "ثلاثة وعود واضحة، مكتوبة بالأبيض والأسود.",
+    home_engage_subtitle: "لا مصطلحات معقّدة ولا علامات نجمية. إليك ما تلتزم به Waselli في كل شحنة.",
+    home_engage_1_title:  "يبقى مالك لدى Waselli حتى يتم تسليم الطرد",
+    home_engage_1_desc:   "يُحتجز الدفع فور الحجز. لا يُحوَّل للسائق إلا بعد تأكيدك للاستلام — بلا مهل خفية، وبلا دفعة مقدّمة.",
+    home_engage_2_title:  "لا يُفعَّل أي سائق دون هوية موثّقة",
+    home_engage_2_desc:   "بطاقة هوية، صورة للمركبة، ورقم هاتف موثّق. إذا رأيت شارة Waselli موثّق، فاعلم أن إنساناً راجع الملف — وليس خوارزمية.",
+    home_engage_3_title:  "في حال نزاع، إنسان يبتّ خلال 48 ساعة عمل",
+    home_engage_3_desc:   "نفحص إيصال التسليم الموقّع، وصور الاستلام، وسجلّ المحادثات. تحرير، استرداد، أو وساطة: نشرح لك القرار.",
+
+    // ── الصفحة الرئيسية: الأسئلة الشائعة المختصرة ──
+    home_faq_title:       "الأسئلة التي تُطرح علينا أكثر",
+    home_faq_subtitle:    "ثلاث إجابات سريعة قبل أن تنقر على «إرسال طرد».",
+    home_faq_cta:         "رؤية كل الأسئلة ←",
 
     stat_users:     "مستخدم",
     stat_wilayas:   "ولاية مغطاة",

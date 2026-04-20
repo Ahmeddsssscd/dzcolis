@@ -489,6 +489,77 @@ export default function Home() {
         </div>
       </section>
 
+      {/* ── Our commitments (trust section) ─ */}
+      <section className="py-20 bg-gradient-to-b from-white to-dz-gray-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Fade className="text-center mb-14">
+            <div className="inline-flex items-center gap-2 bg-dz-green/10 text-dz-green px-4 py-1.5 rounded-full text-sm font-semibold mb-4">
+              <span className="w-1.5 h-1.5 bg-dz-green rounded-full animate-pulse" />
+              {t("home_engage_badge")}
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">{t("home_engage_title")}</h2>
+            <p className="text-dz-gray-500 mt-3 max-w-2xl mx-auto">{t("home_engage_subtitle")}</p>
+          </Fade>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {[
+              { k: "1", icon: "🔒", titleKey: "home_engage_1_title" as TranslationKey, descKey: "home_engage_1_desc" as TranslationKey },
+              { k: "2", icon: "🪪", titleKey: "home_engage_2_title" as TranslationKey, descKey: "home_engage_2_desc" as TranslationKey },
+              { k: "3", icon: "⚖️", titleKey: "home_engage_3_title" as TranslationKey, descKey: "home_engage_3_desc" as TranslationKey },
+            ].map((c, i) => (
+              <Fade key={c.k} delay={i * 80}>
+                <div className="h-full bg-white rounded-2xl border border-dz-gray-100 p-7 shadow-sm hover:shadow-md hover:border-dz-green/30 transition-all">
+                  <div className="w-12 h-12 rounded-xl bg-dz-green/10 flex items-center justify-center text-2xl mb-5">
+                    {c.icon}
+                  </div>
+                  <h3 className="font-bold text-dz-gray-800 text-lg mb-2 leading-snug">{t(c.titleKey)}</h3>
+                  <p className="text-sm text-dz-gray-500 leading-relaxed">{t(c.descKey)}</p>
+                </div>
+              </Fade>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Condensed FAQ ─────────────────── */}
+      <section className="py-20 bg-dz-gray-50">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <Fade className="text-center mb-10">
+            <h2 className="text-3xl md:text-4xl font-bold text-dz-gray-800">{t("home_faq_title")}</h2>
+            <p className="text-dz-gray-500 mt-2">{t("home_faq_subtitle")}</p>
+          </Fade>
+
+          <div className="space-y-3">
+            {[
+              { q: "hiw_faq_q1" as TranslationKey, a: "hiw_faq_a1" as TranslationKey },
+              { q: "hiw_faq_q2" as TranslationKey, a: "hiw_faq_a2" as TranslationKey },
+              { q: "hiw_faq_q3" as TranslationKey, a: "hiw_faq_a3" as TranslationKey },
+            ].map((f, i) => (
+              <Fade key={f.q} delay={i * 60}>
+                <details className="group bg-white rounded-2xl border border-dz-gray-100 hover:border-dz-green/30 transition-colors overflow-hidden">
+                  <summary className="cursor-pointer list-none p-5 flex items-start justify-between gap-4">
+                    <span className="font-semibold text-dz-gray-800">{t(f.q)}</span>
+                    <svg className="w-5 h-5 text-dz-gray-400 flex-shrink-0 mt-0.5 group-open:rotate-180 transition-transform"
+                         fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </summary>
+                  <div className="px-5 pb-5 text-sm text-dz-gray-600 leading-relaxed">
+                    {t(f.a)}
+                  </div>
+                </details>
+              </Fade>
+            ))}
+          </div>
+
+          <Fade className="text-center mt-8">
+            <Link href="/comment-ca-marche" className="text-dz-green font-semibold hover:underline">
+              {t("home_faq_cta")}
+            </Link>
+          </Fade>
+        </div>
+      </section>
+
       {/* ── International ─────────────────── */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
