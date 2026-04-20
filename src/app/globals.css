@@ -4,10 +4,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  /* Police blue palette */
-  --dz-green:       #1d4ed8;   /* main blue  */
-  --dz-green-light: #2563eb;   /* hover blue */
-  --dz-green-dark:  #1e3a8a;   /* deep navy  */
+  /* Blue palette */
+  --dz-green:       #2563eb;   /* main blue  */
+  --dz-green-light: #3b82f6;   /* hover blue */
+  --dz-green-dark:  #1d4ed8;   /* deep blue  */
   --dz-red: #dc2626;
   /* Slate grays — blue-tinted, easy on the eyes */
   --dz-gray-50:  #f8fafc;
@@ -142,3 +142,14 @@ html {
 .dark ::-webkit-scrollbar { width: 8px; }
 .dark ::-webkit-scrollbar-track { background: var(--dz-gray-100); }
 .dark ::-webkit-scrollbar-thumb { background: var(--dz-gray-300); border-radius: 4px; }
+
+/* ── Consistent brand blue on Tailwind blue utilities ── */
+@layer utilities {
+  .brand-btn {
+    background-color: #2563eb;
+    color: white;
+  }
+  .brand-btn:hover {
+    background-color: #1d4ed8;
+  }
+}

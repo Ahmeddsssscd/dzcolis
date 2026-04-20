@@ -155,7 +155,7 @@ export default function DevenirTransporteurInternationalPage() {
             Retour
           </Link>
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-2xl">✈️</div>
+            <div className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center"><svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg></div>
             <div>
               <h1 className="text-2xl font-bold">Devenir transporteur international</h1>
               <p className="text-dz-gray-300 text-sm mt-0.5">Transportez des colis entre l&apos;Algérie et l&apos;Europe et gagnez de l&apos;argent</p>
@@ -269,7 +269,7 @@ export default function DevenirTransporteurInternationalPage() {
                       {EUROPEAN_COUNTRIES.map((c) => (
                         <option key={c.code} value={c.code}>{c.flag} {c.name}</option>
                       ))}
-                      <option value="DZ">🇩🇿 Algérie</option>
+                      <option value="DZ">Algérie</option>
                     </select>
                   </div>
                   <div>
@@ -553,10 +553,10 @@ export default function DevenirTransporteurInternationalPage() {
                   <label className="block text-sm font-medium text-dz-gray-700 mb-2">Type de véhicule</label>
                   <div className="grid grid-cols-4 gap-3">
                     {[
-                      { label: "Voiture", icon: "🚗" },
-                      { label: "Fourgon", icon: "🚐" },
-                      { label: "Camionnette", icon: "🛻" },
-                      { label: "Camion", icon: "🚛" },
+                      { label: "Voiture", icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0zM13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1" /></svg> },
+                      { label: "Fourgon", icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 17a2 2 0 11-4 0 2 2 0 014 0zM20 17a2 2 0 11-4 0 2 2 0 014 0zM3 11V7a2 2 0 012-2h9l4 5v5M3 11h14M3 11V9" /></svg> },
+                      { label: "Camionnette", icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0zM3 10V7a1 1 0 011-1h5l3 4M3 10h10m0 0l2-4h3a1 1 0 011 1v3m0 0v3H3" /></svg> },
+                      { label: "Camion", icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM20 17a2 2 0 11-4 0 2 2 0 014 0zM1 1h14v11H1zM14 6h4l3 3v5h-7V6z" /></svg> },
                     ].map((v) => (
                       <label
                         key={v.label}
@@ -572,7 +572,7 @@ export default function DevenirTransporteurInternationalPage() {
                           onChange={(e) => update("vehicle", e.target.value)}
                           className="sr-only"
                         />
-                        <div className="text-2xl mb-1">{v.icon}</div>
+                        <div className={`flex justify-center mb-1 ${form.vehicle === v.label ? "text-dz-green" : "text-dz-gray-400"}`}>{v.icon}</div>
                         <div className="text-xs font-medium text-dz-gray-700">{v.label}</div>
                       </label>
                     ))}

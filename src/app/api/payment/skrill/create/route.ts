@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminSupabase } from "@/lib/supabase/admin";
+import { createClient } from "@/lib/supabase/server";
 import crypto from "crypto";
 
 // Skrill Quick Checkout — https://www.skrill.com/en/business/payment-gateway/
@@ -18,6 +19,11 @@ const SKRILL_METHOD_MAP: Record<string, string | undefined> = {
 
 export async function POST(req: NextRequest) {
   try {
+    // Auth check — must be a logged-in user
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const { bookingId, paymentMethod } = await req.json();
 
     if (!bookingId || !paymentMethod) {
@@ -41,6 +47,11 @@ export async function POST(req: NextRequest) {
 
     if (bookingError || !booking) {
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
+    }
+
+    // Ownership check — only the sender can pay for their booking
+    if (booking.sender_id !== user.id) {
+      return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";

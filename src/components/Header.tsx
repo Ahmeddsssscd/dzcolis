@@ -37,12 +37,8 @@ export default function Header() {
           <WaselliLogo size="sm" href="/" />
 
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="/annonces" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
-              {t("nav_listings")}
-            </Link>
-            <Link href="/livreurs" className="flex items-center gap-1.5 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
-              {t("nav_deliverers")}
-              <span className="text-[10px] bg-dz-green text-white px-1.5 py-0.5 rounded-full font-bold leading-none">NEW</span>
+            <Link href="/international" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
+              {t("nav_international")}
             </Link>
             <Link href="/envoyer" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
               {t("nav_send")}
@@ -50,14 +46,18 @@ export default function Header() {
             <Link href="/transporter" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
               {t("nav_transport")}
             </Link>
+            <Link href="/annonces" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
+              {t("nav_listings")}
+            </Link>
+            <Link href="/livreurs" className="flex items-center gap-1.5 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
+              {t("nav_deliverers")}
+              <span className="text-[10px] bg-dz-green text-white px-1.5 py-0.5 rounded-full font-bold leading-none">NEW</span>
+            </Link>
             <Link href="/suivi" className="flex items-center gap-1.5 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
               {t("nav_tracking")}
-            </Link>
-            <Link href="/international" className="text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium transition-colors">
-              {t("nav_international")}
             </Link>
           </nav>
 
@@ -89,17 +89,21 @@ export default function Header() {
                       <p className="text-sm font-medium text-dz-gray-800 dark:text-dz-gray-100">{user.firstName} {user.lastName}</p>
                       <p className="text-xs text-dz-gray-500 dark:text-dz-gray-400">{user.email}</p>
                     </div>
-                    <Link href="/tableau-de-bord" className="block px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
-                      📊 {t("nav_dashboard")}
+                    <Link href="/profil" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
+                      <svg className="w-4 h-4 text-dz-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>
+                      {t("nav_profile")}
                     </Link>
-                    <Link href="/suivi" className="block px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
-                      📦 {t("nav_tracking")}
+                    <Link href="/tableau-de-bord" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
+                      <svg className="w-4 h-4 text-dz-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg>
+                      {t("nav_dashboard")}
                     </Link>
-                    <Link href="/messages" className="block px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
-                      💬 {t("nav_messages")}
+                    <Link href="/messages" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
+                      <svg className="w-4 h-4 text-dz-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z" /></svg>
+                      {t("nav_messages")}
                     </Link>
-                    <Link href="/profil" className="block px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
-                      👤 {t("nav_profile")}
+                    <Link href="/suivi" className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-dz-gray-700 dark:text-dz-gray-200 hover:bg-dz-gray-50 dark:hover:bg-dz-gray-700 transition-colors" onClick={() => setDropdownOpen(false)}>
+                      <svg className="w-4 h-4 text-dz-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                      {t("nav_tracking")}
                     </Link>
                     <div className="border-t border-dz-gray-100 dark:border-dz-gray-700 mt-1 pt-1">
                       <button
@@ -155,15 +159,15 @@ export default function Header() {
               ))}
             </div>
             <div className="py-1"><ThemeToggle /></div>
+            <Link href="/international" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_international")}</Link>
+            <Link href="/envoyer" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_send")}</Link>
+            <Link href="/transporter" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_transport")}</Link>
             <Link href="/annonces" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_listings")}</Link>
             <Link href="/livreurs" className="flex items-center gap-2 py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>
               {t("nav_deliverers")}
               <span className="text-[10px] bg-dz-green text-white px-1.5 py-0.5 rounded-full font-bold leading-none">NEW</span>
             </Link>
-            <Link href="/envoyer" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_send")}</Link>
-            <Link href="/transporter" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_transport")}</Link>
-            <Link href="/suivi" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>📦 {t("nav_tracking")}</Link>
-            <Link href="/international" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_international")}</Link>
+            <Link href="/suivi" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_tracking")}</Link>
             <Link href="/comment-ca-marche" className="block py-2 text-dz-gray-600 dark:text-dz-gray-300 hover:text-dz-green font-medium" onClick={() => setMobileOpen(false)}>{t("nav_how_it_works")}</Link>
             {user ? (
               <>

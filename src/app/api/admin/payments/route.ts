@@ -1,13 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminClient, adminSupabase } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
+import { adminSupabase } from "@/lib/supabase/admin";
+import { checkAdminCookie } from "@/lib/admin-auth";
 
 export async function PATCH(req: NextRequest) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const { data: profile } = await (adminClient as any).from("profiles").select("role").eq("id", user.id).single();
-  if (profile?.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!(await checkAdminCookie())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     const { id, status } = await req.json();
@@ -16,7 +14,6 @@ export async function PATCH(req: NextRequest) {
     if (status === "paid") updates.paid_at = new Date().toISOString();
     const { error } = await adminSupabase.from("payments").update(updates).eq("id", id);
     if (error) throw error;
-    // Sync booking payment_status
     const { data: payment } = await adminSupabase.from("payments").select("booking_id").eq("id", id).single();
     if (payment?.booking_id) {
       const bookingPaymentStatus = status === "paid" ? "paid" : status === "refunded" ? "refunded" : "pending";
@@ -30,11 +27,9 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function GET() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const { data: profile } = await (adminClient as any).from("profiles").select("role").eq("id", user.id).single();
-  if (profile?.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!(await checkAdminCookie())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     const { data, error } = await adminSupabase

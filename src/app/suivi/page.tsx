@@ -4,10 +4,10 @@ import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 const STEPS = [
-  { label: "En attente",   sublabel: "De récupération",     icon: "📦" },
-  { label: "Accepté",      sublabel: "Par le transporteur", icon: "✅" },
-  { label: "En transit",   sublabel: "Vers destination",    icon: "🚗" },
-  { label: "Livré",        sublabel: "Confirmé",            icon: "🎉" },
+  { label: "En attente",   sublabel: "De récupération",     icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg> },
+  { label: "Accepté",      sublabel: "Par le transporteur", icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M5 13l4 4L19 7" /></svg> },
+  { label: "En transit",   sublabel: "Vers destination",    icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg> },
+  { label: "Livré",        sublabel: "Confirmé",            icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg> },
 ];
 
 const STATUS_INDEX: Record<string, number> = {
@@ -113,11 +113,9 @@ export default function SuiviPage() {
   return (
     <>
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-dz-green via-dz-green to-dz-green-dark text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10 pointer-events-none">
-          <div className="absolute top-10 left-0 w-64 h-64 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-10 w-80 h-80 bg-dz-green-light rounded-full blur-3xl" />
-        </div>
+      <section className="relative text-white overflow-hidden" style={{ background: "linear-gradient(135deg,#2563eb 0%,#1d4ed8 45%,#0f172a 100%)" }}>
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle,white 1px,transparent 1px)", backgroundSize: "28px 28px" }} />
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10 text-center">
           <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm mb-5">
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -126,7 +124,7 @@ export default function SuiviPage() {
             Suivi en temps réel
           </div>
           <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-4">Suivez votre colis</h1>
-          <p className="text-green-100 text-base md:text-lg max-w-xl mx-auto">
+          <p className="text-slate-400 text-base md:text-lg max-w-xl mx-auto">
             Entrez votre numéro de suivi reçu par email pour voir le statut de votre livraison
           </p>
         </div>
@@ -250,7 +248,7 @@ export default function SuiviPage() {
                               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                               </svg>
-                            ) : <span>{step.icon}</span>}
+                            ) : step.icon}
                           </div>
                           <div className="text-center hidden sm:block">
                             <p className={`text-xs font-semibold leading-tight ${active ? "text-dz-green" : done ? "text-dz-green-dark" : "text-dz-gray-400"}`}>{step.label}</p>
@@ -297,7 +295,7 @@ export default function SuiviPage() {
             {result.transporter && (
               <div className="bg-white dark:bg-dz-gray-800 border border-dz-gray-200 dark:border-dz-gray-700 rounded-2xl p-6 shadow-sm">
                 <h2 className="text-sm font-semibold text-dz-gray-700 dark:text-dz-gray-300 uppercase tracking-wider mb-4">Transporteur</h2>
-                <div className="flex items-center gap-4">
+                <div className="flex items-center gap-4 mb-4">
                   <div className="w-12 h-12 bg-dz-green/10 rounded-full flex items-center justify-center text-dz-green font-bold text-lg shrink-0">
                     {result.transporter.name.charAt(0)}
                   </div>
@@ -312,20 +310,37 @@ export default function SuiviPage() {
                     <span className="text-xs text-dz-green bg-dz-green/10 px-3 py-1.5 rounded-full font-medium">✓ Vérifié</span>
                   )}
                 </div>
+                <div className="flex gap-3">
+                  <Link href="/messages" className="flex-1 flex items-center justify-center gap-2 bg-dz-green hover:bg-dz-green-light text-white py-2.5 rounded-xl text-sm font-semibold transition-colors">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                    Contacter
+                  </Link>
+                  <Link href="/contact" className="flex-1 flex items-center justify-center gap-2 border border-red-200 text-red-600 hover:bg-red-50 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                    Signaler un problème
+                  </Link>
+                </div>
               </div>
             )}
 
-            {/* Amount */}
-            <div className="bg-dz-green/5 dark:bg-dz-green/10 border border-dz-green/20 rounded-2xl p-5 flex items-center justify-between">
-              <div>
-                <p className="text-sm text-dz-gray-600 dark:text-dz-gray-300">Montant total</p>
-                <p className="text-2xl font-bold text-dz-green">{result.total_amount.toLocaleString()} DA</p>
+            {/* Amount + Waselli Protection */}
+            <div className="bg-dz-green/5 dark:bg-dz-green/10 border border-dz-green/20 rounded-2xl p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div>
+                  <p className="text-sm text-dz-gray-600 dark:text-dz-gray-300">Montant total</p>
+                  <p className="text-2xl font-bold text-dz-green">{result.total_amount.toLocaleString()} DA</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-dz-gray-500 dark:text-dz-gray-400">Paiement séquestre</p>
+                  <p className="text-sm font-medium text-dz-gray-700 dark:text-dz-gray-200">
+                    {result.status === "delivered" ? "✅ Libéré au transporteur" : "🔒 Sécurisé par Waselli"}
+                  </p>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-xs text-dz-gray-500 dark:text-dz-gray-400">Paiement séquestre</p>
-                <p className="text-sm font-medium text-dz-gray-700 dark:text-dz-gray-200">
-                  {result.status === "delivered" ? "✅ Libéré au transporteur" : "🔒 Sécurisé par Waselli"}
-                </p>
+              <div className="flex items-center gap-2 pt-3 border-t border-dz-green/20">
+                <svg className="w-4 h-4 text-dz-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                <span className="text-xs font-semibold text-dz-green">Protégé par Waselli</span>
+                <span className="text-xs text-dz-gray-500 dark:text-dz-gray-400">— couverture jusqu&apos;à 50 000 DA contre perte et casse</span>
               </div>
             </div>
 

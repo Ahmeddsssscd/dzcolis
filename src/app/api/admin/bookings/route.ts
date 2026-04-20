@@ -1,23 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminClient, adminSupabase } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
+import { adminSupabase } from "@/lib/supabase/admin";
+import { checkAdminCookie } from "@/lib/admin-auth";
 
 export async function PATCH(req: NextRequest) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const { data: profile } = await (adminClient as any).from("profiles").select("role").eq("id", user.id).single();
-  if (profile?.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!(await checkAdminCookie())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     const { id, status, payment_status } = await req.json();
     if (!id) return NextResponse.json({ error: "Missing id" }, { status: 400 });
+
+    const VALID_STATUSES = ["pending", "accepted", "in_transit", "delivered", "cancelled", "rejected"];
+    const VALID_PAYMENT_STATUSES = ["unpaid", "paid", "refunded", "failed"];
+
+    if (status && !VALID_STATUSES.includes(status)) {
+      return NextResponse.json({ error: "Invalid status value" }, { status: 400 });
+    }
+    if (payment_status && !VALID_PAYMENT_STATUSES.includes(payment_status)) {
+      return NextResponse.json({ error: "Invalid payment_status value" }, { status: 400 });
+    }
+
     const updates: Record<string, string> = {};
     if (status) updates.status = status;
     if (payment_status) updates.payment_status = payment_status;
     const { error } = await adminSupabase.from("bookings").update(updates).eq("id", id);
     if (error) throw error;
-    // If refunded, also update payment record
     if (payment_status === "refunded") {
       await adminSupabase.from("payments").update({ status: "refunded" }).eq("booking_id", id);
     }
@@ -29,11 +37,9 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function GET() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const { data: profile } = await (adminClient as any).from("profiles").select("role").eq("id", user.id).single();
-  if (profile?.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!(await checkAdminCookie())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     const { data: bookings, error } = await adminSupabase
@@ -45,7 +51,6 @@ export async function GET() {
 
     const allBookings = bookings ?? [];
 
-    // Get unique sender_ids to fetch profiles
     const senderIds = [...new Set(allBookings.map((b: { sender_id: string }) => b.sender_id).filter(Boolean))];
 
     let profilesMap: Record<string, { first_name: string; last_name: string }> = {};

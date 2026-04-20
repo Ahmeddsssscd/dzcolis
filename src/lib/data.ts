@@ -124,13 +124,13 @@ export const SAMPLE_LISTINGS: Listing[] = [
   {
     id: "4",
     type: "trip",
-    title: "Trajet Oran → Tlemcen - Camionnette",
+    title: "Trajet Oran → Tlemcen - Fourgon",
     from: "Oran",
     to: "Tlemcen",
     date: "2026-04-04",
     price: 2000,
     weight: "jusqu'à 100 kg",
-    description: "Camionnette avec grand espace. Peut transporter meubles ou électroménager.",
+    description: "Fourgon avec grand espace. Peut transporter meubles ou électroménager.",
     user: { name: "Mohamed A.", rating: 5.0, reviews: 89, avatar: "MA" },
   },
   {
@@ -189,11 +189,13 @@ export const SAMPLE_LISTINGS: Listing[] = [
 
 export const CATEGORIES = [
   "Tous",
+  "Papiers / Documents",
   "Électroménager",
   "Meubles",
   "Cartons",
   "Électronique",
-  "Véhicules",
+  "Vêtements",
+  "Médicaments",
   "Matériaux",
   "Autre",
 ];

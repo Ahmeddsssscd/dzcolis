@@ -84,17 +84,16 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [badges, setBadges]               = useState<{ kyc: number; litiges: number; livreurs: number }>({ kyc: 0, litiges: 0, livreurs: 0 });
   const pathname = usePathname();
 
-  // Load real badge counts once authenticated
-  useEffect(() => {
-    if (!authenticated) return;
-    // Fetch admin stats (kyc, litiges)
+  // Refresh badge counts on login and on every page navigation
+  const refreshBadges = () => {
+    // KYC pending count
     fetch("/api/admin/stats")
       .then(r => r.json())
       .then(d => {
-        setBadges(prev => ({ ...prev, kyc: d.kyc_pending ?? 0, litiges: 2 }));
+        setBadges(prev => ({ ...prev, kyc: d.kyc_pending ?? 0 }));
       })
       .catch(() => {});
-    // Fetch courier applications to count pending
+    // Courier applications pending count
     fetch("/api/courier-applications")
       .then(r => r.json())
       .then((data: Array<{ status: string }>) => {
@@ -102,15 +101,37 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         setBadges(prev => ({ ...prev, livreurs: pending }));
       })
       .catch(() => {});
-  }, [authenticated]);
+    // Litiges (disputes) open count
+    fetch("/api/admin/litiges")
+      .then(r => r.json())
+      .then((data: Array<{ status: string }>) => {
+        const open = Array.isArray(data) ? data.filter(a => a.status === "ouvert").length : 0;
+        setBadges(prev => ({ ...prev, litiges: open }));
+      })
+      .catch(() => {});
+  };
 
-  function handleLogin(e: React.FormEvent) {
+  useEffect(() => {
+    if (!authenticated) return;
+    refreshBadges();
+  }, [authenticated, pathname]);
+
+  async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
-    if (password === "waselli@2026!") {
-      setAuthenticated(true);
-      setError("");
-    } else {
-      setError("Mot de passe incorrect.");
+    setError("");
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (res.ok) {
+        setAuthenticated(true);
+      } else {
+        setError("Mot de passe incorrect.");
+      }
+    } catch {
+      setError("Erreur de connexion. Réessayez.");
     }
   }
 
@@ -256,7 +277,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             <p className="text-gray-400 text-xs capitalize">{formatDate()}</p>
           </div>
           <button
-            onClick={() => setAuthenticated(false)}
+            onClick={() => { fetch("/api/admin/login", { method: "DELETE" }).finally(() => setAuthenticated(false)); }}
             className="flex items-center gap-2 text-sm text-gray-500 hover:text-red-600 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-all"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

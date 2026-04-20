@@ -76,9 +76,9 @@ export default function TarifsPage() {
           </div>
           <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
             {t("tarifs_hero_title")}<br />
-            <span className="text-green-300">{t("tarifs_hero_title2")}</span>
+            <span className="text-blue-200">{t("tarifs_hero_title2")}</span>
           </h1>
-          <p className="text-lg text-green-100 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-blue-100 max-w-2xl mx-auto leading-relaxed">
             {t("tarifs_hero_subtitle")}
           </p>
         </div>
@@ -115,7 +115,7 @@ export default function TarifsPage() {
               </div>
               <div className="text-4xl font-bold mb-1">10 %</div>
               <h3 className="font-semibold mb-2">{t("tarifs_commission_label")}</h3>
-              <p className="text-sm text-green-100">{t("tarifs_commission_desc")}</p>
+              <p className="text-sm text-blue-100">{t("tarifs_commission_desc")}</p>
             </div>
 
             {/* Carrier */}
@@ -339,13 +339,13 @@ export default function TarifsPage() {
       <section className="py-20 bg-gradient-to-br from-dz-green to-dz-green-dark text-white">
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("tarifs_cta_title")}</h2>
-          <p className="text-green-100 text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
             {t("tarifs_cta_subtitle")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/envoyer"
-              className="bg-white text-dz-green hover:bg-green-50 px-8 py-3.5 rounded-xl font-semibold transition-colors"
+              className="bg-white text-dz-green hover:bg-blue-50 px-8 py-3.5 rounded-xl font-semibold transition-colors"
             >
               {t("tarifs_cta_send")}
             </Link>

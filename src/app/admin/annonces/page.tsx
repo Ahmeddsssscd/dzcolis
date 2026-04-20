@@ -224,7 +224,7 @@ export default function AnnoncesPage() {
                         {annonce.statut === "en_attente" && (
                           <button
                             onClick={() => updateStatut(annonce.id, "active")}
-                            className="p-1.5 text-gray-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                            className="p-1.5 text-gray-400 hover:text-dz-green hover:bg-dz-green/10 rounded-lg transition-colors"
                             title="Approuver"
                           >
                             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

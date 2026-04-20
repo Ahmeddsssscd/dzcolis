@@ -167,7 +167,7 @@ export default function InternationalEnvoyerPage() {
               direction === "eu-dz" ? "bg-dz-green text-white" : "text-dz-gray-600 hover:bg-dz-gray-50"
             }`}
           >
-            🌍 Europe → 🇩🇿 Algérie
+            Europe → Algérie
           </button>
           <button
             type="button"
@@ -176,7 +176,7 @@ export default function InternationalEnvoyerPage() {
               direction === "dz-eu" ? "bg-dz-green text-white" : "text-dz-gray-600 hover:bg-dz-gray-50"
             }`}
           >
-            🇩🇿 Algérie → 🌍 Europe
+            Algérie → Europe
           </button>
         </div>
 
@@ -301,7 +301,7 @@ export default function InternationalEnvoyerPage() {
                         : "border-dz-gray-200 text-dz-gray-600 hover:border-dz-green/40 hover:bg-dz-gray-50"
                     }`}
                   >
-                    📦 Standard
+                    Standard
                     {!form.fragile && (
                       <svg className="w-4 h-4 ml-auto text-dz-green" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -359,7 +359,7 @@ export default function InternationalEnvoyerPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-dz-gray-700 mb-1">
-                      Ville d&apos;arrivée (🇩🇿 Algérie) *
+                      Ville d&apos;arrivée (Algérie) *
                     </label>
                     <select
                       value={form.algerianCity}
@@ -375,7 +375,7 @@ export default function InternationalEnvoyerPage() {
                 <>
                   <div>
                     <label className="block text-sm font-medium text-dz-gray-700 mb-1">
-                      Ville de départ (🇩🇿 Algérie) *
+                      Ville de départ (Algérie) *
                     </label>
                     <select
                       value={form.algerianCity}

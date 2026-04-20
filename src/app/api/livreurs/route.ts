@@ -15,13 +15,16 @@ export async function GET(request: Request) {
   const supabase = getSupabase();
 
   try {
+    const available = searchParams.get("available");
+
     let query = supabase
       .from("courier_applications")
-      .select("id, first_name, last_name, wilaya, transport_type, message, created_at")
+      .select("id, first_name, last_name, wilaya, transport_type, message, price_range, is_available, zones, created_at")
       .eq("status", "approved")
       .order("created_at", { ascending: false });
 
     if (wilaya) query = query.eq("wilaya", wilaya) as typeof query;
+    if (available === "1") query = query.eq("is_available", true) as typeof query;
 
     const { data, error } = await query;
     if (error) {

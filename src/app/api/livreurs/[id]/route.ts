@@ -15,7 +15,7 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
 
   const { data, error } = await supabase
     .from("courier_applications")
-    .select("id, first_name, last_name, wilaya, transport_type, message, created_at")
+    .select("id, first_name, last_name, wilaya, transport_type, message, price_range, phone, contact_preference, is_available, zones, vehicle_photo_url, created_at")
     .eq("id", id)
     .eq("status", "approved")
     .single();

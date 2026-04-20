@@ -46,6 +46,14 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Only the sender can cancel a booking" }, { status: 403 });
   }
 
+  // Block cancellation of already-paid bookings by sender — must go through support
+  if (status === "cancelled" && isSender && booking.payment_status === "paid") {
+    return NextResponse.json(
+      { error: "Impossible d'annuler une réservation déjà payée. Contactez le support Waselli pour obtenir un remboursement." },
+      { status: 409 }
+    );
+  }
+
   // Update booking status + timestamp for this specific status
   const now = new Date().toISOString();
   const timestampField: Record<string, string> = {
@@ -64,6 +72,7 @@ export async function PATCH(req: NextRequest) {
 
   const notifMap: Record<string, { user_id: string; type: string; title: string; message: string }> = {
     accepted:   { user_id: booking.sender_id,          type: "booking_accepted",   title: "Réservation acceptée ✅",  message: `Votre réservation ${ref} (${route}) a été acceptée par le transporteur.` },
+    rejected:   { user_id: booking.sender_id,          type: "booking_rejected",   title: "Réservation refusée",      message: `La réservation ${ref} (${route}) a été refusée par le transporteur. Cherchez une autre annonce.` },
     cancelled:  { user_id: isTransporter ? booking.sender_id : booking.listing?.user_id ?? "", type: "booking_cancelled",  title: "Réservation annulée",     message: `La réservation ${ref} (${route}) a été annulée.` },
     in_transit: { user_id: booking.sender_id,          type: "booking_in_transit", title: "Colis en route 🚗",        message: `Votre colis (${ref}) est en route sur le trajet ${route} !` },
     delivered:  { user_id: booking.sender_id,          type: "booking_delivered",  title: "Colis livré 📦",           message: `Votre colis (${ref}) a été livré. Confirmez la réception.` },

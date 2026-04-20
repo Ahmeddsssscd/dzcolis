@@ -28,7 +28,7 @@ const translations = {
     footer_send:       "Envoyer un colis",
     footer_become:     "Devenir transporteur",
     footer_marketplace:"Marketplace",
-    footer_intl:       "International 🌍",
+    footer_intl:       "International",
     footer_business:   "Solutions Business",
     footer_how:        "Comment ça marche",
     footer_pricing:    "Tarifs",
@@ -45,7 +45,7 @@ const translations = {
 
     // ── Homepage hero ──
     hero_badge:        "Livraison collaborative en Algérie",
-    hero_title:        "Envoyez vos colis",
+    hero_title:        "Votre voisin livre votre colis",
     hero_subtitle:     "Waselli connecte les expéditeurs avec des transporteurs qui font déjà le trajet. Économique, écologique et sécurisé.",
     hero_transporter:  "Vous êtes transporteur ?",
     hero_transporter_cta: "Proposez votre trajet et gagnez de l'argent →",
@@ -64,7 +64,7 @@ const translations = {
     carriers_card2_name:  "Farid M.",
     carriers_card2_loc:   "Oran & Ouest",
     carriers_card3_name:  "Yasmine K.",
-    carriers_card3_loc:   "International 🌍",
+    carriers_card3_loc:   "International",
     carriers_verified:    "Vérifié",
     carriers_reviews_s:   "avis",
 
@@ -125,11 +125,11 @@ const translations = {
     cta_transport: "Devenir transporteur",
     cta_soon:      "Bientôt disponible sur mobile",
 
-    // ── Cycle words (hero animated text) ──
-    cycle_1: "partout en Algérie",
-    cycle_2: "Alger → Oran",
-    cycle_3: "Oran → Tlemcen",
-    cycle_4: "Alger → Constantine",
+    // ── Cycle words (hero trust phrases) ──
+    cycle_1: "Paiement 100 % sécurisé par séquestre",
+    cycle_2: "Transporteurs vérifiés et assurés",
+    cycle_3: "Assurance incluse sur chaque envoi",
+    cycle_4: "Support disponible 7j/7",
 
     // ── Auth pages ──
     auth_login_title:      "Connexion",
@@ -544,7 +544,7 @@ const translations = {
     livreurs_badge_verified:   "✓ Vérifié",
     livreurs_badge_top:        "⭐ Top Livreur",
     livreurs_badge_fast:       "⚡ Rapide",
-    livreurs_badge_intl:       "✈️ International",
+    livreurs_badge_intl:       "International",
     livreurs_cta_title:        "Vous êtes transporteur ?",
     livreurs_cta_subtitle:     "Créez votre profil gratuit et recevez des demandes de livraison directement.",
     livreurs_cta_btn:          "Créer mon profil de livreur",
@@ -649,7 +649,7 @@ const translations = {
     footer_send:       "Send a package",
     footer_become:     "Become a transporter",
     footer_marketplace:"Marketplace",
-    footer_intl:       "International 🌍",
+    footer_intl:       "International",
     footer_business:   "Business Solutions",
     footer_how:        "How it works",
     footer_pricing:    "Pricing",
@@ -684,7 +684,7 @@ const translations = {
     carriers_card2_name:  "Farid M.",
     carriers_card2_loc:   "Oran & West",
     carriers_card3_name:  "Yasmine K.",
-    carriers_card3_loc:   "International 🌍",
+    carriers_card3_loc:   "International",
     carriers_verified:    "Verified",
     carriers_reviews_s:   "reviews",
 
@@ -738,10 +738,10 @@ const translations = {
     cta_transport: "Become a transporter",
     cta_soon:      "Coming soon on mobile",
 
-    cycle_1: "across Algeria",
-    cycle_2: "Algiers → Oran",
-    cycle_3: "Oran → Tlemcen",
-    cycle_4: "Algiers → Constantine",
+    cycle_1: "Payment 100% secured by escrow",
+    cycle_2: "Verified and insured transporters",
+    cycle_3: "Insurance included on every shipment",
+    cycle_4: "Support available 7 days a week",
 
     auth_login_title:      "Login",
     auth_login_subtitle:   "Welcome to Waselli",
@@ -1154,7 +1154,7 @@ const translations = {
     livreurs_badge_verified:   "✓ Verified",
     livreurs_badge_top:        "⭐ Top Deliverer",
     livreurs_badge_fast:       "⚡ Fast",
-    livreurs_badge_intl:       "✈️ International",
+    livreurs_badge_intl:       "International",
     livreurs_cta_title:        "Are you a transporter?",
     livreurs_cta_subtitle:     "Create your free profile and receive delivery requests directly.",
     livreurs_cta_btn:          "Create my deliverer profile",
@@ -1348,10 +1348,10 @@ const translations = {
     cta_transport: "كن سائقًا",
     cta_soon:      "قريبًا على الهاتف المحمول",
 
-    cycle_1: "في كل مكان بالجزائر",
-    cycle_2: "الجزائر ← وهران",
-    cycle_3: "وهران ← تلمسان",
-    cycle_4: "الجزائر ← قسنطينة",
+    cycle_1: "دفع آمن 100% عبر الضمان",
+    cycle_2: "سائقون موثقون ومؤمَّنون",
+    cycle_3: "تأمين شامل على كل شحنة",
+    cycle_4: "دعم متاح 7 أيام في الأسبوع",
 
     auth_login_title:      "تسجيل الدخول",
     auth_login_subtitle:   "مرحبًا بك في Waselli",

@@ -203,35 +203,45 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | null>(null);
   const [authLoading, setAuthLoading] = useState(true);
 
-  const fetchProfile = useCallback(async (sbUser: SupabaseUser) => {
+  // resolveLoading=true makes fetchProfile call setAuthLoading(false) once the
+  // profile row is fetched. This prevents the race condition where authLoading
+  // becomes false before `user` is set, causing protected pages to briefly see
+  // authLoading=false + user=null and incorrectly redirect to /connexion.
+  const fetchProfile = useCallback(async (sbUser: SupabaseUser, resolveLoading = false) => {
     const { data } = await db
       .from("profiles")
       .select("*")
       .eq("id", sbUser.id)
       .single();
     if (data) setUser(profileToUser(data, sbUser.email ?? ""));
+    if (resolveLoading) setAuthLoading(false);
   }, []);
 
   const refreshUser = useCallback(async () => {
     const { data: { user: sbUser } } = await supabase.auth.getUser();
-    if (sbUser) await fetchProfile(sbUser);
+    if (sbUser) await fetchProfile(sbUser); // don't resolveLoading during manual refresh
   }, [fetchProfile]);
 
   useEffect(() => {
-    // Safety timeout — never stay stuck loading
-    const timeout = setTimeout(() => setAuthLoading(false), 2000);
+    // Safety timeout — if nothing fires within 3 s, unblock the UI
+    const timeout = setTimeout(() => setAuthLoading(false), 3000);
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
         setSupabaseUser(session.user);
-        fetchProfile(session.user); // fire-and-forget — never block the auth callback
+        // For the initial auth events, let fetchProfile resolve authLoading
+        // AFTER the profile row is ready — this prevents spurious redirects.
+        const isInitialAuth = event === "INITIAL_SESSION" || event === "SIGNED_IN";
+        if (isInitialAuth) clearTimeout(timeout);
+        fetchProfile(session.user, isInitialAuth);
       } else {
         setSupabaseUser(null);
         setUser(null);
-      }
-      if (event === "INITIAL_SESSION" || event === "SIGNED_IN" || event === "SIGNED_OUT") {
-        clearTimeout(timeout);
-        setAuthLoading(false);
+        // No session → nothing to fetch, unblock immediately
+        if (event === "INITIAL_SESSION" || event === "SIGNED_IN" || event === "SIGNED_OUT") {
+          clearTimeout(timeout);
+          setAuthLoading(false);
+        }
       }
     });
 

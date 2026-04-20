@@ -13,8 +13,9 @@ export default function TransporterPage() {
   const { t } = useI18n();
   const router = useRouter();
 
+  const todayStr = new Date().toISOString().split("T")[0];
   const [form, setForm] = useState({
-    from: "", to: "", date: "", vehicle: "car", maxWeight: "", price: "", description: "", recurring: false,
+    from: "", to: "", date: todayStr, time: "08:00", vehicle: "car", maxWeight: "", price: "", description: "", recurring: false,
   });
   const [calcWeight, setCalcWeight] = useState("10");
   const [calcPrice, setCalcPrice] = useState("500");
@@ -26,10 +27,9 @@ export default function TransporterPage() {
   );
 
   const vehicleOptions = [
-    { key: "car",    icon: "🚗", label: t("trans_vehicle_car") },
-    { key: "van",    icon: "🚐", label: t("trans_vehicle_van") },
-    { key: "pickup", icon: "🛻", label: t("trans_vehicle_pickup") },
-    { key: "truck",  icon: "🚛", label: t("trans_vehicle_truck") },
+    { key: "car",  icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0zM13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1" /></svg>, label: "Voiture" },
+    { key: "van",  icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 17a2 2 0 11-4 0 2 2 0 014 0zM20 17a2 2 0 11-4 0 2 2 0 014 0zM3 11V7a2 2 0 012-2h9l4 5v5M3 11h14M3 11V9" /></svg>, label: "Fourgon" },
+    { key: "moto", icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" /></svg>, label: "Moto" },
   ];
 
   if (!user) {
@@ -62,7 +62,7 @@ export default function TransporterPage() {
       user_id: user.id,
       from_city: form.from,
       to_city: form.to,
-      departure_date: form.date || new Date().toISOString().split("T")[0],
+      departure_date: form.date ? `${form.date}T${form.time || "08:00"}:00` : new Date().toISOString(),
       arrival_date: null,
       price_per_kg: parseInt(form.price),
       available_weight: parseFloat(form.maxWeight) || 0,
@@ -89,37 +89,37 @@ export default function TransporterPage() {
 
         <div className="bg-gradient-to-r from-dz-green to-dz-green-light text-white rounded-2xl p-6 mb-8">
           <h3 className="font-semibold text-lg mb-1">{t("trans_calc_title")}</h3>
-          <p className="text-green-100 text-sm mb-4">{t("trans_calc_subtitle")}</p>
+          <p className="text-blue-100 text-sm mb-4">{t("trans_calc_subtitle")}</p>
           <div className="grid grid-cols-2 gap-3 mb-4">
             <div>
-              <label className="block text-xs text-green-200 mb-1">{t("trans_calc_weight")}</label>
+              <label className="block text-xs text-blue-200 mb-1">{t("trans_calc_weight")}</label>
               <input
                 type="number"
                 min="1"
                 max="500"
                 value={calcWeight}
                 onChange={(e) => setCalcWeight(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white/20 text-white placeholder-green-200 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm"
+                className="w-full px-3 py-2 rounded-lg bg-white/20 text-white placeholder-blue-200 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm"
               />
             </div>
             <div>
-              <label className="block text-xs text-green-200 mb-1">{t("trans_calc_price")}</label>
+              <label className="block text-xs text-blue-200 mb-1">{t("trans_calc_price")}</label>
               <input
                 type="number"
                 min="50"
                 max="5000"
                 value={calcPrice}
                 onChange={(e) => setCalcPrice(e.target.value)}
-                className="w-full px-3 py-2 rounded-lg bg-white/20 text-white placeholder-green-200 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm"
+                className="w-full px-3 py-2 rounded-lg bg-white/20 text-white placeholder-blue-200 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm"
               />
             </div>
           </div>
           <div className="bg-white/20 rounded-xl p-4 flex items-center justify-between">
             <div>
-              <div className="text-xs text-green-200">{t("trans_calc_earnings")}</div>
+              <div className="text-xs text-blue-200">{t("trans_calc_earnings")}</div>
               <div className="text-3xl font-bold mt-0.5">{calcEarnings.toLocaleString("fr-DZ")} DA</div>
             </div>
-            <div className="text-right text-xs text-green-200 space-y-1">
+            <div className="text-right text-xs text-blue-200 space-y-1">
               <div>{t("trans_calc_wilayas")}</div>
               <div>{t("trans_calc_avail")}</div>
             </div>
@@ -148,9 +148,15 @@ export default function TransporterPage() {
                 </select>
               </div>
             </div>
-            <div className="mt-4">
-              <label className="block text-sm font-medium text-dz-gray-700 mb-1">{t("trans_date")}</label>
-              <input type="date" value={form.date} onChange={(e) => update("date", e.target.value)} className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green text-dz-gray-700" />
+            <div className="mt-4 grid grid-cols-2 gap-3">
+              <div>
+                <label className="block text-sm font-medium text-dz-gray-700 mb-1">{t("trans_date")}</label>
+                <input type="date" value={form.date} min={new Date().toISOString().split("T")[0]} onChange={(e) => update("date", e.target.value)} className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green text-dz-gray-700" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-dz-gray-700 mb-1">Heure de départ</label>
+                <input type="time" value={form.time} onChange={(e) => update("time", e.target.value)} className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green text-dz-gray-700" />
+              </div>
             </div>
             <label className="flex items-center gap-2 text-sm text-dz-gray-700 mt-4">
               <input type="checkbox" checked={form.recurring} onChange={(e) => update("recurring", e.target.checked)} className="accent-dz-green" />
@@ -167,7 +173,7 @@ export default function TransporterPage() {
               {vehicleOptions.map((v) => (
                 <label key={v.key} className={`border rounded-xl p-4 text-center cursor-pointer transition-colors ${form.vehicle === v.key ? "border-dz-green bg-dz-green/5" : "border-dz-gray-200 hover:border-dz-green/30"}`}>
                   <input type="radio" name="vehicle" value={v.key} checked={form.vehicle === v.key} onChange={(e) => update("vehicle", e.target.value)} className="sr-only" />
-                  <div className="text-2xl mb-1">{v.icon}</div>
+                  <div className={`flex justify-center mb-2 ${form.vehicle === v.key ? "text-dz-green" : "text-dz-gray-400"}`}>{v.icon}</div>
                   <div className="text-sm font-medium text-dz-gray-700">{v.label}</div>
                 </label>
               ))}
@@ -184,8 +190,9 @@ export default function TransporterPage() {
               {t("trans_step3")}
             </h2>
             <div>
-              <label className="block text-sm font-medium text-dz-gray-700 mb-1">{t("trans_min_price")}</label>
-              <input type="number" value={form.price} onChange={(e) => update("price", e.target.value)} placeholder="Ex: 1500" className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green" />
+              <label className="block text-sm font-medium text-dz-gray-700 mb-1">Prix proposé total (DA)</label>
+              <input type="number" value={form.price} onChange={(e) => update("price", e.target.value)} placeholder="Ex: 2500" className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green" />
+              <p className="text-xs text-dz-gray-400 mt-1">Prix total pour le trajet (pas par kg)</p>
             </div>
             <div className="mt-4">
               <label className="block text-sm font-medium text-dz-gray-700 mb-1">{t("trans_desc_notes")}</label>

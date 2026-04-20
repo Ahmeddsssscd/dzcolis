@@ -64,10 +64,16 @@ export default function PaiementSuccesPage() {
         </div>
 
         <div className="flex flex-col gap-3">
-          <Link href="/tableau-de-bord" className="w-full bg-dz-green hover:bg-dz-green-light text-white py-3 rounded-xl font-semibold transition-colors">
+          <Link href="/messages" className="w-full bg-dz-green hover:bg-dz-green-light text-white py-3 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+            Messagez le transporteur
+          </Link>
+          <Link href="/tableau-de-bord" className="w-full border border-dz-gray-200 text-dz-gray-700 py-3 rounded-xl font-semibold hover:bg-dz-gray-50 transition-colors">
             Voir mes réservations
           </Link>
-          <Link href="/annonces" className="w-full border border-dz-gray-200 text-dz-gray-600 py-3 rounded-xl font-semibold hover:bg-dz-gray-50 transition-colors">
+          <Link href="/annonces" className="w-full text-dz-gray-400 py-2 rounded-xl text-sm hover:text-dz-gray-600 transition-colors">
             Retour aux annonces
           </Link>
         </div>

@@ -7,12 +7,12 @@ import { useAuth, useListings, useBookings, useToast } from "@/lib/context";
 const STEPS = ["Résumé", "Détails colis", "Paiement"];
 
 const PAYMENT_METHODS = [
-  { id: "edahabia", label: "Edahabia (Algérie Poste)", desc: "Paiement via votre compte Edahabia", flag: "🇩🇿" },
-  { id: "cib", label: "Carte CIB", desc: "Carte bancaire algérienne CIB", flag: "🇩🇿" },
+  { id: "edahabia", label: "Edahabia (Algérie Poste)", desc: "Paiement via votre compte Edahabia" },
+  { id: "cib", label: "Carte CIB", desc: "Carte bancaire algérienne CIB" },
 ];
 
 const INTERNATIONAL_PAYMENT_METHODS = [
-  { id: "stripe_card", label: "Visa / Mastercard", desc: "Paiement sécurisé par carte bancaire internationale via Stripe", flag: "💳" },
+  { id: "stripe_card", label: "Visa / Mastercard", desc: "Paiement sécurisé par carte bancaire internationale via Stripe" },
 ];
 
 function StepBar({ current }: { current: number }) {
@@ -64,11 +64,48 @@ export default function ReserverPage() {
     prohibited: false,
     signature: "",
   });
+  const [phoneCountry, setPhoneCountry] = useState("+213");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
 
+  const PHONE_COUNTRIES = [
+    { code: "+213", flag: "🇩🇿", label: "Algérie (+213)" },
+    { code: "+33",  flag: "🇫🇷", label: "France (+33)" },
+    { code: "+34",  flag: "🇪🇸", label: "Espagne (+34)" },
+    { code: "+39",  flag: "🇮🇹", label: "Italie (+39)" },
+    { code: "+49",  flag: "🇩🇪", label: "Allemagne (+49)" },
+    { code: "+32",  flag: "🇧🇪", label: "Belgique (+32)" },
+  ];
+  const [submitting, setSubmitting] = useState(false);
+  const [commissionRate, setCommissionRate] = useState(0.10); // default 10%
+  const [minBookingAmount, setMinBookingAmount] = useState(0);
+  const [transporterName, setTransporterName] = useState<string | null>(null);
+
+  // Fetch live commission rate and min booking amount from platform settings
+  useEffect(() => {
+    fetch("/api/settings/public")
+      .then(r => r.json())
+      .then((s: Record<string, string>) => {
+        if (s.commission) setCommissionRate(parseFloat(s.commission) / 100);
+        if (s.montant_minimum) setMinBookingAmount(parseFloat(s.montant_minimum));
+      })
+      .catch(() => {});
+  }, []);
+
+  // listing must be defined before any useEffect that references it
   const listing = getListingById(listingId);
+
+  // Fetch transporter profile name
+  useEffect(() => {
+    if (!listing?.user_id) return;
+    fetch(`/api/profile/${listing.user_id}`)
+      .then(r => r.json())
+      .then((p: { first_name?: string; last_name?: string }) => {
+        const name = [p.first_name, p.last_name].filter(Boolean).join(" ");
+        if (name) setTransporterName(name);
+      })
+      .catch(() => {});
+  }, [listing?.user_id]);
 
   useEffect(() => {
     if (authLoading) return;
@@ -99,12 +136,13 @@ export default function ReserverPage() {
     ? Math.round(listing.price_per_kg * weightKg * 100) / 100
     : Math.round(listing.price_per_kg * weightKg);
   const commission  = isIntl
-    ? Math.round(transport * 0.1 * 100) / 100
-    : Math.round(transport * 0.1);
+    ? Math.round(transport * commissionRate * 100) / 100
+    : Math.round(transport * commissionRate);
   const total       = isIntl
     ? Math.round((transport + commission) * 100) / 100
     : transport + commission;
   const currency    = isIntl ? "€" : "DA";
+  const commissionPct = Math.round(commissionRate * 100);
 
   function updateParcel(field: string, value: string | boolean) {
     setParcel(prev => ({ ...prev, [field]: value }));
@@ -120,6 +158,13 @@ export default function ReserverPage() {
 
   async function handleConfirm() {
     if (!listing) return;
+
+    // Check minimum booking amount
+    if (minBookingAmount > 0 && total < minBookingAmount) {
+      addToast(`Montant minimum de réservation : ${minBookingAmount.toLocaleString("fr-FR")} ${currency}`, "error");
+      return;
+    }
+
     setSubmitting(true);
 
     // Step 1: Create booking in DB
@@ -130,7 +175,7 @@ export default function ReserverPage() {
       content:         parcel.content,
       pickup_address:  parcel.pickupAddress,
       recipient_name:  parcel.recipientName,
-      recipient_phone: parcel.recipientPhone,
+      recipient_phone: `${phoneCountry} ${parcel.recipientPhone}`.trim(),
       instructions:    parcel.instructions || undefined,
       total_amount:    total,
     });
@@ -213,10 +258,14 @@ export default function ReserverPage() {
               {/* Transporter */}
               <div className="flex items-center gap-3 border-t border-dz-gray-100 pt-4">
                 <div className="w-11 h-11 bg-dz-green/10 rounded-full flex items-center justify-center text-sm font-bold text-dz-green flex-shrink-0">
-                  {listing.user_id.substring(0, 2).toUpperCase()}
+                  {transporterName
+                    ? transporterName.substring(0, 2).toUpperCase()
+                    : listing.from_city.substring(0, 2).toUpperCase()}
                 </div>
-                <div>
-                  <p className="font-semibold text-dz-gray-800 text-sm">Transporteur vérifié</p>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-dz-gray-800 text-sm">
+                    {transporterName ? `Envoi avec ${transporterName}` : "Transporteur vérifié"}
+                  </p>
                   <div className="flex items-center gap-1 text-xs text-dz-gray-500 mt-0.5">
                     <svg className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" viewBox="0 0 24 24">
                       <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
@@ -224,33 +273,42 @@ export default function ReserverPage() {
                     Waselli vérifié
                   </div>
                 </div>
-                <div className="ml-auto">
+                <div className="ml-auto flex-shrink-0">
                   <span className="text-xs bg-green-50 text-green-700 border border-green-100 px-2 py-1 rounded-full font-semibold">Vérifié</span>
                 </div>
               </div>
             </div>
 
-            {/* Price summary */}
+            {/* Price summary — shown only after weight is entered */}
             <div className="bg-white border border-dz-gray-200 rounded-2xl p-6">
               <h2 className="text-base font-bold text-dz-gray-800 mb-4">Résumé du prix</h2>
-              <div className="space-y-2.5 text-sm">
-                <div className="flex justify-between text-dz-gray-600">
-                  <span>Transport ({listing.price_per_kg.toLocaleString("fr-FR")} {currency} × {weightKg || "?"} kg)</span>
-                  <span className="font-medium">{transport.toLocaleString("fr-FR")} {currency}</span>
+              {weightKg > 0 ? (
+                <div className="space-y-2.5 text-sm">
+                  <div className="flex justify-between text-dz-gray-600">
+                    <span>Transport ({listing.price_per_kg.toLocaleString("fr-FR")} {currency} × {weightKg} kg)</span>
+                    <span className="font-medium">{transport.toLocaleString("fr-FR")} {currency}</span>
+                  </div>
+                  <div className="flex justify-between text-dz-gray-600">
+                    <span>Commission Waselli ({commissionPct}%)</span>
+                    <span className="font-medium">{commission.toLocaleString("fr-FR")} {currency}</span>
+                  </div>
+                  <div className="flex justify-between text-dz-green text-sm">
+                    <span>Assurance Waselli Protect</span>
+                    <span className="font-semibold">Gratuit</span>
+                  </div>
+                  <div className="border-t border-dz-gray-200 pt-2.5 flex justify-between font-bold text-dz-gray-800 text-base">
+                    <span>Total estimé</span>
+                    <span>{total.toLocaleString("fr-FR")} {currency}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between text-dz-gray-600">
-                  <span>Commission Waselli (10%)</span>
-                  <span className="font-medium">{commission.toLocaleString("fr-FR")} {currency}</span>
+              ) : (
+                <div className="flex items-center gap-3 py-3 text-dz-gray-400">
+                  <svg className="w-8 h-8 shrink-0 text-dz-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <p className="text-sm">Renseignez le poids de votre colis à l&apos;étape suivante pour voir le prix total.</p>
                 </div>
-                <div className="flex justify-between text-dz-green text-sm">
-                  <span>Assurance Waselli Protect</span>
-                  <span className="font-semibold">Gratuit</span>
-                </div>
-                <div className="border-t border-dz-gray-200 pt-2.5 flex justify-between font-bold text-dz-gray-800 text-base">
-                  <span>Total</span>
-                  <span>{total.toLocaleString("fr-FR")} {currency}</span>
-                </div>
-              </div>
+              )}
             </div>
 
             {/* Protection banner */}
@@ -322,10 +380,21 @@ export default function ReserverPage() {
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-dz-gray-600 mb-1.5">Téléphone *</label>
-                      <input type="tel" value={parcel.recipientPhone}
-                        onChange={e => updateParcel("recipientPhone", e.target.value)}
-                        placeholder="+213 5XX XXX XXX"
-                        className="w-full px-3 py-2.5 border border-dz-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green"/>
+                      <div className="flex gap-1.5">
+                        <select
+                          value={phoneCountry}
+                          onChange={e => setPhoneCountry(e.target.value)}
+                          className="px-2 py-2.5 border border-dz-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green bg-white shrink-0"
+                        >
+                          {PHONE_COUNTRIES.map(c => (
+                            <option key={c.code} value={c.code}>{c.flag} {c.code}</option>
+                          ))}
+                        </select>
+                        <input type="tel" value={parcel.recipientPhone}
+                          onChange={e => updateParcel("recipientPhone", e.target.value)}
+                          placeholder="5XX XXX XXX"
+                          className="flex-1 px-3 py-2.5 border border-dz-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green"/>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -399,7 +468,7 @@ export default function ReserverPage() {
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between text-dz-gray-600"><span>Transport ({parcel.weight || "?"} kg × {listing.price_per_kg} {currency})</span><span>{transport.toLocaleString("fr-FR")} {currency}</span></div>
-                <div className="flex justify-between text-dz-gray-600"><span>Commission (10%)</span><span>{commission.toLocaleString("fr-FR")} {currency}</span></div>
+                <div className="flex justify-between text-dz-gray-600"><span>Commission ({commissionPct}%)</span><span>{commission.toLocaleString("fr-FR")} {currency}</span></div>
                 <div className="flex justify-between text-green-600"><span>Assurance</span><span>Gratuit</span></div>
                 <div className="flex justify-between font-bold text-dz-gray-800 text-base border-t border-dz-gray-100 pt-2.5">
                   <span>Total à payer</span><span>{total.toLocaleString("fr-FR")} {currency}</span>
@@ -430,7 +499,7 @@ export default function ReserverPage() {
                     }`}>
                       {paymentMethod === m.id && <div className="w-2 h-2 rounded-full bg-dz-green"/>}
                     </div>
-                    <span className="text-lg">{m.flag}</span>
+                    <svg className="w-5 h-5 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" /></svg>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-dz-gray-800">{m.label}</p>
                       <p className="text-xs text-dz-gray-500">{m.desc}</p>

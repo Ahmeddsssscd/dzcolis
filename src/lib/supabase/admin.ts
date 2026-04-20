@@ -8,6 +8,8 @@ export const adminClient = createClient<Database>(
   { auth: { autoRefreshToken: false, persistSession: false } }
 );
 
-// Alias for convenience
+// Legacy alias used by many callers — cast to any because the hand-written Database
+// type in types.ts is incomplete (missing platform_settings + schema mismatches).
+// TODO: regenerate types with `supabase gen types typescript` to remove this cast.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const adminSupabase = adminClient as any;

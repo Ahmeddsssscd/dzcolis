@@ -59,6 +59,8 @@ export default function EnvoyerPage() {
     },
   ];
 
+  const today = new Date().toISOString().split("T")[0];
+
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -69,7 +71,7 @@ export default function EnvoyerPage() {
     fragile: false,
     from: "",
     to: "",
-    date: "",
+    date: today,
     price: "",
     insuranceTier: "basique" as InsuranceTier,
     declarationContents: "",
@@ -82,7 +84,10 @@ export default function EnvoyerPage() {
     setForm((prev) => ({ ...prev, [field]: value }));
 
   const insurancePremium = calcInsurancePremium(form.insuranceTier, form.declaredValue);
-  const totalPrice = (parseInt(form.price) || 0) + insurancePremium;
+  const pricePerKg = parseInt(form.price) || 0;
+  const weightKg = parseFloat(form.weight) || 0;
+  const transportTotal = pricePerKg * weightKg;
+  const totalPrice = transportTotal + insurancePremium;
 
   const fromDisplay = form.from || "—";
   const toDisplay = form.to || "—";
@@ -123,6 +128,13 @@ export default function EnvoyerPage() {
     }
     if (!form.declarationContents || !form.prohibitedConfirmed || !form.responsibilityConfirmed || !form.signatureName) {
       addToast(t("envoyer_error_declaration"), "error");
+      return;
+    }
+    // Validate signature matches profile full name
+    const expectedName = `${user.firstName} ${user.lastName}`.trim().toLowerCase();
+    const enteredName = form.signatureName.trim().toLowerCase();
+    if (enteredName !== expectedName) {
+      addToast(`La signature doit correspondre exactement à votre nom : ${user.firstName} ${user.lastName}`, "error");
       return;
     }
 
@@ -282,7 +294,7 @@ export default function EnvoyerPage() {
             </div>
             <div className="mt-4">
               <label className="block text-sm font-medium text-dz-gray-700 mb-1">{t("envoyer_date_label")}</label>
-              <input type="date" value={form.date} onChange={(e) => update("date", e.target.value)} className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green text-dz-gray-700" />
+              <input type="date" value={form.date} min={today} onChange={(e) => update("date", e.target.value)} className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green text-dz-gray-700" />
             </div>
           </div>
 
@@ -293,12 +305,12 @@ export default function EnvoyerPage() {
               {t("envoyer_step3")}
             </h2>
             <div>
-              <label className="block text-sm font-medium text-dz-gray-700 mb-1">{t("envoyer_price_label")}</label>
+              <label className="block text-sm font-medium text-dz-gray-700 mb-1">Prix proposé (DA/kg) *</label>
               <div className="relative">
-                <input type="number" value={form.price} onChange={(e) => update("price", e.target.value)} placeholder="Ex: 2500" className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green pr-12" />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-dz-gray-400 font-medium pointer-events-none">DA</span>
+                <input type="number" min="1" value={form.price} onChange={(e) => update("price", e.target.value)} placeholder="Ex: 80" className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green pr-20" />
+                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-sm text-dz-gray-400 font-medium pointer-events-none">DA/kg</span>
               </div>
-              <p className="text-xs text-dz-gray-400 mt-2">{t("envoyer_commission_note")}</p>
+              <p className="text-xs text-dz-gray-400 mt-2">Prix par kilogramme offert au transporteur. Commission Waselli : 10 % — le transporteur reçoit 90 % du montant.</p>
             </div>
           </div>
 
@@ -442,6 +454,12 @@ export default function EnvoyerPage() {
                   </span>
                 </span>
               </div>
+              {form.price && form.weight && (
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-dz-gray-500">Transport ({pricePerKg} DA/kg × {weightKg} kg)</span>
+                  <span className="font-medium text-dz-gray-800">{Math.round(transportTotal).toLocaleString("fr-DZ")} DA</span>
+                </div>
+              )}
               <div className="border-t border-dz-gray-200 pt-2.5 flex items-center justify-between text-sm">
                 <span className="font-semibold text-dz-gray-800">{t("envoyer_total_paid")}</span>
                 <span className="font-bold text-dz-green text-base">
@@ -527,27 +545,40 @@ export default function EnvoyerPage() {
                 <label className="block text-sm font-medium text-dz-gray-700 mb-1">
                   {t("envoyer_signature_label")}
                 </label>
-                <p className="text-xs text-dz-gray-400 mb-2">
+                <p className="text-xs text-dz-gray-400 mb-1">
                   {t("envoyer_signature_hint")}
+                </p>
+                <p className="text-xs text-dz-green font-medium mb-2">
+                  Saisissez exactement : <strong>{user.firstName} {user.lastName}</strong>
                 </p>
                 <div className="relative">
                   <input
                     type="text"
                     value={form.signatureName}
                     onChange={(e) => update("signatureName", e.target.value)}
-                    placeholder="Prénom NOM (ex: Karim BENALI)"
+                    placeholder={`${user.firstName} ${user.lastName}`}
                     className="w-full px-4 py-3 border-b-2 border-dz-gray-300 focus:border-dz-green outline-none bg-dz-gray-50 rounded-t-xl text-dz-gray-800 font-medium italic text-lg tracking-wide"
                     style={{ fontFamily: "Georgia, serif" }}
                   />
                 </div>
-                {form.signatureName && (
-                  <div className="mt-2 px-4 py-2 bg-dz-green/5 border border-dz-green/20 rounded-xl flex items-center gap-2">
-                    <svg className="w-4 h-4 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span className="text-xs text-dz-green">{t("envoyer_signature_saved")} <strong>{form.signatureName}</strong></span>
-                  </div>
-                )}
+                {form.signatureName && (() => {
+                  const matches = form.signatureName.trim().toLowerCase() === `${user.firstName} ${user.lastName}`.trim().toLowerCase();
+                  return (
+                    <div className={`mt-2 px-4 py-2 border rounded-xl flex items-center gap-2 ${matches ? "bg-dz-green/5 border-dz-green/20" : "bg-red-50 border-red-200"}`}>
+                      {matches ? (
+                        <>
+                          <svg className="w-4 h-4 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                          <span className="text-xs text-dz-green">{t("envoyer_signature_saved")} <strong>{form.signatureName}</strong></span>
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                          <span className="text-xs text-red-600">La signature doit être : <strong>{user.firstName} {user.lastName}</strong></span>
+                        </>
+                      )}
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Declaration ID preview */}
@@ -564,7 +595,7 @@ export default function EnvoyerPage() {
 
           <button
             type="submit"
-            disabled={!form.prohibitedConfirmed || !form.responsibilityConfirmed || !form.signatureName}
+            disabled={!form.prohibitedConfirmed || !form.responsibilityConfirmed || !form.signatureName || form.signatureName.trim().toLowerCase() !== `${user.firstName} ${user.lastName}`.trim().toLowerCase()}
             className="w-full bg-dz-green hover:bg-dz-green-light text-white py-4 rounded-xl font-semibold text-lg transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

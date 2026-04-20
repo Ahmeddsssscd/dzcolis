@@ -156,9 +156,9 @@ export default function FaqPage() {
           </div>
           <h1 className="text-4xl md:text-5xl font-bold leading-tight mb-6">
             {t("faq_hero_title")}<br />
-            <span className="text-green-300">{t("faq_hero_title2")}</span>
+            <span className="text-blue-200">{t("faq_hero_title2")}</span>
           </h1>
-          <p className="text-lg text-green-100 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg text-blue-100 max-w-2xl mx-auto leading-relaxed">
             {t("faq_hero_subtitle")}
           </p>
         </div>
@@ -223,13 +223,13 @@ export default function FaqPage() {
             </svg>
           </div>
           <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("faq_cta_title")}</h2>
-          <p className="text-green-100 text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
             {t("faq_cta_subtitle")}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/envoyer"
-              className="bg-white text-dz-green hover:bg-green-50 px-8 py-3.5 rounded-xl font-semibold transition-colors"
+              className="bg-white text-dz-green hover:bg-blue-50 px-8 py-3.5 rounded-xl font-semibold transition-colors"
             >
               {t("faq_cta_send")}
             </Link>

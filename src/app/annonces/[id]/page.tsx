@@ -139,10 +139,18 @@ export default function ListingDetailPage() {
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center gap-2">
                   {isDemande ? (
-                    <span className="text-xs font-semibold px-3 py-1 rounded-full bg-amber-50 text-amber-700">📦 Demande d&apos;envoi</span>
+                    <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full bg-amber-50 text-amber-700">
+                      <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                      Demande d&apos;envoi
+                    </span>
                   ) : (
-                    <span className={`text-xs font-semibold px-3 py-1 rounded-full ${listing.is_international ? "bg-purple-50 text-purple-600" : "bg-blue-50 text-blue-600"}`}>
-                      {listing.is_international ? "✈️ International" : "🇩🇿 National"}
+                    <span className={`inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1 rounded-full ${listing.is_international ? "bg-blue-50 text-blue-600" : "bg-slate-100 text-slate-600"}`}>
+                      {listing.is_international ? (
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+                      ) : (
+                        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                      )}
+                      {listing.is_international ? "International" : "National"}
                     </span>
                   )}
                 </div>
@@ -188,6 +196,17 @@ export default function ListingDetailPage() {
               <p className="text-dz-gray-600 leading-relaxed">{listing.description}</p>
             </div>
 
+            {/* Waselli Protection Badge */}
+            <div className="bg-dz-green border-dz-green rounded-2xl p-4 flex items-center gap-3 text-white">
+              <svg className="w-8 h-8 shrink-0 opacity-90" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              <div>
+                <p className="font-bold text-sm">Protégé par Waselli</p>
+                <p className="text-xs text-blue-100 mt-0.5">Paiement séquestre · Assurance incluse · Remboursement garanti si non livré</p>
+              </div>
+            </div>
+
             {/* Insurance */}
             <div className="bg-dz-green/5 border border-dz-green/20 rounded-2xl p-5 flex items-start gap-3">
               <svg className="w-6 h-6 text-dz-green mt-0.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -230,13 +249,28 @@ export default function ListingDetailPage() {
 
               {isDemande ? (
                 <div className="space-y-2">
-                  <p className="text-xs text-dz-gray-500 mb-3">Vous faites ce trajet ? Cliquez pour envoyer votre proposition directement à l&apos;expéditeur.</p>
+                  <p className="text-xs text-dz-gray-500 mb-3">Vous faites ce trajet ? Cliquez pour contacter l&apos;expéditeur et prendre sa commande. Un message lui sera envoyé automatiquement.</p>
                   <button
                     onClick={handleProposeTrajet}
-                    disabled={sendingMsg}
-                    className="w-full bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-white py-3 rounded-xl font-semibold transition-colors">
-                    {sendingMsg ? "Envoi en cours..." : "Je propose mon trajet"}
+                    disabled={sendingMsg || listing.user_id === user?.id}
+                    className="w-full bg-dz-green hover:bg-dz-green-light disabled:opacity-50 text-white py-3 rounded-xl font-semibold transition-colors flex items-center justify-center gap-2">
+                    {sendingMsg ? (
+                      <>
+                        <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z" /></svg>
+                        Envoi en cours...
+                      </>
+                    ) : listing.user_id === user?.id ? (
+                      "C'est votre annonce"
+                    ) : (
+                      <>
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                        Prendre ce colis
+                      </>
+                    )}
                   </button>
+                  {listing.user_id !== user?.id && (
+                    <p className="text-[11px] text-dz-gray-400 text-center">Votre contact sera envoyé à l&apos;expéditeur · Gratuit</p>
+                  )}
                 </div>
               ) : (
                 <button onClick={handleBook}
@@ -249,7 +283,7 @@ export default function ListingDetailPage() {
             {/* Message */}
             <div id="msg-box" className="bg-white rounded-2xl border border-dz-gray-200 p-6">
               <h3 className="font-semibold text-dz-gray-800 mb-3 text-sm">
-                {isDemande ? "Proposer votre trajet" : "Envoyer un message"}
+                {isDemande ? "Message personnalisé (optionnel)" : "Envoyer un message"}
               </h3>
               <textarea rows={3} value={message} onChange={(e) => setMessage(e.target.value)}
                 placeholder={isDemande ? "Bonjour, je fais ce trajet et je peux transporter votre colis..." : "Bonjour, je suis intéressé par votre trajet..."}

@@ -3,30 +3,36 @@ import { adminSupabase } from "@/lib/supabase/admin";
 import { sendPaymentConfirmedEmail } from "@/lib/email";
 import crypto from "crypto";
 
-// Verify Chargily webhook signature
-function verifySignature(payload: string, signature: string, secret: string): boolean {
+// Chargily uses the API key as the HMAC secret for webhook signing.
+// Set CHARGILY_WEBHOOK_SECRET in Vercel if they ever provide a separate secret.
+const WEBHOOK_SECRET =
+  process.env.CHARGILY_WEBHOOK_SECRET ?? process.env.CHARGILY_API_KEY ?? "";
+
+function verifySignature(payload: string, signature: string): boolean {
+  if (!WEBHOOK_SECRET) return false;
   const computed = crypto
-    .createHmac("sha256", secret)
+    .createHmac("sha256", WEBHOOK_SECRET)
     .update(payload)
     .digest("hex");
-  return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(signature));
+  try {
+    return crypto.timingSafeEqual(Buffer.from(computed), Buffer.from(signature));
+  } catch {
+    return false;
+  }
 }
 
 export async function POST(req: NextRequest) {
   try {
     const rawBody = await req.text();
     const signature = req.headers.get("signature") ?? "";
-    const apiKey = process.env.CHARGILY_API_KEY ?? "";
 
-    // Verify webhook authenticity — mandatory, never optional
-    if (!apiKey) {
+    if (!WEBHOOK_SECRET) {
       return NextResponse.json({ error: "Webhook not configured" }, { status: 500 });
     }
     if (!signature) {
       return NextResponse.json({ error: "Missing signature" }, { status: 401 });
     }
-    const isValid = verifySignature(rawBody, signature, apiKey);
-    if (!isValid) {
+    if (!verifySignature(rawBody, signature)) {
       return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
     }
 
@@ -41,19 +47,31 @@ export async function POST(req: NextRequest) {
         return NextResponse.json({ error: "No booking_id in metadata" }, { status: 400 });
       }
 
-      // Update payment record
+      // ── Idempotency: skip if this checkout was already processed ──
+      const { data: existingPayment } = await adminSupabase
+        .from("payments")
+        .select("status")
+        .eq("provider_ref", checkoutId)
+        .maybeSingle();
+
+      if (existingPayment?.status === "paid") {
+        return NextResponse.json({ received: true, skipped: "already_processed" });
+      }
+
+      // Mark payment as paid
       await adminSupabase
         .from("payments")
         .update({ status: "paid", paid_at: new Date().toISOString() })
         .eq("provider_ref", checkoutId);
 
-      // Update booking payment_status
+      // Update booking — guard with .eq("payment_status", "unpaid") to prevent double-update
       await adminSupabase
         .from("bookings")
         .update({ payment_status: "paid", status: "accepted" })
-        .eq("id", bookingId);
+        .eq("id", bookingId)
+        .eq("payment_status", "unpaid");
 
-      // Create notification for sender
+      // Notification + email
       const { data: booking } = await adminSupabase
         .from("bookings")
         .select("sender_id, booking_ref")
@@ -69,7 +87,6 @@ export async function POST(req: NextRequest) {
           read: false,
         });
 
-        // Send email notification
         const { data: profile } = await adminSupabase
           .from("profiles")
           .select("first_name")
@@ -91,15 +108,18 @@ export async function POST(req: NextRequest) {
       const bookingId  = data.metadata?.booking_id;
 
       if (bookingId) {
+        // Never downgrade a confirmed payment
         await adminSupabase
           .from("payments")
           .update({ status: "failed" })
-          .eq("provider_ref", checkoutId);
+          .eq("provider_ref", checkoutId)
+          .neq("status", "paid");
 
         await adminSupabase
           .from("bookings")
           .update({ payment_status: "unpaid" })
-          .eq("id", bookingId);
+          .eq("id", bookingId)
+          .eq("payment_status", "unpaid");
       }
     }
 

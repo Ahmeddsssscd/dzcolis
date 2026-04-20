@@ -31,13 +31,20 @@ interface GroupedUser {
 export default function KYCPage() {
   const [grouped, setGrouped] = useState<GroupedUser[]>([]);
   const [loading, setLoading] = useState(true);
+  const [apiError, setApiError] = useState<string | null>(null);
   const [acting, setActing] = useState<Record<string, "approve" | "reject" | null>>({});
   const [done, setDone] = useState<Record<string, "approved" | "rejected">>({});
 
   const fetchPending = useCallback(async () => {
     setLoading(true);
+    setApiError(null);
     const res = await fetch("/api/admin/kyc");
-    if (!res.ok) { setLoading(false); return; }
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}));
+      setApiError(`Erreur ${res.status}: ${body?.error ?? "inconnu"}`);
+      setLoading(false);
+      return;
+    }
     const records: KycRecord[] = await res.json();
 
     setGrouped(records.map(r => ({
@@ -77,6 +84,11 @@ export default function KYCPage() {
         <p className="text-gray-500 text-sm mt-1">File de vérification d&apos;identité</p>
       </div>
 
+      {apiError && (
+        <div className="bg-red-50 border border-red-200 rounded-2xl p-4">
+          <p className="text-red-700 text-sm font-medium">{apiError}</p>
+        </div>
+      )}
       {loading ? (
         <div className="flex items-center justify-center py-20">
           <div className="w-8 h-8 border-4 border-green-600 border-t-transparent rounded-full animate-spin" />

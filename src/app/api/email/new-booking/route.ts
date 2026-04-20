@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminClient as adminSb } from "@/lib/supabase/admin";
 import { sendNewBookingToTransporterEmail } from "@/lib/email";
+import { createClient } from "@/lib/supabase/server";
 
 export async function POST(req: NextRequest) {
   try {
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
     const { bookingId } = await req.json();
     if (!bookingId) return NextResponse.json({ error: "Missing bookingId" }, { status: 400 });
 

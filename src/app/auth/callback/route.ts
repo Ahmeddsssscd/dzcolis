@@ -8,7 +8,9 @@ export async function GET(request: Request) {
   const code         = searchParams.get("code");
   const token_hash   = searchParams.get("token_hash");
   const type         = searchParams.get("type");
-  const next         = searchParams.get("next") ?? "/tableau-de-bord";
+  // Validate next param to prevent open redirect — must be a relative path
+  const rawNext = searchParams.get("next") ?? "/tableau-de-bord";
+  const next = rawNext.startsWith("/") && !rawNext.startsWith("//") ? rawNext : "/tableau-de-bord";
 
   const supabase = await createClient();
 

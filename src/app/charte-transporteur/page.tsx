@@ -14,7 +14,7 @@ const OBLIGATIONS = [
     ],
   },
   {
-    icon: "📦",
+    icon: "box",
     title: "Gestion des colis",
     items: [
       "Récupérer le colis dans l'état décrit par l'expéditeur",
@@ -35,7 +35,7 @@ const OBLIGATIONS = [
     ],
   },
   {
-    icon: "🚗",
+    icon: "truck",
     title: "Véhicule et sécurité",
     items: [
       "Utiliser un véhicule en bon état mécanique et légalement en règle",
@@ -69,10 +69,12 @@ export default function CharteTransporteurPage() {
   return (
     <div className="bg-dz-gray-50 min-h-screen">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-dz-gray-800 to-dz-gray-700 text-white py-16">
+      <section className="text-white py-16 relative overflow-hidden" style={{ background: "linear-gradient(135deg,#2563eb 0%,#1d4ed8 45%,#0f172a 100%)" }}>
+        <div className="absolute inset-0 pointer-events-none opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle,white 1px,transparent 1px)", backgroundSize: "28px 28px" }} />
         <div className="max-w-4xl mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm mb-5">
-            <span>🚚</span> Charte officielle Waselli
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM20 17a2 2 0 11-4 0 2 2 0 014 0zM1 1h14v11H1zM14 6h4l3 3v5h-7V6z" /></svg>
+            Charte officielle Waselli
           </div>
           <h1 className="text-3xl md:text-5xl font-bold mb-3">Charte du Transporteur</h1>
           <p className="text-dz-gray-300 text-lg max-w-xl mx-auto">
@@ -95,7 +97,7 @@ export default function CharteTransporteurPage() {
         {OBLIGATIONS.map((section) => (
           <div key={section.title} className="bg-white rounded-2xl border border-dz-gray-200 p-6">
             <h2 className="text-lg font-bold text-dz-gray-800 mb-4 flex items-center gap-3">
-              <span className="text-2xl">{section.icon}</span>
+              <div className="w-8 h-8 bg-dz-green/10 text-dz-green rounded-lg flex items-center justify-center"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
               {section.title}
             </h2>
             <ul className="space-y-2">
@@ -114,7 +116,8 @@ export default function CharteTransporteurPage() {
         {/* Liability */}
         <div className="bg-orange-50 border border-orange-200 rounded-2xl p-6">
           <h2 className="text-lg font-bold text-orange-800 mb-3 flex items-center gap-2">
-            ⚠️ Responsabilité financière du transporteur
+            <svg className="w-5 h-5 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+            Responsabilité financière du transporteur
           </h2>
           <p className="text-sm text-orange-700 leading-relaxed mb-3">
             En cas de perte, vol ou dommage causé à un colis par négligence avérée du transporteur, Waselli peut retenir le paiement et engager la responsabilité civile du transporteur à hauteur de la valeur déclarée du colis.
@@ -184,7 +187,7 @@ export default function CharteTransporteurPage() {
           </div>
         ) : (
           <div className="bg-dz-green/5 border border-dz-green/30 rounded-2xl p-6 text-center">
-            <div className="text-4xl mb-3">✅</div>
+            <div className="w-14 h-14 bg-dz-green/20 rounded-2xl flex items-center justify-center mx-auto mb-3"><svg className="w-7 h-7 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg></div>
             <h3 className="font-bold text-dz-green text-lg mb-1">Charte signée avec succès</h3>
             <p className="text-sm text-dz-gray-500 mb-2">
               Signature électronique : <strong className="italic" style={{ fontFamily: "Georgia, serif" }}>{signatureName}</strong>

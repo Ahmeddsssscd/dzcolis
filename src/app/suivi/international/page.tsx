@@ -6,14 +6,14 @@ import Link from "next/link";
 // ─── Data ───────────────────────────────────────────────────────────────────
 
 const EU_ROUTES = [
-  { from: "Paris", to: "Alger", fromFlag: "🇫🇷", toFlag: "🇩🇿", country: "France" },
-  { from: "Madrid", to: "Oran", fromFlag: "🇪🇸", toFlag: "🇩🇿", country: "Espagne" },
-  { from: "Bruxelles", to: "Alger", fromFlag: "🇧🇪", toFlag: "🇩🇿", country: "Belgique" },
-  { from: "Berlin", to: "Constantine", fromFlag: "🇩🇪", toFlag: "🇩🇿", country: "Allemagne" },
-  { from: "Milan", to: "Annaba", fromFlag: "🇮🇹", toFlag: "🇩🇿", country: "Italie" },
-  { from: "Alger", to: "Paris", fromFlag: "🇩🇿", toFlag: "🇫🇷", country: "France" },
-  { from: "Oran", to: "Madrid", fromFlag: "🇩🇿", toFlag: "🇪🇸", country: "Espagne" },
-  { from: "Constantine", to: "Bruxelles", fromFlag: "🇩🇿", toFlag: "🇧🇪", country: "Belgique" },
+  { from: "Paris", to: "Alger", fromCode: "FR", toCode: "DZ", country: "France" },
+  { from: "Madrid", to: "Oran", fromCode: "ES", toCode: "DZ", country: "Espagne" },
+  { from: "Bruxelles", to: "Alger", fromCode: "BE", toCode: "DZ", country: "Belgique" },
+  { from: "Berlin", to: "Constantine", fromCode: "DE", toCode: "DZ", country: "Allemagne" },
+  { from: "Milan", to: "Annaba", fromCode: "IT", toCode: "DZ", country: "Italie" },
+  { from: "Alger", to: "Paris", fromCode: "DZ", toCode: "FR", country: "France" },
+  { from: "Oran", to: "Madrid", fromCode: "DZ", toCode: "ES", country: "Espagne" },
+  { from: "Constantine", to: "Bruxelles", fromCode: "DZ", toCode: "BE", country: "Belgique" },
 ];
 
 const FIRST_NAMES = ["Mohamed", "Ahmed", "Karim", "Yacine", "Redouane", "Nabil", "Jean", "Carlos", "Luca", "Klaus"];
@@ -26,12 +26,12 @@ const PACKAGE_TYPES = [
 // ─── 6 International Steps (includes Customs) ───────────────────────────────
 
 const INT_STEPS = [
-  { label: "Enregistré",   sublabel: "Commande confirmée",   icon: "📋" },
-  { label: "Récupéré",     sublabel: "Par le transporteur",  icon: "🚚" },
-  { label: "En transit",   sublabel: "Vers pays de destination", icon: "✈️" },
-  { label: "Douane",       sublabel: "Contrôle en cours",    icon: "🛃" },
-  { label: "En livraison", sublabel: "Dernière étape",       icon: "📍" },
-  { label: "Livré",        sublabel: "Confirmé",             icon: "✅" },
+  { label: "Enregistré",   sublabel: "Commande confirmée",      icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg> },
+  { label: "Récupéré",     sublabel: "Par le transporteur",     icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.177v-.958c0-.568-.422-1.048-.987-1.106a48.554 48.554 0 00-10.026 0 1.106 1.106 0 00-.987 1.106v7.635m12-6.677v6.677m0 4.5v-4.5m0 0h-12" /></svg> },
+  { label: "En transit",   sublabel: "Vers pays de destination",icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg> },
+  { label: "Douane",       sublabel: "Contrôle en cours",       icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg> },
+  { label: "En livraison", sublabel: "Dernière étape",          icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg> },
+  { label: "Livré",        sublabel: "Confirmé",                icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg> },
 ];
 
 const CUSTOMS_NOTES = [
@@ -68,6 +68,15 @@ type TrackingData = {
   isDzEu: boolean;
 };
 
+// Helper to render a country code badge inline
+function CountryBadge({ code }: { code: string }) {
+  return (
+    <span className="inline-flex items-center justify-center w-8 h-5 bg-dz-gray-200 text-dz-gray-700 text-[10px] font-bold rounded">
+      {code}
+    </span>
+  );
+}
+
 function generate(code: string): TrackingData {
   const cleaned = code.trim().toUpperCase();
   const hash = hashStr(cleaned);
@@ -84,7 +93,7 @@ function generate(code: string): TrackingData {
   else             statusIndex = 5;
 
   const route      = pickFrom(EU_ROUTES, hash);
-  const isDzEu     = route.from === "Alger" || route.from === "Oran" || route.from === "Constantine";
+  const isDzEu     = route.fromCode === "DZ";
   const direction  = isDzEu ? "dz-eu" : "eu-dz";
   const firstName  = pickFrom(FIRST_NAMES, hash >> 2);
   const lastName   = pickFrom(LAST_NAMES, hash >> 5);
@@ -178,19 +187,22 @@ export default function InternationalSuiviPage() {
         </div>
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16 md:py-22 relative z-10 text-center">
           <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm mb-5">
-            <span>✈️</span> Suivi international
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
+            Suivi international
           </div>
-          <div className="flex justify-center items-center gap-3 text-4xl mb-5">
-            <span>🇩🇿</span>
-            <svg className="w-6 h-6 text-dz-green-light" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="flex justify-center items-center gap-2 mb-5">
+            <span className="bg-white/20 text-white text-xs font-bold px-2.5 py-1 rounded-lg">DZ</span>
+            <svg className="w-5 h-5 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
             </svg>
-            <span>🇫🇷</span><span>🇪🇸</span><span>🇧🇪</span><span>🇩🇪</span><span>🇮🇹</span>
+            {["FR","ES","BE","DE","IT"].map(c => (
+              <span key={c} className="bg-white/20 text-white text-xs font-bold px-2.5 py-1 rounded-lg">{c}</span>
+            ))}
           </div>
           <h1 className="text-3xl md:text-5xl font-bold mb-3">
             Suivez votre colis international
           </h1>
-          <p className="text-green-100 text-base md:text-lg max-w-xl mx-auto">
+          <p className="text-blue-100 text-base md:text-lg max-w-xl mx-auto">
             Algérie ↔ Europe — Suivi complet avec étape douanière en temps réel
           </p>
         </div>
@@ -256,8 +268,8 @@ export default function InternationalSuiviPage() {
               {/* Route banner */}
               <div className="bg-dz-gray-50 rounded-xl p-4 flex items-center justify-center gap-4 mb-4">
                 <div className="text-center">
-                  <div className="text-3xl">{data.route.fromFlag}</div>
-                  <p className="text-xs text-dz-gray-500 mt-1 font-medium">{data.route.from}</p>
+                  <div className="w-10 h-7 bg-dz-gray-200 text-dz-gray-700 text-sm font-bold rounded flex items-center justify-center mx-auto mb-1">{data.route.fromCode}</div>
+                  <p className="text-xs text-dz-gray-500 font-medium">{data.route.from}</p>
                 </div>
                 <div className="flex flex-col items-center gap-1">
                   <svg className="w-8 h-5 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -266,8 +278,8 @@ export default function InternationalSuiviPage() {
                   <span className="text-[10px] text-dz-gray-400 font-medium">INTERNATIONAL</span>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl">{data.route.toFlag}</div>
-                  <p className="text-xs text-dz-gray-500 mt-1 font-medium">{data.route.to}</p>
+                  <div className="w-10 h-7 bg-dz-gray-200 text-dz-gray-700 text-sm font-bold rounded flex items-center justify-center mx-auto mb-1">{data.route.toCode}</div>
+                  <p className="text-xs text-dz-gray-500 font-medium">{data.route.to}</p>
                 </div>
               </div>
 
@@ -291,7 +303,7 @@ export default function InternationalSuiviPage() {
                   <span>
                     {data.statusIndex < 5
                       ? <>Livraison prévue : <span className="font-medium text-dz-gray-800">{data.estimatedDelivery}</span></>
-                      : <span className="text-dz-green font-medium">✅ Livré</span>
+                      : <span className="text-dz-green font-medium flex items-center gap-1"><svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>Livré</span>
                     }
                   </span>
                 </div>
@@ -328,7 +340,7 @@ export default function InternationalSuiviPage() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                             </svg>
                           ) : (
-                            <span>{step.icon}</span>
+                            step.icon
                           )}
                         </div>
                         <div className="text-center">
@@ -349,7 +361,9 @@ export default function InternationalSuiviPage() {
             {/* Customs callout (shown when at customs step) */}
             {data.statusIndex === 3 && (
               <div className="bg-orange-50 border border-orange-200 rounded-2xl p-5 flex items-start gap-4">
-                <div className="w-10 h-10 bg-orange-100 text-orange-500 rounded-xl flex items-center justify-center text-xl shrink-0">🛃</div>
+                <div className="w-10 h-10 bg-orange-100 text-orange-500 rounded-xl flex items-center justify-center shrink-0">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                </div>
                 <div>
                   <p className="font-semibold text-orange-800 text-sm">Colis en cours de dédouanement</p>
                   <p className="text-xs text-orange-700 mt-1 leading-relaxed">{data.customsNote}</p>
@@ -371,11 +385,11 @@ export default function InternationalSuiviPage() {
                     const isCustoms = i === 3;
                     const labels = [
                       `Commande enregistrée — colis à récupérer à ${data.route.from}`,
-                      `Colis récupéré à ${data.route.from} ${data.route.fromFlag}`,
-                      `En transit international vers ${data.route.to} ${data.route.toFlag}`,
+                      `Colis récupéré à ${data.route.from} (${data.route.fromCode})`,
+                      `En transit international vers ${data.route.to} (${data.route.toCode})`,
                       `Arrivée en zone douanière — dédouanement en cours`,
                       `Colis remis au livreur final à ${data.route.to}`,
-                      `Colis livré avec succès à ${data.route.to} ${data.route.toFlag} ✅`,
+                      `Colis livré avec succès à ${data.route.to} (${data.route.toCode})`,
                     ];
                     return (
                       <div key={step.label} className="flex gap-4">
@@ -469,7 +483,9 @@ export default function InternationalSuiviPage() {
       <section className={`py-12 ${data ? "bg-dz-gray-50" : "bg-white"}`}>
         <div className="max-w-3xl mx-auto px-4">
           <div className="bg-white border border-dz-gray-200 rounded-2xl p-6 flex flex-col sm:flex-row gap-5 items-start">
-            <div className="w-12 h-12 bg-dz-green/10 text-dz-green rounded-xl flex items-center justify-center shrink-0 text-xl">📧</div>
+            <div className="w-12 h-12 bg-dz-green/10 text-dz-green rounded-xl flex items-center justify-center shrink-0">
+              <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" /></svg>
+            </div>
             <div>
               <h3 className="font-semibold text-dz-gray-800 mb-1">Pas encore de numéro de suivi ?</h3>
               <p className="text-sm text-dz-gray-500 mb-3">

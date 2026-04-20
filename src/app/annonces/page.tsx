@@ -15,8 +15,11 @@ function TrajetCard({ listing }: { listing: Listing }) {
     <Link href={`/annonces/${listing.id}`} className="block bg-white rounded-2xl border border-dz-gray-200 hover:border-dz-green/40 hover:shadow-lg transition-all overflow-hidden group">
       <div className="p-5">
         <div className="flex items-start justify-between mb-3">
-          <span className={`text-xs font-semibold px-3 py-1 rounded-full ${isIntl ? "bg-purple-50 text-purple-600" : "bg-blue-50 text-blue-600"}`}>
-            {isIntl ? "✈️ International" : "🇩🇿 National"}
+          <span className={`text-xs font-semibold px-3 py-1 rounded-full flex items-center gap-1 w-fit ${isIntl ? "bg-purple-50 text-purple-600" : "bg-blue-50 text-dz-green"}`}>
+            {isIntl
+              ? <><svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg> International</>
+              : <><svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" /></svg> National</>
+            }
           </span>
           <span className="text-base font-bold text-dz-green">{listing.price_per_kg.toLocaleString("fr-FR")} {currency}/kg</span>
         </div>
@@ -49,7 +52,7 @@ function TrajetCard({ listing }: { listing: Listing }) {
         </div>
         <p className="text-sm text-dz-gray-500 line-clamp-2 mb-4">{listing.description}</p>
         <div className="flex items-center justify-between pt-3 border-t border-dz-gray-100">
-          <p className="text-xs text-dz-gray-400">🛡️ {t("annonces_secure_payment")}</p>
+          <p className="text-xs text-dz-gray-400 flex items-center gap-1"><svg className="w-3.5 h-3.5 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg> {t("annonces_secure_payment")}</p>
           <span className="bg-dz-green group-hover:bg-dz-green-light text-white text-sm px-4 py-2 rounded-xl font-medium transition-colors">
             {t("annonces_reserve")}
           </span>
@@ -67,8 +70,9 @@ function DemandeCard({ listing }: { listing: Listing }) {
     <Link href={`/annonces/${listing.id}`} className="block bg-white rounded-2xl border border-dz-gray-200 hover:border-amber-400/60 hover:shadow-lg transition-all overflow-hidden group">
       <div className="p-5">
         <div className="flex items-start justify-between mb-3">
-          <span className="text-xs font-semibold px-3 py-1 rounded-full bg-amber-50 text-amber-700">
-            📦 {t("annonces_request_label")}
+          <span className="text-xs font-semibold px-3 py-1 rounded-full bg-amber-50 text-amber-700 flex items-center gap-1 w-fit">
+            <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+            {t("annonces_request_label")}
           </span>
           <span className="text-base font-bold text-amber-600">{listing.price_per_kg.toLocaleString("fr-FR")} {currency}/kg</span>
         </div>
@@ -98,7 +102,7 @@ function DemandeCard({ listing }: { listing: Listing }) {
             </svg>
             {listing.available_weight} kg
           </span>
-          {isIntl && <span className="text-purple-600 font-medium">✈️ International</span>}
+          {isIntl && <span className="text-purple-600 font-medium flex items-center gap-1"><svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg> International</span>}
         </div>
         <p className="text-sm text-dz-gray-500 line-clamp-2 mb-4">{listing.description}</p>
         <div className="flex items-center justify-between pt-3 border-t border-dz-gray-100">
@@ -164,12 +168,14 @@ export default function AnnoncesPage() {
         <div className="flex gap-2 mb-6 bg-white border border-dz-gray-200 rounded-2xl p-1.5 w-fit">
           <button onClick={() => setTab("trajets")}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${tab === "trajets" ? "bg-dz-green text-white shadow-sm" : "text-dz-gray-600 hover:bg-dz-gray-50"}`}>
-            🚗 {t("annonces_tab_trajets")}
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg>
+            {t("annonces_tab_trajets")}
             {trajetsCount > 0 && <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${tab === "trajets" ? "bg-white/20 text-white" : "bg-dz-gray-100 text-dz-gray-600"}`}>{trajetsCount}</span>}
           </button>
           <button onClick={() => setTab("demandes")}
             className={`flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all ${tab === "demandes" ? "bg-amber-500 text-white shadow-sm" : "text-dz-gray-600 hover:bg-dz-gray-50"}`}>
-            📦 {t("annonces_tab_demandes")}
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+            {t("annonces_tab_demandes")}
             {demandesCount > 0 && <span className={`text-xs px-2 py-0.5 rounded-full font-bold ${tab === "demandes" ? "bg-white/20 text-white" : "bg-dz-gray-100 text-dz-gray-600"}`}>{demandesCount}</span>}
           </button>
         </div>
@@ -177,7 +183,7 @@ export default function AnnoncesPage() {
         {/* Context banner */}
         {tab === "trajets" ? (
           <div className="bg-dz-green/5 border border-dz-green/20 rounded-xl px-4 py-3 mb-6 flex items-center gap-3">
-            <span className="text-xl">🚗</span>
+            <svg className="w-5 h-5 text-dz-green shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg>
             <div>
               <p className="text-sm font-semibold text-dz-green">{t("annonces_banner_sender_title")}</p>
               <p className="text-xs text-dz-gray-600">{t("annonces_banner_sender_desc")}</p>
@@ -186,7 +192,7 @@ export default function AnnoncesPage() {
           </div>
         ) : (
           <div className="bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 mb-6 flex items-center gap-3">
-            <span className="text-xl">📦</span>
+            <svg className="w-5 h-5 text-amber-600 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
             <div>
               <p className="text-sm font-semibold text-amber-700">{t("annonces_banner_trans_title")}</p>
               <p className="text-xs text-dz-gray-600">{t("annonces_banner_trans_desc")}</p>
@@ -230,7 +236,12 @@ export default function AnnoncesPage() {
           </div>
         ) : filtered.length === 0 ? (
           <div className="text-center py-20">
-            <div className="text-5xl mb-4">{tab === "trajets" ? "🚗" : "📦"}</div>
+            <div className="w-16 h-16 bg-dz-gray-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              {tab === "trajets"
+                ? <svg className="w-8 h-8 text-dz-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" /></svg>
+                : <svg className="w-8 h-8 text-dz-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+              }
+            </div>
             <h3 className="text-xl font-semibold text-dz-gray-700 mb-2">
               {tab === "trajets" ? t("annonces_empty_trajets") : t("annonces_empty_demandes")}
             </h3>

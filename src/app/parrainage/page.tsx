@@ -69,7 +69,7 @@ export default function ParrainagePage() {
 
   function shareWhatsApp() {
     const text = encodeURIComponent(
-      `Rejoins Waselli — livraison collaborative en Algérie ! 🚚📦\nUtilise mon code *${user!.referralCode}* à l'inscription pour 500 DA offerts : ${referralLink}`
+      `Rejoins Waselli — livraison collaborative en Algérie !\nUtilise mon code *${user!.referralCode}* à l'inscription pour 500 DA offerts : ${referralLink}`
     );
     window.open(`https://wa.me/?text=${text}`, "_blank");
   }
@@ -240,8 +240,9 @@ export default function ParrainagePage() {
                   </div>
                   <div className="text-right">
                     {r.completed ? (
-                      <span className="text-xs font-semibold text-green-700 bg-green-50 border border-green-100 px-2 py-0.5 rounded-full">
-                        +500 DA ✓
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold text-green-700 bg-green-50 border border-green-100 px-2 py-0.5 rounded-full">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg>
+                        +500 DA
                       </span>
                     ) : (
                       <span className="text-xs text-dz-gray-400 bg-dz-gray-100 px-2 py-0.5 rounded-full">

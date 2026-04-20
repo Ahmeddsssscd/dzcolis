@@ -40,6 +40,7 @@ export default function MessagesPage() {
   const [loading, setLoading] = useState(true);
   const [dbError, setDbError] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const channelRef = useRef<ReturnType<typeof supabase.channel> | null>(null);
 
   // ── Fetch conversations ──────────────────────────────────────────────────
@@ -121,9 +122,12 @@ export default function MessagesPage() {
     };
   }, [selectedConvId, user]);
 
-  // ── Auto-scroll to bottom ─────────────────────────────────────────────────
+  // ── Auto-scroll to bottom (scroll the chat container, not the whole page) ──
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const container = messagesContainerRef.current;
+    if (container) {
+      container.scrollTop = container.scrollHeight;
+    }
   }, [messages]);
 
   // ── Send message ──────────────────────────────────────────────────────────
@@ -291,7 +295,7 @@ alter publication supabase_realtime add table messages;`}
                   </div>
 
                   {/* Messages */}
-                  <div className="flex-1 p-4 space-y-3 overflow-y-auto" style={{ maxHeight: "380px" }}>
+                  <div ref={messagesContainerRef} className="flex-1 p-4 space-y-3 overflow-y-auto" style={{ maxHeight: "380px" }}>
                     {messages.length === 0 && (
                       <p className="text-center text-sm text-dz-gray-400 py-10">Début de la conversation. Dites bonjour ! 👋</p>
                     )}
@@ -301,7 +305,7 @@ alter publication supabase_realtime add table messages;`}
                         <div key={msg.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
                           <div className={`max-w-[70%] px-4 py-2.5 rounded-2xl text-sm ${isMe ? "bg-dz-green text-white rounded-br-md" : "bg-dz-gray-100 text-dz-gray-800 rounded-bl-md"}`}>
                             <p>{msg.text}</p>
-                            <div className={`text-[10px] mt-1 ${isMe ? "text-green-100" : "text-dz-gray-400"}`}>
+                            <div className={`text-[10px] mt-1 ${isMe ? "text-blue-100" : "text-dz-gray-400"}`}>
                               {new Date(msg.created_at).toLocaleTimeString("fr-DZ", { hour: "2-digit", minute: "2-digit" })}
                             </div>
                           </div>

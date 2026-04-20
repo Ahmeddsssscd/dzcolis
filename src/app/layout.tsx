@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Plus_Jakarta_Sans, Cairo } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "@/lib/context";
@@ -25,6 +25,10 @@ const cairo = Cairo({
   display: "swap",
 });
 
+export const viewport: Viewport = {
+  themeColor: "#1d4ed8",
+};
+
 export const metadata: Metadata = {
   title: {
     default: "Waselli — Livraison collaborative Algérie & Europe",
@@ -40,21 +44,16 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.waselli.com"),
   alternates: { canonical: "https://www.waselli.com" },
   manifest: "/manifest.json",
-  themeColor: "#1d4ed8",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
     title: "Waselli",
-    startupImage: "/icons/icon-512.png",
+    startupImage: "/icons/logo.png",
   },
   icons: {
-    icon: [
-      { url: "/icons/icon.svg", type: "image/svg+xml" },
-      { url: "/icons/icon-192.png", sizes: "192x192", type: "image/png" },
-      { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-    ],
-    apple: { url: "/icons/icon-512.png", sizes: "512x512", type: "image/png" },
-    shortcut: "/icons/icon.svg",
+    icon: "/icons/logo.png",
+    apple: "/icons/logo.png",
+    shortcut: "/icons/logo.png",
   },
   openGraph: {
     title: "Waselli — Livraison collaborative Algérie & Europe",
@@ -63,13 +62,13 @@ export const metadata: Metadata = {
     url: "https://www.waselli.com",
     locale: "fr_DZ",
     siteName: "Waselli",
-    images: [{ url: "/icons/icon-512.png", width: 512, height: 512, alt: "Waselli" }],
+    images: [{ url: "/icons/logo.png", width: 512, height: 512, alt: "Waselli" }],
   },
   twitter: {
     card: "summary",
     title: "Waselli — Livraison collaborative Algérie & Europe",
     description: "Envoyez vos colis entre l'Algérie et l'Europe grâce à des transporteurs vérifiés.",
-    images: ["/icons/icon-512.png"],
+    images: ["/icons/logo.png"],
   },
   robots: {
     index: true,

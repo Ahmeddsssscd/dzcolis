@@ -272,7 +272,7 @@ export default function LitigesPage() {
                   <button
                     disabled={acting === l.id}
                     onClick={() => resoudre(l.id, "libere_transporteur")}
-                    className="flex items-center gap-2 px-4 py-2.5 bg-green-600 text-white text-sm font-semibold rounded-xl hover:bg-green-700 disabled:opacity-50 transition-colors"
+                    className="flex items-center gap-2 px-4 py-2.5 bg-dz-green text-white text-sm font-semibold rounded-xl hover:bg-dz-green-dark disabled:opacity-50 transition-colors"
                   >
                     <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
                     Libérer au transporteur

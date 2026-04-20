@@ -74,18 +74,20 @@ function StatCard({ label, value, color }: { label: string; value: number; color
 export default function UtilisateursPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<FilterType>("tous");
 
   useEffect(() => {
     fetch("/api/admin/users")
-      .then((r) => r.json())
-      .then((data: Array<Record<string, string>>) => {
-        const mapped: User[] = (data ?? []).map((p) => {
+      .then(async (r) => {
+        const data = await r.json();
+        if (!r.ok) { setError(`Erreur API: ${data?.error ?? r.status}`); setLoading(false); return; }
+        if (!Array.isArray(data)) { setError(`Réponse inattendue: ${JSON.stringify(data)}`); setLoading(false); return; }
+        const mapped: User[] = data.map((p: Record<string, string>) => {
           const firstName = p.first_name ?? "";
           const lastName = p.last_name ?? "";
-          const initials =
-            (firstName[0] ?? "") + (lastName[0] ?? "") || "?";
+          const initials = (firstName[0] ?? "") + (lastName[0] ?? "") || "?";
           return {
             id: p.id,
             nom: `${firstName} ${lastName}`.trim() || "Inconnu",
@@ -101,7 +103,7 @@ export default function UtilisateursPage() {
         setUsers(mapped);
         setLoading(false);
       })
-      .catch(() => setLoading(false));
+      .catch((e) => { setError(String(e)); setLoading(false); });
   }, []);
 
   const filtered = users.filter((u) => {
@@ -164,6 +166,11 @@ export default function UtilisateursPage() {
 
       {/* Table */}
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        {error && (
+          <div className="py-6 px-6 text-center">
+            <p className="text-red-600 text-sm font-medium bg-red-50 rounded-xl p-4">{error}</p>
+          </div>
+        )}
         {loading ? (
           <div className="py-16 text-center text-gray-400 text-sm">Chargement…</div>
         ) : (

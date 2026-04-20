@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import HeroSearch from "@/components/HeroSearch";
 import { useI18n } from "@/lib/i18n";
 
 /* ─── hooks ─────────────────────────────── */
@@ -23,41 +22,34 @@ function useInView(threshold = 0.15) {
   return { ref, visible };
 }
 
-function useCountUp(target: number, active: boolean, ms = 1600) {
-  const [n, setN] = useState(0);
-  useEffect(() => {
-    if (!active) return;
-    const t0 = Date.now();
-    const id = setInterval(() => {
-      const p = Math.min((Date.now() - t0) / ms, 1);
-      setN(Math.floor((1 - (1 - p) ** 3) * target));
-      if (p >= 1) clearInterval(id);
-    }, 16);
-    return () => clearInterval(id);
-  }, [active, target, ms]);
-  return n;
-}
 
 /* ─── small components ──────────────────── */
 
 function Cycle() {
   const { t } = useI18n();
-  const WORDS = [t("cycle_1"), t("cycle_2"), t("cycle_3"), t("cycle_4")];
+  const ITEMS = [
+    { text: t("cycle_1"), icon: "🔒" },
+    { text: t("cycle_2"), icon: "✅" },
+    { text: t("cycle_3"), icon: "🛡️" },
+    { text: t("cycle_4"), icon: "💬" },
+  ];
   const [i, setI] = useState(0);
   const [on, setOn] = useState(true);
   useEffect(() => {
     const timer = setInterval(() => {
       setOn(false);
-      setTimeout(() => { setI(prev => (prev + 1) % WORDS.length); setOn(true); }, 350);
-    }, 3000);
+      setTimeout(() => { setI(prev => (prev + 1) % ITEMS.length); setOn(true); }, 350);
+    }, 3200);
     return () => clearInterval(timer);
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   return (
-    <span className="text-white inline-block transition-all duration-300"
-      style={{ opacity: on ? 1 : 0, transform: on ? "translateY(0)" : "translateY(-8px)" }}>
-      {WORDS[i]}
-    </span>
+    <div
+      className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-2 text-sm font-medium text-white/90 transition-all duration-350 backdrop-blur-sm"
+      style={{ opacity: on ? 1 : 0, transform: on ? "translateY(0) scale(1)" : "translateY(6px) scale(0.97)" }}>
+      <span>{ITEMS[i].icon}</span>
+      <span>{ITEMS[i].text}</span>
+    </div>
   );
 }
 
@@ -74,24 +66,11 @@ function Fade({ children, delay = 0, className = "" }: { children: React.ReactNo
   );
 }
 
-function Stat({ label, target, suffix, go, fixed }: { label: string; target: number; suffix: string; go: boolean; fixed?: string }) {
-  const n = useCountUp(target, go);
-  return (
-    <div className="text-center">
-      <div className="text-3xl md:text-4xl font-bold text-white tabular-nums">
-        {fixed ? (go ? fixed : "–") : `${n.toLocaleString("fr-DZ")}${suffix}`}
-      </div>
-      <div className="text-sm text-white/60 mt-1">{label}</div>
-    </div>
-  );
-}
 
 /* ─── page ──────────────────────────────── */
 
 export default function Home() {
   const { t } = useI18n();
-  const { ref: stRef, visible: stVis } = useInView(0.3);
-
   const [topCarriers, setTopCarriers] = useState<Array<{
     id: string; first_name: string; last_name: string; wilaya: string;
     rating: number; review_count: number; kyc_status: string;
@@ -147,8 +126,7 @@ export default function Home() {
   return (
     <>
       <style>{`
-        .hero-bg{background:linear-gradient(155deg,#1d4ed8 0%,#1e3a8a 50%,#0f2460 100%)}
-        .blend{background:linear-gradient(180deg,#0f2460 0%,var(--dz-gray-50) 100%)}
+        .hero-bg{background:linear-gradient(155deg,#2563eb 0%,#1d4ed8 45%,#0f172a 100%)}
       `}</style>
 
       {/* ── Hero ─────────────────────────── */}
@@ -163,36 +141,103 @@ export default function Home() {
               {t("hero_badge")}
             </p>
             <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
-              {t("hero_title")}<br /><Cycle />
+              {t("hero_title")}
             </h1>
-            <p className="text-lg text-white/80 mb-10 max-w-2xl leading-relaxed">
+            <p className="text-lg text-white/80 mb-6 max-w-2xl leading-relaxed">
               {t("hero_subtitle")}
             </p>
-            <HeroSearch />
-            <div className="mt-6 flex flex-col sm:flex-row gap-3 text-sm text-white/60">
-              <p>
-                {t("hero_transporter")}{" "}
-                <Link href="/transporter" className="text-white font-semibold underline underline-offset-2 hover:text-blue-200 transition-colors">
-                  {t("hero_transporter_cta")}
-                </Link>
-              </p>
-              <span className="hidden sm:inline text-white/30">·</span>
-              <Link href="/livreurs" className="text-blue-300 font-semibold hover:text-white transition-colors flex items-center gap-1">
-                🚗 {t("hero_find_carrier")}
+
+            {/* Trust cycling badge */}
+            <div className="mb-10">
+              <Cycle />
+            </div>
+
+            {/* CTA buttons */}
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link href="/envoyer"
+                className="inline-flex items-center justify-center gap-2 bg-white text-blue-700 hover:bg-blue-50 px-8 py-4 rounded-xl font-bold text-base transition-all shadow-lg shadow-black/20 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                </svg>
+                Envoyer votre colis
+              </Link>
+              <Link href="/annonces"
+                className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 hover:border-white/50 text-white px-8 py-4 rounded-xl font-bold text-base transition-all backdrop-blur-sm hover:-translate-y-0.5 active:translate-y-0">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                </svg>
+                Voir les annonces
               </Link>
             </div>
+
+            {/* Transporter subtle link */}
+            <p className="mt-6 text-sm text-white/50">
+              {t("hero_transporter")}{" "}
+              <Link href="/transporter" className="text-white/80 font-semibold hover:text-white transition-colors underline underline-offset-2">
+                {t("hero_transporter_cta")}
+              </Link>
+            </p>
           </div>
         </div>
       </section>
 
-      {/* ── Stats ────────────────────────── */}
-      <div className="blend">
-        <div ref={stRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            <Stat label={t("stat_users")}      target={50000} suffix="+" go={stVis} />
-            <Stat label={t("stat_wilayas")}    target={69}    suffix=""  go={stVis} />
-            <Stat label={t("stat_complaints")} target={0}     suffix=""  go={stVis} fixed="0.2 %" />
-            <Stat label={t("stat_savings")}    target={60}    suffix=" %" go={stVis} />
+      {/* ── Trust pillars ────────────────── */}
+      <div className="bg-white border-b border-dz-gray-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-0">
+          <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-dz-gray-100">
+
+            {/* 1 — Escrow payment */}
+            <div className="flex items-start gap-4 px-6 py-8 group">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center group-hover:bg-blue-600 transition-colors duration-300">
+                <svg className="w-5 h-5 text-blue-600 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold text-dz-gray-800 text-sm leading-snug">Paiement séquestre</p>
+                <p className="text-xs text-dz-gray-400 mt-1 leading-relaxed">Votre argent est libéré uniquement après confirmation de réception.</p>
+              </div>
+            </div>
+
+            {/* 2 — Verified ID */}
+            <div className="flex items-start gap-4 px-6 py-8 group">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center group-hover:bg-green-600 transition-colors duration-300">
+                <svg className="w-5 h-5 text-green-600 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold text-dz-gray-800 text-sm leading-snug">Transporteurs vérifiés</p>
+                <p className="text-xs text-dz-gray-400 mt-1 leading-relaxed">Identité et véhicule contrôlés avant toute activation du compte.</p>
+              </div>
+            </div>
+
+            {/* 3 — Insurance */}
+            <div className="flex items-start gap-4 px-6 py-8 group">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center group-hover:bg-purple-600 transition-colors duration-300">
+                <svg className="w-5 h-5 text-purple-600 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 9v4m0 4h.01" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold text-dz-gray-800 text-sm leading-snug">Assurance incluse</p>
+                <p className="text-xs text-dz-gray-400 mt-1 leading-relaxed">Chaque colis couvert jusqu'à 50 000 DA, sans frais cachés.</p>
+              </div>
+            </div>
+
+            {/* 4 — Support */}
+            <div className="flex items-start gap-4 px-6 py-8 group">
+              <div className="shrink-0 w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center group-hover:bg-orange-500 transition-colors duration-300">
+                <svg className="w-5 h-5 text-orange-500 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold text-dz-gray-800 text-sm leading-snug">Support 7j/7</p>
+                <p className="text-xs text-dz-gray-400 mt-1 leading-relaxed">Une équipe disponible chaque jour pour répondre à vos questions.</p>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -235,7 +280,7 @@ export default function Home() {
                     <th className="text-left px-6 py-4 font-semibold text-dz-gray-600">{t("table_route")}</th>
                     <th className="px-6 py-4 font-semibold text-red-500 text-center">DHL / Chronopost</th>
                     <th className="px-6 py-4 font-semibold text-red-400 text-center">Agences locales</th>
-                    <th className="px-6 py-4 font-bold text-dz-green text-center bg-dz-green/5 rounded-tr-2xl">Waselli ✓</th>
+                    <th className="px-6 py-4 font-bold text-dz-green text-center bg-dz-green/5 rounded-tr-2xl">Waselli</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-dz-gray-50">
@@ -321,7 +366,7 @@ export default function Home() {
           <Fade className="grid grid-cols-3 gap-4 mb-10 max-w-lg mx-auto">
             {[
               { value: "2 400+", label: t("carriers_stat1_label") },
-              { value: "4.8 ⭐", label: t("carriers_stat2_label") },
+              { value: "4.8★", label: t("carriers_stat2_label") },
               { value: "98%",    label: t("carriers_stat3_label") },
             ].map((s) => (
               <div key={s.label} className="bg-dz-gray-50 rounded-2xl p-4 text-center border border-dz-gray-100">
@@ -355,7 +400,7 @@ export default function Home() {
                         <span className="font-semibold text-dz-gray-400">—</span>
                         <p className="text-xs text-dz-gray-300 mt-0.5">—</p>
                         <div className="flex items-center gap-1 mt-1.5">
-                          <span className="text-dz-gray-200 text-xs">★★★★★</span>
+                          <div className="flex gap-0.5">{Array.from({length:5}).map((_,si)=><svg key={si} className="w-3 h-3 fill-dz-gray-200 text-dz-gray-200" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>)}</div>
                         </div>
                       </div>
                     </div>
@@ -385,7 +430,11 @@ export default function Home() {
                           </div>
                           <p className="text-xs text-dz-gray-500 mt-0.5 truncate">{c.wilaya || "Algérie"}</p>
                           <div className="flex items-center gap-1 mt-1.5">
-                            <span className="text-yellow-400 text-xs">{"★".repeat(Math.min(5, Math.round(rating)))}</span>
+                            <div className="flex gap-0.5">
+                              {Array.from({ length: Math.min(5, Math.round(rating)) }).map((_, si) => (
+                                <svg key={si} className="w-3 h-3 fill-yellow-400 text-yellow-400" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                              ))}
+                            </div>
                             <span className="text-xs text-dz-gray-500">{rating.toFixed(1)} · {reviews} {t("carriers_reviews_s")}</span>
                           </div>
                         </div>
@@ -444,9 +493,9 @@ export default function Home() {
         <div className="max-w-3xl mx-auto px-4 text-center">
           <Fade>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("cta_title")}</h2>
-            <p className="text-green-100 text-lg mb-8">{t("cta_subtitle")}</p>
+            <p className="text-blue-100 text-lg mb-8">{t("cta_subtitle")}</p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/envoyer" className="bg-white text-dz-green hover:bg-green-50 px-8 py-3.5 rounded-xl font-semibold transition-colors">
+              <Link href="/envoyer" className="bg-white text-dz-green hover:bg-blue-50 px-8 py-3.5 rounded-xl font-semibold transition-colors">
                 {t("cta_send")}
               </Link>
               <Link href="/transporter" className="border border-white/30 hover:bg-white/10 px-8 py-3.5 rounded-xl font-semibold transition-colors">
@@ -454,7 +503,7 @@ export default function Home() {
               </Link>
             </div>
             <div className="mt-12 flex flex-col items-center gap-4">
-              <p className="text-green-200/60 text-sm">{t("cta_soon")}</p>
+              <p className="text-blue-200/60 text-sm">{t("cta_soon")}</p>
               <div className="flex flex-wrap gap-3 justify-center">
                 <a href="#" className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-colors text-sm">
                   <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">

@@ -8,6 +8,46 @@ type Direction = "dz-eu" | "eu-dz";
 
 const EU_CITIES = new Set(EUROPEAN_COUNTRIES.flatMap((c) => c.cities));
 
+function BudgetEstimator() {
+  const [weight, setWeight] = useState("10");
+  const [pricePerKg, setPricePerKg] = useState("5");
+  const total = Math.round((parseFloat(weight) || 0) * (parseFloat(pricePerKg) || 0) * 100) / 100;
+  const waselli = Math.round(total * 1.1 * 100) / 100; // +10% commission
+
+  return (
+    <div>
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <div>
+          <label className="block text-xs text-blue-200 mb-1">Poids (kg)</label>
+          <input
+            type="number" min="1" max="500" value={weight}
+            onChange={(e) => setWeight(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-white/20 text-white placeholder-blue-200 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm"
+          />
+        </div>
+        <div>
+          <label className="block text-xs text-blue-200 mb-1">Prix transporteur (€/kg)</label>
+          <input
+            type="number" min="1" max="100" value={pricePerKg}
+            onChange={(e) => setPricePerKg(e.target.value)}
+            className="w-full px-3 py-2 rounded-lg bg-white/20 text-white placeholder-blue-200 border border-white/30 focus:outline-none focus:ring-2 focus:ring-white/50 text-sm"
+          />
+        </div>
+      </div>
+      <div className="bg-white/20 rounded-xl p-4 flex items-center justify-between">
+        <div>
+          <div className="text-xs text-blue-200">Estimation totale (avec commission Waselli)</div>
+          <div className="text-3xl font-bold mt-0.5">{waselli.toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €</div>
+        </div>
+        <div className="text-right text-xs text-blue-200 space-y-1">
+          <div>Transport : {total.toFixed(2)} €</div>
+          <div>Commission : {(waselli - total).toFixed(2)} €</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function InternationalPage() {
   const [direction, setDirection] = useState<Direction>("eu-dz");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
@@ -47,23 +87,23 @@ export default function InternationalPage() {
               <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
               Service international disponible
             </div>
-            <div className="flex justify-center items-center gap-3 mb-6 flex-wrap">
-              <span className="text-5xl">🇩🇿</span>
-              <svg className="w-8 h-8 text-green-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
-              </svg>
-              <div className="flex gap-2">
-                {EUROPEAN_COUNTRIES.map((c) => (
-                  <span key={c.code} className="text-4xl">{c.flag}</span>
-                ))}
+            <div className="flex justify-center items-center gap-4 mb-6">
+              <div className="flex items-center gap-2 bg-white/10 border border-white/15 rounded-xl px-4 py-2 text-sm font-medium">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" /></svg>
+                Algérie
+              </div>
+              <svg className="w-6 h-6 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+              <div className="flex items-center gap-2 bg-white/10 border border-white/15 rounded-xl px-4 py-2 text-sm font-medium">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                Europe
               </div>
             </div>
             <h1 className="text-3xl md:text-5xl font-bold leading-tight mb-4">
               Envoyez entre l&apos;Algérie
               <br />
-              <span className="text-green-300">et l&apos;Europe</span>
+              <span className="text-blue-300">et l&apos;Europe</span>
             </h1>
-            <p className="text-lg text-green-100 max-w-2xl mx-auto">
+            <p className="text-lg text-slate-400 max-w-2xl mx-auto">
               Trouvez des transporteurs vérifiés qui font régulièrement le trajet entre
               l&apos;Algérie et la France, l&apos;Espagne, la Belgique, l&apos;Allemagne et l&apos;Italie.
             </p>
@@ -84,7 +124,7 @@ export default function InternationalPage() {
                   : "text-dz-gray-600 hover:bg-dz-gray-50"
               }`}
             >
-              <span>🌍</span> Europe → <span>🇩🇿</span> Algérie
+              Europe → Algérie
             </button>
             <button
               onClick={() => { setDirection("dz-eu"); setSelectedCountry(null); }}
@@ -94,7 +134,7 @@ export default function InternationalPage() {
                   : "text-dz-gray-600 hover:bg-dz-gray-50"
               }`}
             >
-              <span>🇩🇿</span> Algérie → <span>🌍</span> Europe
+              Algérie → Europe
             </button>
           </div>
         </div>
@@ -123,7 +163,7 @@ export default function InternationalPage() {
                     : "border-dz-gray-200 bg-white text-dz-gray-600 hover:border-dz-green/30"
                 }`}
               >
-                <span className="text-xl">{country.flag}</span>
+                <span className="text-xs font-bold bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">{country.code}</span>
                 {country.name}
               </button>
             ))}
@@ -157,12 +197,19 @@ export default function InternationalPage() {
             </div>
             <div className="flex-1">
               <h3 className="font-semibold">Publier votre colis</h3>
-              <p className="text-sm text-green-200">Postez votre demande et recevez des offres</p>
+              <p className="text-sm text-blue-200">Postez votre demande et recevez des offres</p>
             </div>
             <svg className="w-5 h-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           </Link>
+        </div>
+
+        {/* Budget Estimator */}
+        <div className="bg-gradient-to-r from-dz-green to-dz-green-light text-white rounded-2xl p-6 mb-10">
+          <h3 className="font-semibold text-lg mb-1">Estimez votre budget</h3>
+          <p className="text-blue-100 text-sm mb-4">Combien coûte votre envoi international ?</p>
+          <BudgetEstimator />
         </div>
 
         {/* Listings */}
@@ -197,7 +244,7 @@ export default function InternationalPage() {
                   className="bg-white rounded-2xl border border-dz-gray-200 p-5 hover:border-dz-green/30 hover:shadow-md transition-all block"
                 >
                   <div className="flex items-start justify-between mb-3">
-                    <span className="text-xs bg-dz-green/10 text-dz-green px-2.5 py-1 rounded-full font-medium">✈️ International</span>
+                    <span className="text-xs bg-dz-green/10 text-dz-green px-2.5 py-1 rounded-full font-medium flex items-center gap-1 w-fit"><svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg> International</span>
                     <span className="text-lg font-bold text-dz-green">{listing.price_per_kg.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} €/kg</span>
                   </div>
 
@@ -225,8 +272,8 @@ export default function InternationalPage() {
         {/* Become a transporter banner */}
         <div className="mt-12 bg-gradient-to-r from-dz-gray-800 to-dz-gray-700 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-white">
           <div className="flex items-center gap-4">
-            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0 text-2xl">
-              ✈️
+            <div className="w-14 h-14 bg-white/10 rounded-2xl flex items-center justify-center flex-shrink-0">
+              <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg>
             </div>
             <div>
               <h3 className="font-bold text-lg">Vous faites régulièrement le trajet Europe ↔ Algérie ?</h3>

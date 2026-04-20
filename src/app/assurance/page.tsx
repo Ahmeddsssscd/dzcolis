@@ -54,26 +54,26 @@ const tiers = [
 ];
 
 const covered = [
-  { icon: "💥", label: "Casse accidentelle", desc: "Dommages survenus pendant le transport" },
-  { icon: "🔓", label: "Vol", desc: "Vol du colis pendant la prise en charge" },
-  { icon: "❌", label: "Perte", desc: "Colis introuvable à la livraison" },
-  { icon: "💧", label: "Dommages eau", desc: "Dégâts causés par l'humidité ou les intempéries" },
+  { label: "Casse accidentelle", desc: "Dommages survenus pendant le transport" },
+  { label: "Vol", desc: "Vol du colis pendant la prise en charge" },
+  { label: "Perte", desc: "Colis introuvable à la livraison" },
+  { label: "Dommages eau", desc: "Dégâts causés par l'humidité ou les intempéries" },
 ];
 
 const notCovered = [
-  { icon: "🚫", label: "Contenu interdit", desc: "Objets interdits non déclarés (armes, drogues...)" },
-  { icon: "📦", label: "Mauvais emballage", desc: "Fragile non déclaré ou emballage insuffisant" },
-  { icon: "💰", label: "Valeur sous-déclarée", desc: "Remboursement limité à la valeur déclarée" },
-  { icon: "⏰", label: "Réclamation tardive", desc: "Signalement après le délai de 48h" },
-  { icon: "🌊", label: "Force majeure", desc: "Catastrophes naturelles, guerre, grève" },
-  { icon: "💎", label: "Objets non déclarés", desc: "Bijoux, espèces, documents officiels non déclarés" },
+  { label: "Contenu interdit", desc: "Objets interdits non déclarés (armes, drogues...)" },
+  { label: "Mauvais emballage", desc: "Fragile non déclaré ou emballage insuffisant" },
+  { label: "Valeur sous-déclarée", desc: "Remboursement limité à la valeur déclarée" },
+  { label: "Réclamation tardive", desc: "Signalement après le délai de 48h" },
+  { label: "Force majeure", desc: "Catastrophes naturelles, guerre, grève" },
+  { label: "Objets non déclarés", desc: "Bijoux, espèces, documents officiels non déclarés" },
 ];
 
 const trustLevels = [
   { label: "Débutant", range: "0 – 30", textColor: "text-red-700", bg: "bg-red-50", access: "Formule Basique uniquement — couverture 20 000 DA / 500 €" },
   { label: "Confirmé", range: "31 – 60", textColor: "text-orange-700", bg: "bg-orange-50", access: "Formules Basique + Standard — couverture jusqu'à 50 000 DA / 1 500 €" },
   { label: "Expert", range: "61 – 80", textColor: "text-blue-700", bg: "bg-blue-50", access: "Toutes formules — couverture jusqu'à 150 000 DA / 3 000 €" },
-  { label: "Elite ✓", range: "81 – 100", textColor: "text-dz-green", bg: "bg-dz-green/5", access: "Toutes formules + accès prioritaire support + couverture 150 000 DA / 3 000 € max" },
+  { label: "Elite", range: "81 – 100", textColor: "text-dz-green", bg: "bg-dz-green/5", access: "Toutes formules + accès prioritaire support + couverture 150 000 DA / 3 000 € max" },
 ];
 
 const scoreFactors = [
@@ -90,31 +90,31 @@ export default function AssurancePage() {
     <div className="bg-dz-gray-50 min-h-screen">
 
       {/* Hero */}
-      <section className="relative bg-gradient-to-br from-dz-green via-dz-green-dark to-dz-gray-800 text-white overflow-hidden">
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl" />
-          <div className="absolute bottom-0 right-10 w-80 h-80 bg-dz-green-light rounded-full blur-3xl" />
-        </div>
+      <section className="relative text-white overflow-hidden" style={{ background: "linear-gradient(135deg,#2563eb 0%,#1d4ed8 45%,#0f172a 100%)" }}>
+        <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{ backgroundImage: "radial-gradient(circle,white 1px,transparent 1px)", backgroundSize: "28px 28px" }} />
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none" />
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 relative z-10 text-center">
-          <div className="inline-flex items-center gap-2 bg-white/15 backdrop-blur-sm rounded-full px-4 py-1.5 text-sm mb-6">
-            <span className="w-2 h-2 bg-green-300 rounded-full animate-pulse" />
+          <div className="inline-flex items-center gap-2 bg-white/10 border border-white/15 rounded-full px-4 py-1.5 text-sm mb-6">
+            <span className="w-2 h-2 bg-blue-300 rounded-full animate-pulse" />
             Inclus gratuitement dans chaque envoi
           </div>
-          <div className="text-5xl mb-4">🛡️</div>
+          <div className="w-16 h-16 bg-dz-green/20 rounded-2xl flex items-center justify-center mx-auto mb-5">
+            <svg className="w-8 h-8 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+          </div>
           <h1 className="text-4xl md:text-5xl font-bold mb-4">Waselli Protect</h1>
-          <p className="text-xl text-green-100 max-w-2xl mx-auto mb-10">
+          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-10">
             Le système de confiance complet qui protège chaque colis, chaque transporteur,
             et chaque centime — du départ à la livraison.
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { icon: "📸", label: "Photos horodatées" },
-              { icon: "💰", label: "Paiement séquestre" },
-              { icon: "✅", label: "Double confirmation" },
-              { icon: "⚡", label: "Remboursement rapide" },
+              { icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>, label: "Photos horodatées" },
+              { icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>, label: "Paiement séquestre" },
+              { icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>, label: "Double confirmation" },
+              { icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>, label: "Remboursement rapide" },
             ].map((b) => (
-              <div key={b.label} className="bg-white/10 backdrop-blur-sm rounded-2xl p-4">
-                <div className="text-2xl mb-1">{b.icon}</div>
+              <div key={b.label} className="bg-white/10 border border-white/10 backdrop-blur-sm rounded-2xl p-4 flex flex-col items-center gap-2">
+                <div className="text-dz-green">{b.icon}</div>
                 <div className="text-sm font-semibold">{b.label}</div>
               </div>
             ))}
@@ -132,13 +132,13 @@ export default function AssurancePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
             {[
-              { step: "1", icon: "📸", title: "Photo à la récupération", desc: "Le transporteur prend une photo horodatée et géolocalisée du colis au moment de la prise en charge. Preuve irréfutable de l'état initial." },
-              { step: "2", icon: "🔒", title: "Argent en séquestre", desc: "Le montant est bloqué sur un compte sécurisé pendant tout le transport. Ni le transporteur ni personne d'autre n'y a accès avant la livraison confirmée." },
-              { step: "3", icon: "📸", title: "Photo à la livraison", desc: "À la remise du colis, le transporteur envoie une photo avec le destinataire visible. Preuve de livraison datée et localisée." },
-              { step: "4", icon: "✅", title: "Double confirmation", desc: "Le destinataire confirme la réception dans l'app. C'est seulement à ce moment que le transporteur est payé. Pas de confirmation = argent bloqué." },
+              { step: "1", icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>, title: "Photo à la récupération", desc: "Le transporteur prend une photo horodatée et géolocalisée du colis au moment de la prise en charge. Preuve irréfutable de l'état initial." },
+              { step: "2", icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>, title: "Argent en séquestre", desc: "Le montant est bloqué sur un compte sécurisé pendant tout le transport. Ni le transporteur ni personne d'autre n'y a accès avant la livraison confirmée." },
+              { step: "3", icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" /></svg>, title: "Photo à la livraison", desc: "À la remise du colis, le transporteur envoie une photo avec le destinataire visible. Preuve de livraison datée et localisée." },
+              { step: "4", icon: <svg className="w-7 h-7" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>, title: "Double confirmation", desc: "Le destinataire confirme la réception dans l'app. C'est seulement à ce moment que le transporteur est payé. Pas de confirmation = argent bloqué." },
             ].map((s) => (
               <div key={s.step} className="text-center group">
-                <div className="w-16 h-16 bg-dz-green/10 text-dz-green rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl group-hover:bg-dz-green group-hover:text-white transition-colors">
+                <div className="w-16 h-16 bg-dz-green/10 text-dz-green rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:bg-dz-green group-hover:text-white transition-colors">
                   {s.icon}
                 </div>
                 <div className="text-xs font-bold text-dz-green mb-2">ÉTAPE {s.step}</div>
@@ -255,7 +255,7 @@ export default function AssurancePage() {
               <div className="space-y-3">
                 {covered.map((c) => (
                   <div key={c.label} className="bg-white rounded-xl border border-dz-gray-200 p-4 flex items-start gap-3 hover:border-dz-green/30 transition-colors">
-                    <span className="text-2xl">{c.icon}</span>
+                    <div className="w-7 h-7 bg-dz-green/10 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"><svg className="w-4 h-4 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" /></svg></div>
                     <div>
                       <div className="font-semibold text-dz-gray-800 text-sm">{c.label}</div>
                       <div className="text-xs text-dz-gray-500 mt-0.5">{c.desc}</div>
@@ -269,7 +269,7 @@ export default function AssurancePage() {
               <div className="space-y-3">
                 {notCovered.map((c) => (
                   <div key={c.label} className="bg-white rounded-xl border border-dz-gray-200 p-4 flex items-start gap-3">
-                    <span className="text-2xl">{c.icon}</span>
+                    <div className="w-7 h-7 bg-red-100 rounded-lg flex items-center justify-center flex-shrink-0 mt-0.5"><svg className="w-4 h-4 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" /></svg></div>
                     <div>
                       <div className="font-semibold text-dz-gray-800 text-sm">{c.label}</div>
                       <div className="text-xs text-dz-gray-500 mt-0.5">{c.desc}</div>
@@ -377,12 +377,12 @@ export default function AssurancePage() {
         <section className="bg-gradient-to-br from-dz-green to-dz-green-dark rounded-3xl p-10 text-white text-center">
           <div className="text-4xl mb-4">🛡️</div>
           <h2 className="text-3xl font-bold mb-3">Expédiez en toute sécurité</h2>
-          <p className="text-green-100 text-lg mb-8 max-w-xl mx-auto">
+          <p className="text-blue-100 text-lg mb-8 max-w-xl mx-auto">
             Waselli Protect est inclus automatiquement dans chaque envoi.
             Choisissez votre formule au moment de la publication.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/envoyer" className="bg-white text-dz-green hover:bg-green-50 px-8 py-3.5 rounded-xl font-semibold transition-colors">
+            <Link href="/envoyer" className="bg-white text-dz-green hover:bg-blue-50 px-8 py-3.5 rounded-xl font-semibold transition-colors">
               Envoyer un colis
             </Link>
             <Link href="/international" className="border-2 border-white/30 hover:bg-white/10 px-8 py-3.5 rounded-xl font-semibold transition-colors">

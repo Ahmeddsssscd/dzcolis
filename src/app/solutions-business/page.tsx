@@ -3,22 +3,22 @@ import ContactForm from "./ContactForm";
 
 const targetAudience = [
   {
-    icon: "🛍️",
+    icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>,
     title: "E-commerce",
     desc: "Boutiques en ligne qui expédient régulièrement vers toute l'Algérie. Optimisez vos coûts et fidélisez vos clients.",
   },
   {
-    icon: "🏭",
+    icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>,
     title: "Fabricants & distributeurs",
     desc: "Livraisons B2B entre wilayas à grande échelle. Des transporteurs fiables pour vos marchandises professionnelles.",
   },
   {
-    icon: "🏪",
+    icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /></svg>,
     title: "Commerçants",
     desc: "Envois ponctuels ou récurrents sans contrainte d'abonnement. Payez uniquement ce que vous expédiez.",
   },
   {
-    icon: "🏢",
+    icon: <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>,
     title: "Grandes entreprises",
     desc: "Logistique de déménagement d'entreprise, transfert de matériel et livraison de masse inter-wilayas.",
   },
@@ -152,7 +152,7 @@ export default function SolutionsBusinessPage() {
   return (
     <>
       {/* ── Hero ──────────────────────────────────────────────────── */}
-      <section className="relative bg-gradient-to-br from-dz-gray-800 to-dz-gray-900 text-white overflow-hidden">
+      <section className="relative text-white overflow-hidden" style={{ background: "linear-gradient(135deg,#2563eb 0%,#1d4ed8 45%,#0f172a 100%)" }}>
         {/* Subtle background texture */}
         <div className="absolute inset-0 opacity-5">
           <div className="absolute top-0 left-0 w-full h-full"
@@ -184,15 +184,15 @@ export default function SolutionsBusinessPage() {
           {/* Trust badges */}
           <div className="flex flex-wrap justify-center gap-4 mb-10">
             {[
-              { icon: "🏢", label: "500+ entreprises" },
-              { icon: "⚡", label: "48h setup" },
-              { icon: "🎯", label: "Support dédié" },
+              { icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" /></svg>, label: "500+ entreprises" },
+              { icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>, label: "48h setup" },
+              { icon: <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" /></svg>, label: "Support dédié" },
             ].map((badge) => (
               <div
                 key={badge.label}
                 className="flex items-center gap-2 bg-white/10 border border-white/15 backdrop-blur-sm rounded-full px-5 py-2 text-sm font-medium"
               >
-                <span>{badge.icon}</span>
+                {badge.icon}
                 <span>{badge.label}</span>
               </div>
             ))}
@@ -231,7 +231,7 @@ export default function SolutionsBusinessPage() {
                 key={item.title}
                 className="bg-white rounded-2xl border border-dz-gray-200 p-6 hover:border-dz-green/30 hover:shadow-md transition-all text-center group"
               >
-                <div className="text-4xl mb-4 group-hover:scale-110 transition-transform inline-block">
+                <div className="w-12 h-12 bg-dz-green/10 text-dz-green rounded-xl flex items-center justify-center mx-auto mb-4 group-hover:bg-dz-green group-hover:text-white transition-colors">
                   {item.icon}
                 </div>
                 <h3 className="font-semibold text-dz-gray-800 mb-2 text-base">{item.title}</h3>
@@ -325,7 +325,7 @@ export default function SolutionsBusinessPage() {
                   <div className={`text-3xl font-bold mb-1 ${plan.highlighted ? "text-white" : "text-dz-green"}`}>
                     {plan.price}
                   </div>
-                  <p className={`text-sm ${plan.highlighted ? "text-green-100" : "text-dz-gray-500"}`}>
+                  <p className={`text-sm ${plan.highlighted ? "text-blue-100" : "text-dz-gray-500"}`}>
                     {plan.subtitle}
                   </p>
                 </div>
@@ -345,7 +345,7 @@ export default function SolutionsBusinessPage() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" />
                         </svg>
                       </div>
-                      <span className={plan.highlighted ? "text-green-50" : "text-dz-gray-600"}>{feature}</span>
+                      <span className={plan.highlighted ? "text-blue-50" : "text-dz-gray-600"}>{feature}</span>
                     </li>
                   ))}
                 </ul>
@@ -354,7 +354,7 @@ export default function SolutionsBusinessPage() {
                   href={plan.ctaHref}
                   className={`block text-center py-3 rounded-xl font-semibold text-sm transition-colors ${
                     plan.highlighted
-                      ? "bg-white text-dz-green hover:bg-green-50"
+                      ? "bg-white text-dz-green hover:bg-blue-50"
                       : "bg-dz-green text-white hover:bg-dz-green-dark"
                   }`}
                 >

@@ -28,19 +28,19 @@ export default function ContactPage() {
 
   const contactInfo = [
     {
-      icon: "👤",
+      icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>,
       title: t("contact_support_title"),
       value: t("contact_support_value"),
       sub: t("contact_support_sub"),
     },
     {
-      icon: "📧",
+      icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>,
       title: t("contact_email_title"),
       value: "contact@waselli.com",
       sub: t("contact_email_sub"),
     },
     {
-      icon: "📍",
+      icon: <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>,
       title: t("contact_address_title"),
       value: t("contact_address_value"),
       sub: t("contact_address_sub"),
@@ -59,11 +59,15 @@ export default function ContactPage() {
   return (
     <div className="min-h-screen bg-dz-gray-50">
       {/* Hero */}
-      <div className="bg-gradient-to-br from-dz-green to-green-700 text-white py-16">
-        <div className="max-w-3xl mx-auto px-4 text-center">
-          <div className="text-5xl mb-4">💬</div>
+      <div className="text-white py-16 relative overflow-hidden" style={{ background: "linear-gradient(135deg,#2563eb 0%,#1d4ed8 45%,#0f172a 100%)" }}>
+        <div className="absolute inset-0 pointer-events-none opacity-[0.04]" style={{ backgroundImage: "radial-gradient(circle,white 1px,transparent 1px)", backgroundSize: "28px 28px" }} />
+        <div className="absolute -top-20 -right-20 w-80 h-80 bg-white/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="max-w-3xl mx-auto px-4 text-center relative z-10">
+          <div className="w-16 h-16 bg-dz-green/20 rounded-2xl flex items-center justify-center mx-auto mb-5">
+            <svg className="w-8 h-8 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+          </div>
           <h1 className="text-4xl font-bold mb-3">{t("contact_hero_title")}</h1>
-          <p className="text-green-100 text-lg">
+          <p className="text-slate-400 text-lg">
             {t("contact_hero_subtitle")}
           </p>
         </div>
@@ -74,7 +78,7 @@ export default function ContactPage() {
         <div className="space-y-4">
           {contactInfo.map((info) => (
             <div key={info.title} className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-5">
-              <div className="text-2xl mb-2">{info.icon}</div>
+              <div className="w-9 h-9 bg-dz-green/10 text-dz-green rounded-lg flex items-center justify-center mb-3">{info.icon}</div>
               <p className="text-xs text-dz-gray-400 font-medium uppercase tracking-wide">{info.title}</p>
               <p className="font-semibold text-dz-gray-900 mt-0.5">{info.value}</p>
               <p className="text-xs text-dz-gray-400 mt-0.5">{info.sub}</p>
@@ -102,7 +106,7 @@ export default function ContactPage() {
             </svg>
           </a>
 
-          <div className="bg-green-50 border border-green-100 rounded-2xl p-5">
+          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-5">
             <p className="text-sm font-semibold text-dz-gray-800 mb-1">{t("contact_quick_help_title")}</p>
             <p className="text-xs text-dz-gray-500 mb-3">
               {t("contact_quick_help_desc")}
@@ -117,7 +121,9 @@ export default function ContactPage() {
         <div className="md:col-span-2">
           {sent ? (
             <div className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-10 text-center">
-              <div className="text-5xl mb-4">✅</div>
+              <div className="w-16 h-16 bg-dz-green/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+              </div>
               <h2 className="text-xl font-bold text-dz-gray-900 mb-2">{t("contact_sent_title")}</h2>
               <p className="text-dz-gray-500 mb-6">
                 {t("contact_sent_desc")}
@@ -188,7 +194,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={sending}
-                className="w-full bg-dz-green text-white py-3 rounded-xl font-semibold hover:bg-green-700 transition-colors disabled:opacity-60"
+                className="w-full bg-dz-green text-white py-3 rounded-xl font-semibold hover:bg-dz-green-dark transition-colors disabled:opacity-60"
               >
                 {sending ? t("contact_sending") : t("contact_send_btn")}
               </button>

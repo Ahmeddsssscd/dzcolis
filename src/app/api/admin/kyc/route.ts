@@ -1,31 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminSupabase } from "@/lib/supabase/admin";
+import { checkAdminCookie } from "@/lib/admin-auth";
 import { sendKycApprovedEmail, sendKycRejectedEmail } from "@/lib/email";
-import { createServerClient } from "@supabase/ssr";
-import { cookies } from "next/headers";
-
-async function isAdmin(): Promise<boolean> {
-  const cookieStore = await cookies();
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    { cookies: { getAll: () => cookieStore.getAll(), setAll: () => {} } }
-  );
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return false;
-  const { data: profile } = await adminSupabase.from("profiles").select("role").eq("id", user.id).single();
-  return profile?.role === "admin";
-}
 
 // GET — list all pending KYC submissions
 export async function GET() {
-  if (!(await isAdmin())) {
+  if (!(await checkAdminCookie())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 
   const { data, error } = await adminSupabase
     .from("kyc_documents")
-    .select("*, profiles(first_name, last_name, phone, wilaya, kyc_status)")
+    .select("*, profiles!kyc_documents_user_id_fkey(first_name, last_name, phone, wilaya, kyc_status)")
     .eq("status", "submitted")
     .order("submitted_at", { ascending: true });
 
@@ -35,7 +21,7 @@ export async function GET() {
 
 // POST — approve or reject a user's KYC
 export async function POST(req: NextRequest) {
-  if (!(await isAdmin())) {
+  if (!(await checkAdminCookie())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   }
 

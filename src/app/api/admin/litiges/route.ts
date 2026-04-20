@@ -1,17 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { adminClient, adminSupabase } from "@/lib/supabase/admin";
-import { createClient } from "@/lib/supabase/server";
+import { adminSupabase } from "@/lib/supabase/admin";
+import { checkAdminCookie } from "@/lib/admin-auth";
 
 // We persist litige resolutions in the notifications table
 // using type "litige_resolution" and user_id "admin"
 // so they survive page refreshes without needing a new table.
 
 export async function GET() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const { data: profile } = await (adminClient as any).from("profiles").select("role").eq("id", user.id).single();
-  if (profile?.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!(await checkAdminCookie())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     const { data, error } = await adminSupabase
@@ -20,7 +18,6 @@ export async function GET() {
       .eq("type", "litige_resolution")
       .order("created_at", { ascending: false });
     if (error) throw error;
-    // Return a map of litige_id → decision
     const resolved: Record<string, { decision: string; date: string }> = {};
     for (const n of data ?? []) {
       const d = n.data as { litige_id?: string; decision?: string } | null;
@@ -36,11 +33,9 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const { data: profile } = await (adminClient as any).from("profiles").select("role").eq("id", user.id).single();
-  if (profile?.role !== "admin") return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  if (!(await checkAdminCookie())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   try {
     const { litige_id, decision } = await req.json();
@@ -48,7 +43,6 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing fields" }, { status: 400 });
     }
 
-    // Upsert: delete old record for this litige_id if exists, then insert
     await adminSupabase
       .from("notifications")
       .delete()
@@ -56,7 +50,7 @@ export async function POST(req: NextRequest) {
       .contains("data", { litige_id });
 
     const { error } = await adminSupabase.from("notifications").insert({
-      user_id: "00000000-0000-0000-0000-000000000000", // placeholder admin
+      user_id: "00000000-0000-0000-0000-000000000000",
       type: "litige_resolution",
       title: "Litige résolu",
       message: `Litige ${litige_id} résolu : ${decision}`,

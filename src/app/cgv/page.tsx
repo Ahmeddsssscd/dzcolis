@@ -4,10 +4,10 @@ export default function CGVPage() {
   return (
     <div className="bg-white">
       {/* Hero Header */}
-      <section className="bg-gradient-to-br from-dz-green to-dz-green-dark text-white py-16">
+      <section className="text-white py-16 relative overflow-hidden" style={{ background: "linear-gradient(135deg,#2563eb 0%,#1d4ed8 45%,#0f172a 100%)" }}>
         <div className="max-w-4xl mx-auto px-4 text-center">
           <h1 className="text-4xl font-bold mb-4">Conditions Générales de Vente</h1>
-          <p className="text-green-100 text-lg">
+          <p className="text-blue-100 text-lg">
             Les règles qui encadrent l&apos;utilisation de la plateforme Waselli et les transactions entre expéditeurs et transporteurs.
           </p>
         </div>
