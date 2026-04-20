@@ -3,13 +3,27 @@
 /* Dark mode variant (class-based) */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ═══════════════════════════════════════════════════════════════════════
+   DESIGN TOKENS
+   One source of truth. Colors, spacing, radii, shadows, motion.
+   If a value needs to exist in more than one place — it goes here.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 :root {
-  /* Blue palette */
-  --dz-green:       #2563eb;   /* main blue  */
-  --dz-green-light: #3b82f6;   /* hover blue */
-  --dz-green-dark:  #1d4ed8;   /* deep blue  */
-  --dz-red: #dc2626;
-  /* Slate grays — blue-tinted, easy on the eyes */
+  /* ── Brand blue ────────────────────────────────────────────────────
+     Historical name kept (--dz-green) to avoid a 692-occurrence rename.
+     Anything new should reach for --brand-*, which is the canonical name. */
+  --brand:        #2563eb;
+  --brand-hover:  #1d4ed8;
+  --brand-soft:   #eff6ff;  /* 50-tier tint for subtle backgrounds */
+  --brand-ring:   rgba(37, 99, 235, 0.35);
+
+  --dz-green:       #2563eb;
+  --dz-green-light: #3b82f6;
+  --dz-green-dark:  #1d4ed8;
+  --dz-red:         #dc2626;
+
+  /* ── Slate grays — blue-tinted neutrals, easy on the eyes ───────── */
   --dz-gray-50:  #f8fafc;
   --dz-gray-100: #f1f5f9;
   --dz-gray-200: #e2e8f0;
@@ -20,17 +34,58 @@
   --dz-gray-700: #334155;
   --dz-gray-800: #1e293b;
   --dz-gray-900: #0f172a;
-  --background: #ffffff;
-  --foreground: #1e293b;
-  --card-bg: #ffffff;
-  --card-border: #e2e8f0;
-  --input-bg: #ffffff;
-  --muted: #64748b;
+
+  /* ── Semantic status colors ─────────────────────────────────────────
+     One value per meaning. No more blue/purple/orange picked ad-hoc. */
+  --success:      #059669;
+  --success-soft: #ecfdf5;
+  --warning:      #d97706;
+  --warning-soft: #fffbeb;
+  --danger:       #dc2626;
+  --danger-soft:  #fef2f2;
+  --info:         #2563eb;
+  --info-soft:    #eff6ff;
+
+  /* ── Surfaces ─────────────────────────────────────────────────────── */
+  --background:   #ffffff;
+  --foreground:   #0f172a;
+  --card-bg:      #ffffff;
+  --card-border:  #e2e8f0;
+  --input-bg:     #ffffff;
+  --muted:        #64748b;
+
+  /* ── Radii ──────────────────────────────────────────────────────────
+     Two-tier: small elements (buttons, inputs, chips) = sm/md,
+     containers (cards, modals, hero) = lg/xl. No more drift between
+     rounded-lg/xl/2xl on lookalike elements. */
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+
+  /* ── Shadow palette ─────────────────────────────────────────────────
+     Tailwind defaults are harsh. These are softer, layered, use the
+     brand's cool undertone so they feel cohesive with the blue palette. */
+  --shadow-xs: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-sm: 0 1px 3px 0 rgba(15, 23, 42, 0.06), 0 1px 2px -1px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 8px -2px rgba(15, 23, 42, 0.08), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 12px 24px -8px rgba(15, 23, 42, 0.12), 0 4px 8px -4px rgba(15, 23, 42, 0.06);
+  --shadow-ring-brand: 0 0 0 3px var(--brand-ring);
+
+  /* ── Motion ─────────────────────────────────────────────────────────
+     Slightly eased, slightly longer than default. Default Tailwind
+     `duration-150` ease-linear feels abrupt. */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 140ms;
+  --dur-med:  220ms;
+  --dur-slow: 380ms;
 }
 
 .dark {
-  /* Neutral charcoal palette — not greenish */
-  --dz-gray-50: #0f1117;
+  /* ── Dark palette ───────────────────────────────────────────────────
+     Deep charcoal with subtle blue tint. Keeps the brand cohesion but
+     avoids the dead-flat "pitch-black" look that feels cheap. */
+  --dz-gray-50:  #0f1117;
   --dz-gray-100: #1c1f26;
   --dz-gray-200: #252a34;
   --dz-gray-300: #374151;
@@ -40,17 +95,31 @@
   --dz-gray-700: #e5e7eb;
   --dz-gray-800: #f3f4f6;
   --dz-gray-900: #f9fafb;
-  --background: #0f1117;
-  --foreground: #e5e7eb;
-  --card-bg: #1c1f26;
-  --card-border: #252a34;
-  --input-bg: #252a34;
-  --muted: #9ca3af;
+
+  --background:   #0b0e14;
+  --foreground:   #e5e7eb;
+  --card-bg:      #141821;
+  --card-border:  #242a35;
+  --input-bg:     #1a1f29;
+  --muted:        #94a3b8;
+
+  --brand-soft:   rgba(37, 99, 235, 0.12);
+  --success-soft: rgba(5, 150, 105, 0.14);
+  --warning-soft: rgba(217, 119, 6, 0.14);
+  --danger-soft:  rgba(220, 38, 38, 0.14);
+  --info-soft:    rgba(37, 99, 235, 0.14);
+
+  --shadow-xs: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 6px 12px -4px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 16px 32px -8px rgba(0, 0, 0, 0.6);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
   --color-dz-green: var(--dz-green);
   --color-dz-green-light: var(--dz-green-light);
   --color-dz-green-dark: var(--dz-green-dark);
@@ -68,29 +137,270 @@
   --font-sans: var(--font-jakarta);
 }
 
+/* ═══════════════════════════════════════════════════════════════════════
+   GLOBAL DEFAULTS
+   The stuff a senior designer wants set once, site-wide.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-jakarta), "Segoe UI", system-ui, -apple-system, sans-serif;
-  transition: background-color 0.25s ease, color 0.25s ease;
+  font-feature-settings: "cv11", "ss01"; /* subtle stylistic sets for a less generic look */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  transition: background-color var(--dur-med) var(--ease-out),
+              color var(--dur-med) var(--ease-out);
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-/* ── Dark mode overrides ─────────────────────────────────── */
+/* Headings: tighter tracking + balanced wraps. Hierarchy over raw weight. */
+h1, h2, h3, h4 {
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+h1 { letter-spacing: -0.03em; }
 
-/* Cards & white surfaces */
+/* Body copy: nicer default line-height than Tailwind's base */
+p { text-wrap: pretty; }
+
+/* Selection in brand color — small detail, pays for itself */
+::selection {
+  background: var(--brand);
+  color: #fff;
+}
+
+/* Consistent focus ring across every interactive element. This is the
+   single biggest "looks professional" upgrade: before, focused inputs
+   showed the browser default. */
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-ring-brand);
+  border-radius: var(--radius-sm);
+}
+
+/* Inputs should actually look like inputs even without Tailwind classes */
+:where(input, textarea, select) {
+  font: inherit;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   COMPONENT UTILITIES
+   Use these on new code. Existing pages keep working unchanged, but
+   anywhere you reach for `bg-dz-green hover:bg-dz-green-dark text-white
+   px-5 py-2.5 rounded-xl font-medium transition-colors` — that's a
+   `.btn .btn-primary`.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+  /* ── Buttons ─────────────────────────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.125rem;
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    font-size: 0.9375rem;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease-out),
+                color var(--dur-fast) var(--ease-out),
+                box-shadow var(--dur-fast) var(--ease-out),
+                transform var(--dur-fast) var(--ease-out),
+                border-color var(--dur-fast) var(--ease-out);
+    user-select: none;
+  }
+  .btn:disabled { opacity: 0.55; cursor: not-allowed; }
+  .btn:active:not(:disabled) { transform: translateY(1px); }
+
+  .btn-primary {
+    background: var(--brand);
+    color: #fff;
+    box-shadow: var(--shadow-xs);
+  }
+  .btn-primary:hover:not(:disabled) {
+    background: var(--brand-hover);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-secondary {
+    background: var(--card-bg);
+    color: var(--foreground);
+    border: 1px solid var(--card-border);
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background: var(--dz-gray-50);
+    border-color: var(--dz-gray-300);
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--foreground);
+  }
+  .btn-ghost:hover:not(:disabled) { background: var(--dz-gray-100); }
+
+  .btn-danger {
+    background: var(--danger);
+    color: #fff;
+  }
+  .btn-danger:hover:not(:disabled) { background: #b91c1c; }
+
+  .btn-sm { padding: 0.4375rem 0.875rem; font-size: 0.875rem; border-radius: var(--radius-sm); }
+  .btn-lg { padding: 0.875rem 1.5rem; font-size: 1rem; border-radius: var(--radius-lg); }
+
+  /* ── Cards ───────────────────────────────────────────────────────── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-xs);
+    transition: box-shadow var(--dur-med) var(--ease-out),
+                border-color var(--dur-med) var(--ease-out),
+                transform var(--dur-med) var(--ease-out);
+  }
+  .card-hover:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--dz-gray-300);
+  }
+  .card-interactive {
+    cursor: pointer;
+  }
+  .card-interactive:hover {
+    box-shadow: var(--shadow-md);
+    border-color: color-mix(in srgb, var(--brand) 40%, var(--card-border));
+    transform: translateY(-1px);
+  }
+
+  /* ── Inputs ──────────────────────────────────────────────────────── */
+  .input {
+    display: block;
+    width: 100%;
+    padding: 0.625rem 0.875rem;
+    background: var(--input-bg);
+    color: var(--foreground);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius-md);
+    font-size: 0.9375rem;
+    line-height: 1.5;
+    transition: border-color var(--dur-fast) var(--ease-out),
+                box-shadow var(--dur-fast) var(--ease-out);
+  }
+  .input:focus-visible {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: var(--shadow-ring-brand);
+  }
+  .input::placeholder { color: var(--muted); }
+
+  /* ── Badges ──────────────────────────────────────────────────────── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.1875rem 0.5625rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    line-height: 1.25;
+    white-space: nowrap;
+  }
+  .badge-brand   { background: var(--brand-soft);   color: var(--brand); }
+  .badge-success { background: var(--success-soft); color: var(--success); }
+  .badge-warning { background: var(--warning-soft); color: var(--warning); }
+  .badge-danger  { background: var(--danger-soft);  color: var(--danger); }
+  .badge-neutral { background: var(--dz-gray-100);  color: var(--dz-gray-700); }
+
+  /* ── Section rhythm ──────────────────────────────────────────────── */
+  .section      { padding-top: 4rem; padding-bottom: 4rem; }
+  .section-sm   { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+  .section-lg   { padding-top: 6rem; padding-bottom: 6rem; }
+
+  /* ── Content container ──────────────────────────────────────────── */
+  .container-px { padding-left: 1rem; padding-right: 1rem; }
+  @media (min-width: 640px)  { .container-px { padding-left: 1.5rem; padding-right: 1.5rem; } }
+  @media (min-width: 1024px) { .container-px { padding-left: 2rem; padding-right: 2rem; } }
+
+  /* ── Subtle texture overlay for hero sections ───────────────────────
+     A very-low-opacity SVG noise. Takes the "AI-generated / too perfect"
+     feel off gradients. Apply via `.texture-noise` on a positioned parent. */
+  .texture-noise::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='5'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  }
+
+  /* ── Divider ─────────────────────────────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: var(--card-border);
+    width: 100%;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   MOTION
+   Reusable entrance animations. Respect prefers-reduced-motion.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+@layer utilities {
+  .animate-fade-up {
+    animation: fade-up var(--dur-slow) var(--ease-out) both;
+  }
+  .animate-fade {
+    animation: fade var(--dur-slow) var(--ease-out) both;
+  }
+  .brand-btn {
+    background-color: var(--brand);
+    color: white;
+  }
+  .brand-btn:hover { background-color: var(--brand-hover); }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════
+   DARK MODE OVERRIDES
+   Kept minimal — only the semantic remaps. Surface/border/input tokens
+   already handled by the .dark block above, so most components don't
+   need any per-element dark rule.
+   ═══════════════════════════════════════════════════════════════════════ */
+
 .dark .bg-white { background-color: var(--card-bg) !important; }
 
-/* Borders */
 .dark [class*="border-dz-gray"],
 .dark [class*="border-gray"] {
   border-color: var(--card-border) !important;
 }
 
-/* Inputs */
 .dark input:not([type="checkbox"]):not([type="radio"]),
 .dark textarea,
 .dark select {
@@ -108,48 +418,28 @@ html {
   color: var(--muted) !important;
 }
 
-/* Blue tinted sections */
-.dark .bg-green-50  { background-color: rgba(29,78,216,0.10) !important; }
-.dark .bg-green-100 { background-color: rgba(29,78,216,0.18) !important; }
-.dark .border-green-100 { border-color: rgba(37,99,235,0.25) !important; }
+/* Tailwind blue/green/amber tint remaps in dark mode */
+.dark .bg-green-50  { background-color: rgba(29, 78, 216, 0.10) !important; }
+.dark .bg-green-100 { background-color: rgba(29, 78, 216, 0.18) !important; }
+.dark .border-green-100 { border-color: rgba(37, 99, 235, 0.25) !important; }
 .dark .text-green-700 { color: #60a5fa !important; }
 .dark .text-green-800 { color: #93c5fd !important; }
+.dark .bg-orange-50  { background-color: rgba(124, 45, 18, 0.2) !important; }
+.dark .bg-orange-100 { background-color: rgba(124, 45, 18, 0.3) !important; }
+.dark .bg-amber-50   { background-color: rgba(120, 80, 0, 0.2) !important; }
+.dark .bg-amber-100  { background-color: rgba(120, 80, 0, 0.3) !important; }
+.dark .bg-red-50     { background-color: rgba(127, 29, 29, 0.2) !important; }
+.dark .bg-blue-50    { background-color: rgba(30, 58, 138, 0.2) !important; }
+.dark .bg-blue-100   { background-color: rgba(30, 58, 138, 0.3) !important; }
+.dark .bg-purple-50  { background-color: rgba(76, 29, 149, 0.2) !important; }
+.dark .bg-teal-50    { background-color: rgba(19, 78, 74, 0.2) !important; }
 
-/* Badges */
-.dark .bg-orange-50  { background-color: rgba(124,45,18,0.2) !important; }
-.dark .bg-orange-100 { background-color: rgba(124,45,18,0.3) !important; }
-.dark .bg-amber-50   { background-color: rgba(120,80,0,0.2) !important; }
-.dark .bg-amber-100  { background-color: rgba(120,80,0,0.3) !important; }
-.dark .bg-red-50     { background-color: rgba(127,29,29,0.2) !important; }
-.dark .bg-blue-50    { background-color: rgba(30,58,138,0.2) !important; }
-.dark .bg-blue-100   { background-color: rgba(30,58,138,0.3) !important; }
-.dark .bg-purple-50  { background-color: rgba(76,29,149,0.2) !important; }
-.dark .bg-teal-50    { background-color: rgba(19,78,74,0.2) !important; }
-
-/* Hover states */
 .dark .hover\:bg-dz-gray-50:hover { background-color: var(--dz-gray-200) !important; }
-.dark .hover\:bg-red-50:hover { background-color: rgba(127,29,29,0.2) !important; }
+.dark .hover\:bg-red-50:hover { background-color: rgba(127, 29, 29, 0.2) !important; }
 
-/* Shadows */
-.dark .shadow-sm,
-.dark .shadow-lg,
-.dark .shadow-2xl {
-  --tw-shadow: 0 1px 8px 0 rgba(0,0,0,0.5);
-  --tw-shadow-colored: 0 1px 8px 0 var(--tw-shadow-color);
-}
-
-/* Scrollbar */
-.dark ::-webkit-scrollbar { width: 8px; }
-.dark ::-webkit-scrollbar-track { background: var(--dz-gray-100); }
-.dark ::-webkit-scrollbar-thumb { background: var(--dz-gray-300); border-radius: 4px; }
-
-/* ── Consistent brand blue on Tailwind blue utilities ── */
-@layer utilities {
-  .brand-btn {
-    background-color: #2563eb;
-    color: white;
-  }
-  .brand-btn:hover {
-    background-color: #1d4ed8;
-  }
-}
+/* Scrollbar — subtle, doesn't distract */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--dz-gray-300); border-radius: 999px; border: 2px solid var(--background); }
+::-webkit-scrollbar-thumb:hover { background: var(--dz-gray-400); }
+.dark ::-webkit-scrollbar-thumb { background: var(--dz-gray-300); border-color: var(--background); }

@@ -126,21 +126,43 @@ export default function Home() {
   return (
     <>
       <style>{`
-        .hero-bg{background:linear-gradient(155deg,#2563eb 0%,#1d4ed8 45%,#0f172a 100%)}
+        .hero-bg{
+          background:
+            radial-gradient(1200px 500px at 85% -10%, rgba(59,130,246,0.45), transparent 60%),
+            radial-gradient(900px 600px at 10% 110%, rgba(15,23,42,0.55), transparent 55%),
+            linear-gradient(155deg,#2563eb 0%,#1d4ed8 45%,#0f172a 100%);
+        }
+        .hero-grain{
+          background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' seed='4'/></filter><rect width='200' height='200' filter='url(%23n)' opacity='1'/></svg>");
+        }
       `}</style>
 
-      {/* ── Hero ─────────────────────────── */}
+      {/* ── Hero ─────────────────────────────────────────────────────
+           The senior-designer upgrade here:
+           • Multi-stop radial gradient adds depth that a flat gradient
+             can't — eye traces light across the section.
+           • A faint SVG noise grain kills the "perfect CSS" look; the
+             hero now feels printed, not rendered.
+           • CTAs use the shared .btn primitives so they match the rest
+             of the site's click surface exactly. */}
       <section className="hero-bg relative text-white overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none opacity-[0.04]"
-          style={{ backgroundImage: "radial-gradient(circle,white 1px,transparent 1px)", backgroundSize: "30px 30px" }} />
+        <div className="hero-grain absolute inset-0 pointer-events-none opacity-[0.08] mix-blend-overlay" aria-hidden />
+        <div
+          className="absolute inset-0 pointer-events-none opacity-[0.05]"
+          style={{ backgroundImage: "radial-gradient(circle,white 1px,transparent 1px)", backgroundSize: "32px 32px" }}
+          aria-hidden
+        />
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-32 relative z-10">
+        <div className="max-w-7xl mx-auto container-px py-20 md:py-32 relative z-10">
           <div className="max-w-3xl">
-            <p className="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-1.5 text-sm mb-8 border border-white/15">
-              <span className="w-2 h-2 bg-blue-300 rounded-full animate-pulse" />
+            <p className="inline-flex items-center gap-2 bg-white/10 rounded-full pl-2 pr-4 py-1.5 text-sm mb-8 border border-white/15 backdrop-blur-sm">
+              <span className="relative flex w-2 h-2">
+                <span className="animate-ping absolute inset-0 rounded-full bg-blue-300 opacity-75" />
+                <span className="relative rounded-full w-2 h-2 bg-blue-300" />
+              </span>
               {t("hero_badge")}
             </p>
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight mb-6">
+            <h1 className="text-4xl md:text-6xl font-bold leading-[1.05] mb-6 tracking-[-0.03em]">
               {t("hero_title")}
             </h1>
             <p className="text-lg text-white/80 mb-6 max-w-2xl leading-relaxed">
@@ -153,27 +175,31 @@ export default function Home() {
             </div>
 
             {/* CTA buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/envoyer"
-                className="inline-flex items-center justify-center gap-2 bg-white text-blue-700 hover:bg-blue-50 px-8 py-4 rounded-xl font-bold text-base transition-all shadow-lg shadow-black/20 hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Link
+                href="/envoyer"
+                className="btn btn-lg bg-white text-[color:var(--brand-hover)] hover:bg-blue-50 shadow-lg shadow-black/20"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                 </svg>
-                Envoyer votre colis
+                {t("cta_send")}
               </Link>
-              <Link href="/annonces"
-                className="inline-flex items-center justify-center gap-2 bg-white/10 hover:bg-white/20 border border-white/30 hover:border-white/50 text-white px-8 py-4 rounded-xl font-bold text-base transition-all backdrop-blur-sm hover:-translate-y-0.5 active:translate-y-0">
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+              <Link
+                href="/annonces"
+                className="btn btn-lg bg-white/10 hover:bg-white/20 border border-white/25 hover:border-white/40 text-white backdrop-blur-sm"
+              >
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
                 </svg>
-                Voir les annonces
+                {t("nav_listings")}
               </Link>
             </div>
 
             {/* Transporter subtle link */}
-            <p className="mt-6 text-sm text-white/50">
+            <p className="mt-6 text-sm text-white/55">
               {t("hero_transporter")}{" "}
-              <Link href="/transporter" className="text-white/80 font-semibold hover:text-white transition-colors underline underline-offset-2">
+              <Link href="/transporter" className="text-white font-semibold hover:text-white/90 transition-colors underline underline-offset-4 decoration-white/30 hover:decoration-white">
                 {t("hero_transporter_cta")}
               </Link>
             </p>
@@ -181,63 +207,48 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── Trust pillars ────────────────── */}
+      {/* ── Trust pillars ─────────────────────────────────────────────
+           Design note: previous version used blue/green/purple/orange
+           icons — visually fun but reads as "we picked a random color
+           for each icon." One brand tint across the board makes the
+           eye read the row as one unified trust signal. */}
       <div className="bg-white border-b border-dz-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-0">
+        <div className="max-w-7xl mx-auto container-px">
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-dz-gray-100">
-
-            {/* 1 — Escrow payment */}
-            <div className="flex items-start gap-4 px-6 py-8 group">
-              <div className="shrink-0 w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center group-hover:bg-blue-600 transition-colors duration-300">
-                <svg className="w-5 h-5 text-blue-600 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                </svg>
+            {[
+              {
+                title: "Paiement séquestre",
+                desc: "Votre argent est libéré uniquement après confirmation de réception.",
+                path: "M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z",
+              },
+              {
+                title: "Transporteurs vérifiés",
+                desc: "Identité et véhicule contrôlés avant toute activation du compte.",
+                path: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+              },
+              {
+                title: "Assurance incluse",
+                desc: "Chaque colis couvert jusqu'à 50 000 DA, sans frais cachés.",
+                path: "M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 9v4m0 4h.01",
+              },
+              {
+                title: "Support 7j/7",
+                desc: "Une équipe disponible chaque jour pour répondre à vos questions.",
+                path: "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z",
+              },
+            ].map((pillar) => (
+              <div key={pillar.title} className="flex items-start gap-4 px-6 py-8 group">
+                <div className="shrink-0 w-10 h-10 rounded-lg bg-dz-green/10 text-dz-green flex items-center justify-center transition-colors duration-300 group-hover:bg-dz-green group-hover:text-white">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.8}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d={pillar.path} />
+                  </svg>
+                </div>
+                <div>
+                  <p className="font-semibold text-dz-gray-800 text-sm leading-snug">{pillar.title}</p>
+                  <p className="text-xs text-dz-gray-500 mt-1 leading-relaxed">{pillar.desc}</p>
+                </div>
               </div>
-              <div>
-                <p className="font-semibold text-dz-gray-800 text-sm leading-snug">Paiement séquestre</p>
-                <p className="text-xs text-dz-gray-400 mt-1 leading-relaxed">Votre argent est libéré uniquement après confirmation de réception.</p>
-              </div>
-            </div>
-
-            {/* 2 — Verified ID */}
-            <div className="flex items-start gap-4 px-6 py-8 group">
-              <div className="shrink-0 w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center group-hover:bg-green-600 transition-colors duration-300">
-                <svg className="w-5 h-5 text-green-600 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                </svg>
-              </div>
-              <div>
-                <p className="font-semibold text-dz-gray-800 text-sm leading-snug">Transporteurs vérifiés</p>
-                <p className="text-xs text-dz-gray-400 mt-1 leading-relaxed">Identité et véhicule contrôlés avant toute activation du compte.</p>
-              </div>
-            </div>
-
-            {/* 3 — Insurance */}
-            <div className="flex items-start gap-4 px-6 py-8 group">
-              <div className="shrink-0 w-10 h-10 rounded-xl bg-purple-50 flex items-center justify-center group-hover:bg-purple-600 transition-colors duration-300">
-                <svg className="w-5 h-5 text-purple-600 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M20.618 5.984A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016zM12 9v4m0 4h.01" />
-                </svg>
-              </div>
-              <div>
-                <p className="font-semibold text-dz-gray-800 text-sm leading-snug">Assurance incluse</p>
-                <p className="text-xs text-dz-gray-400 mt-1 leading-relaxed">Chaque colis couvert jusqu'à 50 000 DA, sans frais cachés.</p>
-              </div>
-            </div>
-
-            {/* 4 — Support */}
-            <div className="flex items-start gap-4 px-6 py-8 group">
-              <div className="shrink-0 w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center group-hover:bg-orange-500 transition-colors duration-300">
-                <svg className="w-5 h-5 text-orange-500 group-hover:text-white transition-colors duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-              </div>
-              <div>
-                <p className="font-semibold text-dz-gray-800 text-sm leading-snug">Support 7j/7</p>
-                <p className="text-xs text-dz-gray-400 mt-1 leading-relaxed">Une équipe disponible chaque jour pour répondre à vos questions.</p>
-              </div>
-            </div>
-
+            ))}
           </div>
         </div>
       </div>
@@ -309,8 +320,8 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {features.map((f, i) => (
               <Fade key={f.title} delay={i * 80}>
-                <div className="bg-dz-gray-50 rounded-2xl p-6 border border-dz-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 h-full">
-                  <div className="w-11 h-11 bg-dz-green/10 text-dz-green rounded-xl flex items-center justify-center mb-4">
+                <div className="card card-hover p-6 h-full">
+                  <div className="w-11 h-11 bg-dz-green/10 text-dz-green rounded-lg flex items-center justify-center mb-4">
                     {f.icon}
                   </div>
                   <h3 className="font-semibold text-dz-gray-800 mb-2">{f.title}</h3>
@@ -414,19 +425,19 @@ export default function Home() {
                   return (
                     <Fade key={c.id} delay={i * 80}>
                       <Link href="/livreurs"
-                        className="bg-dz-gray-50 rounded-2xl border border-dz-gray-100 p-5 flex items-center gap-4 hover:border-dz-green/40 hover:shadow-md transition-all duration-200 group">
-                        <div className="w-14 h-14 bg-dz-green text-white rounded-2xl flex items-center justify-center text-lg font-black shrink-0 group-hover:scale-105 transition-transform">
+                        className="card card-interactive p-5 flex items-center gap-4 group">
+                        <div className="w-14 h-14 bg-gradient-to-br from-dz-green to-dz-green-dark text-white rounded-full flex items-center justify-center text-base font-bold shrink-0 shadow-sm">
                           {avatar.toUpperCase()}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
+                          <div className="flex items-center gap-1.5 flex-wrap">
                             <span className="font-semibold text-dz-gray-800">{c.first_name} {c.last_name[0]}.</span>
                             {c.kyc_status === "approved" && (
-                              <span className="text-[10px] bg-green-100 text-green-700 border border-green-200 px-2 py-0.5 rounded-full font-semibold">
+                              <span className="badge badge-success">
                                 ✓ {t("carriers_verified")}
                               </span>
                             )}
-                            {isIntl && <span className="text-[10px] bg-purple-100 text-purple-700 border border-purple-200 px-2 py-0.5 rounded-full font-semibold">Intl</span>}
+                            {isIntl && <span className="badge badge-brand">Intl</span>}
                           </div>
                           <p className="text-xs text-dz-gray-500 mt-0.5 truncate">{c.wilaya || "Algérie"}</p>
                           <div className="flex items-center gap-1 mt-1.5">
@@ -446,10 +457,9 @@ export default function Home() {
           </div>
 
           <Fade className="text-center">
-            <Link href="/livreurs"
-              className="inline-flex items-center gap-2 bg-dz-green hover:bg-dz-green-light text-white px-8 py-3.5 rounded-xl font-semibold transition-colors shadow-sm shadow-dz-green/20">
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+            <Link href="/livreurs" className="btn btn-primary btn-lg">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               {t("carriers_cta")}
             </Link>
@@ -478,10 +488,13 @@ export default function Home() {
             ))}
           </div>
           <Fade className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link href="/international" className="bg-dz-green hover:bg-dz-green-light text-white px-7 py-3 rounded-xl font-semibold transition-colors text-center text-sm">
+            <Link href="/international" className="btn btn-primary">
               {t("intl_cta1")}
             </Link>
-            <Link href="/international/devenir-transporteur" className="border border-dz-green text-dz-green hover:bg-dz-green/5 px-7 py-3 rounded-xl font-semibold transition-colors text-center text-sm">
+            <Link
+              href="/international/devenir-transporteur"
+              className="btn border border-dz-green text-dz-green hover:bg-dz-green/5"
+            >
               {t("intl_cta2")}
             </Link>
           </Fade>
@@ -494,11 +507,11 @@ export default function Home() {
           <Fade>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">{t("cta_title")}</h2>
             <p className="text-blue-100 text-lg mb-8">{t("cta_subtitle")}</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/envoyer" className="bg-white text-dz-green hover:bg-blue-50 px-8 py-3.5 rounded-xl font-semibold transition-colors">
+            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+              <Link href="/envoyer" className="btn btn-lg bg-white text-[color:var(--brand-hover)] hover:bg-blue-50">
                 {t("cta_send")}
               </Link>
-              <Link href="/transporter" className="border border-white/30 hover:bg-white/10 px-8 py-3.5 rounded-xl font-semibold transition-colors">
+              <Link href="/transporter" className="btn btn-lg border border-white/30 hover:bg-white/10 text-white">
                 {t("cta_transport")}
               </Link>
             </div>
