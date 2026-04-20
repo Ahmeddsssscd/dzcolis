@@ -3,16 +3,19 @@ import { useState, useEffect } from "react";
 
 type Permission = "default" | "granted" | "denied";
 
-// Demo notifications shown after user enables push
+// Demo notifications shown after user enables push.
+// Kept generic — the same bell serves senders AND transporters, so the copy
+// must not assume the user is looking for "un transporteur". Someone who just
+// published a colis would be confused by that wording.
 const DEMO_NOTIFICATIONS = [
   {
     title: "Waselli",
-    body: "Nouveau transporteur disponible sur votre trajet Alger → Paris 🇫🇷",
+    body: "Nouvelle annonce sur votre trajet Alger → Paris 🇫🇷",
     delay: 4000,
   },
   {
     title: "Waselli",
-    body: "Votre colis a été pris en charge par le transporteur ✅",
+    body: "Votre colis a été pris en charge ✅",
     delay: 9000,
   },
 ];
@@ -48,7 +51,7 @@ export default function PushNotifications() {
     if (result === "granted") {
       // Send a welcome notification
       new Notification("Waselli — Notifications activées ✅", {
-        body: "Vous serez alerté dès qu'un transporteur est disponible sur votre trajet.",
+        body: "Vous serez alerté dès qu'une annonce correspond à votre trajet ou à votre colis.",
         icon: "/favicon.ico",
       });
 

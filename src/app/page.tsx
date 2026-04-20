@@ -189,7 +189,9 @@ export default function Home() {
               <Cycle />
             </div>
 
-            {/* CTA buttons */}
+            {/* CTA buttons — both audiences land here, so both get
+                a first-class CTA. Previous hero relegated travellers
+                to a small underline link under the fold. */}
             <div className="flex flex-col sm:flex-row gap-3">
               <Link
                 href="/envoyer"
@@ -201,21 +203,21 @@ export default function Home() {
                 {t("cta_send")}
               </Link>
               <Link
-                href="/annonces"
+                href="/transporter"
                 className="btn btn-lg bg-white/10 hover:bg-white/20 border border-white/25 hover:border-white/40 text-white backdrop-blur-sm"
               >
                 <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
                 </svg>
-                {t("nav_listings")}
+                {t("cta_propose_route")}
               </Link>
             </div>
 
-            {/* Transporter subtle link */}
+            {/* Tertiary: browse the marketplace */}
             <p className="mt-6 text-sm text-white/55">
-              {t("hero_transporter")}{" "}
-              <Link href="/transporter" className="text-white font-semibold hover:text-white/90 transition-colors underline underline-offset-4 decoration-white/30 hover:decoration-white">
-                {t("hero_transporter_cta")}
+              {t("hero_marketplace_lead")}{" "}
+              <Link href="/annonces" className="text-white font-semibold hover:text-white/90 transition-colors underline underline-offset-4 decoration-white/30 hover:decoration-white">
+                {t("nav_listings")} →
               </Link>
             </p>
           </div>
@@ -388,12 +390,15 @@ export default function Home() {
             <p className="text-dz-gray-500 mt-3 max-w-xl mx-auto">{t("carriers_subtitle")}</p>
           </Fade>
 
-          {/* Stats row */}
+          {/* Concrete commitments row — we're a new marketplace, so
+              we refuse to ship fake "2 400+ transporteurs / 98%
+              satisfaction" vanity numbers. These three signals are
+              facts about the product itself, verifiable today. */}
           <Fade className="grid grid-cols-3 gap-4 mb-10 max-w-lg mx-auto">
             {[
-              { value: "2 400+", label: t("carriers_stat1_label") },
-              { value: "4.8★", label: t("carriers_stat2_label") },
-              { value: "98%",    label: t("carriers_stat3_label") },
+              { value: "58", label: t("carriers_stat1_label") },
+              { value: "5",   label: t("carriers_stat2_label") },
+              { value: "100%", label: t("carriers_stat3_label") },
             ].map((s) => (
               <div key={s.label} className="bg-dz-gray-50 rounded-2xl p-4 text-center border border-dz-gray-100">
                 <div className="text-xl font-bold text-dz-gray-800">{s.value}</div>

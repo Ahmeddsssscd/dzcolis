@@ -73,6 +73,12 @@ export default function InternationalPage() {
     });
   }, [contextListings, direction, selectedCountry]);
 
+  // Split by listing_type so transporters (trajet) and senders (demande)
+  // render under their own heading — a sender publishing a package should
+  // never appear under "Transporteurs disponibles".
+  const trajets  = useMemo(() => filteredListings.filter((l) => l.listing_type === "trajet"),  [filteredListings]);
+  const demandes = useMemo(() => filteredListings.filter((l) => l.listing_type === "demande"), [filteredListings]);
+
   return (
     <div className="bg-dz-gray-50 min-h-screen">
       {/* Hero */}
@@ -170,22 +176,25 @@ export default function InternationalPage() {
           </div>
         </div>
 
-        {/* Action CTAs */}
+        {/* Action CTAs — two clear paths: I'm travelling vs I want to send */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
-          <div className="bg-white border border-dz-gray-200 rounded-2xl p-6 flex items-center gap-4 hover:border-dz-green/30 hover:shadow-md transition-all">
+          <Link
+            href="/international/devenir-transporteur"
+            className="bg-white border border-dz-gray-200 rounded-2xl p-6 flex items-center gap-4 hover:border-dz-green/30 hover:shadow-md transition-all"
+          >
             <div className="w-12 h-12 bg-dz-green/10 text-dz-green rounded-xl flex items-center justify-center flex-shrink-0">
               <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
               </svg>
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold text-dz-gray-800">Voir les transporteurs</h3>
-              <p className="text-sm text-dz-gray-500">Parcourez les transporteurs disponibles sur votre trajet</p>
+              <h3 className="font-semibold text-dz-gray-800">Je voyage — proposer ma route</h3>
+              <p className="text-sm text-dz-gray-500">Vous avez de la place dans votre véhicule ? Publiez votre trajet.</p>
             </div>
-            <a href="#listings" className="text-dz-green font-medium text-sm whitespace-nowrap hover:underline">
-              Voir ↓
-            </a>
-          </div>
+            <svg className="w-5 h-5 text-dz-green opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </Link>
           <Link
             href="/international/envoyer"
             className="bg-dz-green text-white rounded-2xl p-6 flex items-center gap-4 hover:bg-dz-green-light transition-all"
@@ -196,8 +205,8 @@ export default function InternationalPage() {
               </svg>
             </div>
             <div className="flex-1">
-              <h3 className="font-semibold">Publier votre colis</h3>
-              <p className="text-sm text-blue-200">Postez votre demande et recevez des offres</p>
+              <h3 className="font-semibold">Envoyer mon colis</h3>
+              <p className="text-sm text-blue-200">Publiez votre colis et recevez des offres de transporteurs.</p>
             </div>
             <svg className="w-5 h-5 opacity-70" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -205,69 +214,144 @@ export default function InternationalPage() {
           </Link>
         </div>
 
-        {/* Budget Estimator */}
-        <div className="bg-gradient-to-r from-dz-green to-dz-green-light text-white rounded-2xl p-6 mb-10">
-          <h3 className="font-semibold text-lg mb-1">Estimez votre budget</h3>
-          <p className="text-blue-100 text-sm mb-4">Combien coûte votre envoi international ?</p>
-          <BudgetEstimator />
-        </div>
-
-        {/* Listings */}
-        <div id="listings">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-semibold text-dz-gray-700">
-              Transporteurs disponibles
-              <span className="ml-2 text-sm font-normal text-dz-gray-400">
-                ({filteredListings.length} résultat{filteredListings.length !== 1 ? "s" : ""})
-              </span>
-            </h2>
-            <Link href="/international/envoyer" className="text-sm text-dz-green font-medium hover:underline">
-              + Proposer un trajet
-            </Link>
-          </div>
-
-          {filteredListings.length === 0 ? (
-            <div className="text-center py-16 bg-white rounded-2xl border border-dz-gray-200">
-              <div className="text-4xl mb-3">🚐</div>
-              <p className="text-dz-gray-500 font-medium">Aucun transporteur disponible pour ce filtre</p>
-              <p className="text-sm text-dz-gray-400 mt-1">Essayez un autre pays ou revenez plus tard</p>
-              <Link href="/international/envoyer" className="inline-block mt-4 bg-dz-green text-white px-6 py-2.5 rounded-xl font-medium text-sm hover:bg-dz-green-light transition-colors">
-                Proposer un trajet
+        {/* Listings — split into Trajets (transporters) and Demandes (senders) */}
+        <div id="listings" className="space-y-12">
+          {/* Trajets */}
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-dz-gray-800">
+                Trajets disponibles
+                <span className="ml-2 text-sm font-normal text-dz-gray-400">
+                  ({trajets.length} transporteur{trajets.length !== 1 ? "s" : ""})
+                </span>
+              </h2>
+              <Link href="/international/devenir-transporteur" className="text-sm text-dz-green font-medium hover:underline">
+                + Proposer ma route
               </Link>
             </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredListings.map((listing) => (
-                <Link
-                  key={listing.id}
-                  href={`/annonces/${listing.id}`}
-                  className="bg-white rounded-2xl border border-dz-gray-200 p-5 hover:border-dz-green/30 hover:shadow-md transition-all block"
-                >
-                  <div className="flex items-start justify-between mb-3">
-                    <span className="text-xs bg-dz-green/10 text-dz-green px-2.5 py-1 rounded-full font-medium flex items-center gap-1 w-fit"><svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" /></svg> International</span>
-                    <span className="text-lg font-bold text-dz-green">{listing.price_per_kg.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} €/kg</span>
-                  </div>
+            <p className="text-sm text-dz-gray-500 mb-4">
+              Des voyageurs qui font le trajet {direction === "eu-dz" ? "Europe → Algérie" : "Algérie → Europe"} et prennent des colis.
+            </p>
 
-                  <div className="flex items-center gap-2 text-sm text-dz-gray-500 mb-3">
-                    <span className="font-medium text-dz-gray-700">{listing.from_city}</span>
-                    <span>→</span>
-                    <span className="font-medium text-dz-gray-700">{listing.to_city}</span>
-                  </div>
-
-                  <p className="text-xs text-dz-gray-500 leading-relaxed mb-4 line-clamp-2">{listing.description}</p>
-
-                  <div className="flex items-center justify-between pt-3 border-t border-dz-gray-100">
-                    <p className="text-xs text-dz-gray-400">
-                      {new Date(listing.departure_date).toLocaleDateString("fr-DZ", { day: "numeric", month: "short", year: "numeric" })}
-                      {" · "}{listing.available_weight} kg dispo
-                    </p>
-                    <span className="bg-dz-green text-white text-xs px-3 py-1.5 rounded-xl font-medium">Voir</span>
-                  </div>
+            {trajets.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-2xl border border-dz-gray-200">
+                <div className="text-4xl mb-3">🚐</div>
+                <p className="text-dz-gray-500 font-medium">Aucun trajet disponible pour ce filtre</p>
+                <p className="text-sm text-dz-gray-400 mt-1">Essayez un autre pays ou revenez plus tard</p>
+                <Link href="/international/devenir-transporteur" className="inline-block mt-4 bg-dz-green text-white px-6 py-2.5 rounded-xl font-medium text-sm hover:bg-dz-green-light transition-colors">
+                  Proposer ma route
                 </Link>
-              ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {trajets.map((listing) => (
+                  <Link
+                    key={listing.id}
+                    href={`/annonces/${listing.id}`}
+                    className="bg-white rounded-2xl border border-dz-gray-200 p-5 hover:border-dz-green/30 hover:shadow-md transition-all block"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <span className="text-xs bg-dz-green/10 text-dz-green px-2.5 py-1 rounded-full font-medium flex items-center gap-1 w-fit">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" /></svg>
+                        Trajet
+                      </span>
+                      <span className="text-lg font-bold text-dz-green">{listing.price_per_kg.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} €/kg</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-dz-gray-500 mb-3">
+                      <span className="font-medium text-dz-gray-700">{listing.from_city}</span>
+                      <span>→</span>
+                      <span className="font-medium text-dz-gray-700">{listing.to_city}</span>
+                    </div>
+                    <p className="text-xs text-dz-gray-500 leading-relaxed mb-4 line-clamp-2">{listing.description}</p>
+                    <div className="flex items-center justify-between pt-3 border-t border-dz-gray-100">
+                      <p className="text-xs text-dz-gray-400">
+                        {new Date(listing.departure_date).toLocaleDateString("fr-DZ", { day: "numeric", month: "short", year: "numeric" })}
+                        {" · "}{listing.available_weight} kg dispo
+                      </p>
+                      <span className="bg-dz-green text-white text-xs px-3 py-1.5 rounded-xl font-medium">Voir</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </section>
+
+          {/* Demandes */}
+          <section>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-semibold text-dz-gray-800">
+                Colis à transporter
+                <span className="ml-2 text-sm font-normal text-dz-gray-400">
+                  ({demandes.length} demande{demandes.length !== 1 ? "s" : ""})
+                </span>
+              </h2>
+              <Link href="/international/envoyer" className="text-sm text-dz-green font-medium hover:underline">
+                + Envoyer un colis
+              </Link>
             </div>
-          )}
+            <p className="text-sm text-dz-gray-500 mb-4">
+              Des expéditeurs qui cherchent un transporteur sur le trajet {direction === "eu-dz" ? "Europe → Algérie" : "Algérie → Europe"}.
+            </p>
+
+            {demandes.length === 0 ? (
+              <div className="text-center py-12 bg-white rounded-2xl border border-dz-gray-200">
+                <div className="text-4xl mb-3">📦</div>
+                <p className="text-dz-gray-500 font-medium">Aucune demande de colis pour ce filtre</p>
+                <p className="text-sm text-dz-gray-400 mt-1">Essayez un autre pays ou revenez plus tard</p>
+                <Link href="/international/envoyer" className="inline-block mt-4 bg-dz-green text-white px-6 py-2.5 rounded-xl font-medium text-sm hover:bg-dz-green-light transition-colors">
+                  Envoyer mon colis
+                </Link>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {demandes.map((listing) => (
+                  <Link
+                    key={listing.id}
+                    href={`/annonces/${listing.id}`}
+                    className="bg-white rounded-2xl border border-dz-gray-200 p-5 hover:border-blue-300 hover:shadow-md transition-all block"
+                  >
+                    <div className="flex items-start justify-between mb-3">
+                      <span className="text-xs bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full font-medium flex items-center gap-1 w-fit">
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" /></svg>
+                        Demande
+                      </span>
+                      <span className="text-lg font-bold text-blue-700">{listing.price_per_kg.toLocaleString("fr-FR", { minimumFractionDigits: 0, maximumFractionDigits: 2 })} €/kg</span>
+                    </div>
+                    <div className="flex items-center gap-2 text-sm text-dz-gray-500 mb-3">
+                      <span className="font-medium text-dz-gray-700">{listing.from_city}</span>
+                      <span>→</span>
+                      <span className="font-medium text-dz-gray-700">{listing.to_city}</span>
+                    </div>
+                    <p className="text-xs text-dz-gray-500 leading-relaxed mb-4 line-clamp-2">{listing.description}</p>
+                    <div className="flex items-center justify-between pt-3 border-t border-dz-gray-100">
+                      <p className="text-xs text-dz-gray-400">
+                        {new Date(listing.departure_date).toLocaleDateString("fr-DZ", { day: "numeric", month: "short", year: "numeric" })}
+                        {" · "}{listing.available_weight} kg à envoyer
+                      </p>
+                      <span className="bg-blue-600 text-white text-xs px-3 py-1.5 rounded-xl font-medium">Voir</span>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </section>
         </div>
+
+        {/* Budget Estimator — demoted to the bottom (secondary, not hero) */}
+        <details className="mt-10 bg-white border border-dz-gray-200 rounded-2xl overflow-hidden">
+          <summary className="cursor-pointer px-6 py-4 flex items-center justify-between hover:bg-dz-gray-50 transition-colors">
+            <div>
+              <h3 className="font-semibold text-dz-gray-800">Estimer votre budget</h3>
+              <p className="text-xs text-dz-gray-500 mt-0.5">Combien coûte votre envoi international ?</p>
+            </div>
+            <svg className="w-5 h-5 text-dz-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </summary>
+          <div className="bg-gradient-to-r from-dz-green to-dz-green-light text-white p-6">
+            <BudgetEstimator />
+          </div>
+        </details>
 
         {/* Become a transporter banner */}
         <div className="mt-12 bg-gradient-to-r from-dz-gray-800 to-dz-gray-700 rounded-2xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 text-white">
