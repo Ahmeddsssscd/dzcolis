@@ -159,30 +159,35 @@ export type AdminAction =
   | "audit.export";
 
 export const ACTION_MIN_ROLE: Record<AdminAction, AdminRole> = {
+  // ── viewer: only the summary dashboard (no data pages) ──────────────
   "dashboard.view":               "viewer",
-  "users.view":                   "viewer",
-  "listings.view":                "viewer",
-  "bookings.view":                "viewer",
-  "payments.view":                "viewer",
-  "disputes.view":                "viewer",
-  "kyc.view":                     "viewer",
-  "audit.view":                   "viewer",
-  "contact.view":                 "viewer",
 
+  // ── support: customer-facing ops ────────────────────────────────────
+  "users.view":                   "support",
+  "listings.view":                "support",
+  "bookings.view":                "support",
+  "disputes.view":                "support",
+  "contact.view":                 "support",
   "disputes.resolve":             "support",
   "users.message":                "support",
   "support.respond":              "support",
   "contact.manage":               "support",
 
+  // ── moderator: review queue ──────────────────────────────────────────
+  "kyc.view":                     "moderator",
   "kyc.review":                   "moderator",
   "courier_applications.review": "moderator",
   "listings.moderate":            "moderator",
 
+  // ── admin: financial + system + mutations ────────────────────────────
+  "payments.view":                "admin",
+  "audit.view":                   "admin",
   "settings.update":              "admin",
   "payments.refund":              "admin",
   "users.update":                 "admin",
   "users.delete":                 "admin",
 
+  // ── super_admin: team management + audit export ───────────────────────
   "admins.manage":                "super_admin",
   "audit.export":                 "super_admin",
 };

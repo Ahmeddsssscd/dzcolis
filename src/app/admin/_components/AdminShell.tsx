@@ -142,25 +142,43 @@ interface NavItem {
   minRole: AdminRole;
 }
 
+/*
+ * Role → page access matrix (single source of truth for both NAV
+ * visibility and the client-side forbidden redirect below):
+ *
+ *  viewer      → dashboard only
+ *  support     → + users, listings, shipments, support chat, disputes
+ *  moderator   → + KYC, courier applications
+ *  admin       → + payments/revenue, audit journal, system audit, settings
+ *  super_admin → + team management (add/remove admins)
+ *
+ * NO role (except admin+) can see financial data (paiements, revenus).
+ * API routes enforce the same matrix via requireAction() + ACTION_MIN_ROLE.
+ */
 const NAV: NavItem[] = [
   { href: "/admin",              labelKey: "adm_nav_dashboard", iconKey: "dashboard",    minRole: "viewer"      },
-  { href: "/admin/systeme",      labelKey: "adm_nav_systeme",   iconKey: "systeme",      minRole: "viewer"      },
-  { href: "/admin/utilisateurs", labelKey: "adm_nav_users",     iconKey: "utilisateurs", minRole: "viewer"      },
-  { href: "/admin/annonces",     labelKey: "adm_nav_listings",  iconKey: "annonces",     minRole: "viewer"      },
-  { href: "/admin/expeditions",  labelKey: "adm_nav_shipments", iconKey: "expeditions",  minRole: "viewer"      },
-  { href: "/admin/kyc",          labelKey: "adm_nav_kyc",       iconKey: "kyc",          badgeKey: "kyc",      minRole: "moderator" },
-  { href: "/admin/support",      labelKey: "adm_nav_support",   iconKey: "support",      minRole: "support"   },
-  // /admin/contact is intentionally removed from the sidebar: the
-  // public contact form now delivers straight to contact@waselli.com
-  // (and forwards to the owner's personal inbox), so there's no
-  // second tool to check. The route + DB backup still exist as a
-  // fallback in case email delivery is ever down.
-  { href: "/admin/litiges",      labelKey: "adm_nav_disputes",  iconKey: "litiges",      badgeKey: "litiges",  minRole: "support"   },
-  { href: "/admin/livreurs",     labelKey: "adm_nav_couriers",  iconKey: "livreurs",     badgeKey: "livreurs", minRole: "moderator" },
-  { href: "/admin/paiements",    labelKey: "adm_nav_payments",  iconKey: "paiements",    minRole: "viewer"      },
-  { href: "/admin/journal",      labelKey: "adm_nav_audit",     iconKey: "journal",      minRole: "viewer"      },
-  { href: "/admin/equipe",       labelKey: "adm_nav_team",      iconKey: "equipe",       minRole: "super_admin" },
+
+  // support+
+  { href: "/admin/utilisateurs", labelKey: "adm_nav_users",     iconKey: "utilisateurs", minRole: "support"     },
+  { href: "/admin/annonces",     labelKey: "adm_nav_listings",  iconKey: "annonces",     minRole: "support"     },
+  { href: "/admin/expeditions",  labelKey: "adm_nav_shipments", iconKey: "expeditions",  minRole: "support"     },
+  { href: "/admin/support",      labelKey: "adm_nav_support",   iconKey: "support",      minRole: "support"     },
+  // /admin/contact hidden from nav — public form now emails contact@waselli.com
+  // directly; route + DB still exist as fallback if email delivery fails.
+  { href: "/admin/litiges",      labelKey: "adm_nav_disputes",  iconKey: "litiges",      badgeKey: "litiges",  minRole: "support"     },
+
+  // moderator+
+  { href: "/admin/kyc",          labelKey: "adm_nav_kyc",       iconKey: "kyc",          badgeKey: "kyc",      minRole: "moderator"   },
+  { href: "/admin/livreurs",     labelKey: "adm_nav_couriers",  iconKey: "livreurs",     badgeKey: "livreurs", minRole: "moderator"   },
+
+  // admin+ (financial + system — hidden from support/moderator)
+  { href: "/admin/paiements",    labelKey: "adm_nav_payments",  iconKey: "paiements",    minRole: "admin"       },
+  { href: "/admin/journal",      labelKey: "adm_nav_audit",     iconKey: "journal",      minRole: "admin"       },
+  { href: "/admin/systeme",      labelKey: "adm_nav_systeme",   iconKey: "systeme",      minRole: "admin"       },
   { href: "/admin/parametres",   labelKey: "adm_nav_settings",  iconKey: "parametres",   minRole: "admin"       },
+
+  // super_admin only
+  { href: "/admin/equipe",       labelKey: "adm_nav_team",      iconKey: "equipe",       minRole: "super_admin" },
 ];
 
 /**
@@ -207,6 +225,21 @@ export default function AdminShell({
     () => NAV.filter((item) => hasRole(session.role, item.minRole)),
     [session.role]
   );
+
+  // ── Forbidden-page redirect ──────────────────────────────────────────
+  // Hides nav items above covers 99% of cases, but a user can still type
+  // a URL directly. This effect catches that: if the current path maps to
+  // a NAV item whose minRole exceeds the user's role, silently redirect
+  // back to the dashboard. API routes enforce the same rules independently,
+  // so the user would only see an empty/error page anyway.
+  useEffect(() => {
+    const navItem = NAV.find(
+      (n) => pathname === n.href || (n.href !== "/admin" && pathname.startsWith(n.href + "/"))
+    );
+    if (navItem && !hasRole(session.role, navItem.minRole)) {
+      router.replace("/admin");
+    }
+  }, [pathname, session.role, router]);
 
   useEffect(() => {
     // Refresh badge counts on every navigation. Errors are swallowed so
