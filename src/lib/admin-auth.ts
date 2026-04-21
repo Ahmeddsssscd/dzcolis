@@ -2,21 +2,8 @@ import { cookies } from "next/headers";
 import { createHmac, timingSafeEqual } from "crypto";
 import { adminSupabase } from "@/lib/supabase/admin";
 
-/*
- * Admin session model
- * --------------------
- * Pre-RBAC:  cookie = HMAC("waselli-admin-authenticated") — a static value.
- *            Every admin shared one password, one cookie. A stolen cookie
- *            was good until its 8h TTL elapsed, with no way to revoke.
- *
- * Post-RBAC (this file): cookie = "<uid>.<hmac(uid)>".
- *   - `uid` points at a row in public.admin_users
- *   - every request re-fetches the row and checks `is_active`, so
- *     deactivating an admin in the DB kills their session within one
- *     request (no cache, on purpose — admin traffic is low volume)
- *   - the HMAC still uses ADMIN_SESSION_SECRET so the cookie can't be
- *     forged without server secret access
- */
+// Session cookie format: "<uid>.<hmac(uid)>" — verified on every request,
+// is_active checked against DB so deactivating an admin takes effect immediately.
 
 export type AdminRole =
   | "viewer"
@@ -114,12 +101,8 @@ export async function checkAdminCookie(): Promise<boolean> {
   return session !== null;
 }
 
-/* ────────── Role capability matrix ──────────
- *
- * Single source of truth. If a new admin-facing action is added, put its
- * minimum-required role here and call `can(session, "action")` from the
- * route handler. Don't hard-code role strings in handlers — they drift.
- */
+// Role capability matrix — single source of truth.
+// Add new actions here and call can(session, "action") in route handlers.
 
 const ROLE_RANK: Record<AdminRole, number> = {
   viewer: 0,
@@ -199,14 +182,7 @@ export function can(session: AdminSession | null, action: AdminAction): boolean 
   return userRank >= needRank;
 }
 
-/**
- * Guard helper for API routes. Returns either the session (authorized)
- * or a NextResponse to return directly (401 / 403). Typical use:
- *
- *   const sessionOrRes = await requireAction("kyc.review");
- *   if (sessionOrRes instanceof NextResponse) return sessionOrRes;
- *   const session = sessionOrRes;
- */
+/** Route guard — returns session or a 401/403 NextResponse. */
 import { NextResponse } from "next/server";
 
 export async function requireAction(

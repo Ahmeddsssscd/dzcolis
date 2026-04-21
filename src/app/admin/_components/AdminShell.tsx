@@ -142,19 +142,8 @@ interface NavItem {
   minRole: AdminRole;
 }
 
-/*
- * Role → page access matrix (single source of truth for both NAV
- * visibility and the client-side forbidden redirect below):
- *
- *  viewer      → dashboard only
- *  support     → + users, listings, shipments, support chat, disputes
- *  moderator   → + KYC, courier applications
- *  admin       → + payments/revenue, audit journal, system audit, settings
- *  super_admin → + team management (add/remove admins)
- *
- * NO role (except admin+) can see financial data (paiements, revenus).
- * API routes enforce the same matrix via requireAction() + ACTION_MIN_ROLE.
- */
+// viewer→dashboard only | support→+users/listings/shipments/chat/disputes
+// moderator→+kyc/couriers | admin→+payments/journal/system/settings | super_admin→+team
 const NAV: NavItem[] = [
   { href: "/admin",              labelKey: "adm_nav_dashboard", iconKey: "dashboard",    minRole: "viewer"      },
 
@@ -226,12 +215,7 @@ export default function AdminShell({
     [session.role]
   );
 
-  // ── Forbidden-page redirect ──────────────────────────────────────────
-  // Hides nav items above covers 99% of cases, but a user can still type
-  // a URL directly. This effect catches that: if the current path maps to
-  // a NAV item whose minRole exceeds the user's role, silently redirect
-  // back to the dashboard. API routes enforce the same rules independently,
-  // so the user would only see an empty/error page anyway.
+  // Guard direct URL access — API routes enforce the same rules independently.
   useEffect(() => {
     const navItem = NAV.find(
       (n) => pathname === n.href || (n.href !== "/admin" && pathname.startsWith(n.href + "/"))

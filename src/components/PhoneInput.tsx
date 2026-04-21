@@ -1,25 +1,6 @@
 "use client";
 
-/*
- * <PhoneInput>
- *
- * One input, one country picker — drop-in replacement for the ad-hoc
- * "[+213] [555 123 456]" UI scattered across signup / profile /
- * transporter / reserver pages. Produces a single E.164 string via
- * `onChange` so the parent form only has to store one field.
- *
- * Design notes:
- *   • Placeholder defaults to a grey-but-visible example (not hidden),
- *     so first-time users see EXACTLY what they should type. Previously
- *     placeholders were invisible because pages used `placeholder="…"`
- *     with no color override and the default is near-transparent.
- *   • We split the stored value on every render — this keeps the
- *     component controlled by a single string without needing two
- *     props. Parents can still bind `value` to the full E.164 string
- *     (preferred) or to just the local part (legacy).
- *   • Dark mode: inputs inherit border / bg via existing design tokens
- *     on the page. No hardcoded `bg-white` here.
- */
+// Country dial-code picker + phone input. Emits a single E.164 string via onChange.
 
 import { useEffect, useMemo, useState } from "react";
 import { PHONE_COUNTRIES, DEFAULT_PHONE_CODE, splitPhone, joinE164, samplePlaceholder } from "@/lib/phone";

@@ -4,20 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 
 /**
- * Floating support chat — opens a modal from the "Support" card on
- * /contact. Self-contained on purpose so it can later be dropped on
- * other pages (FAQ, /tableau-de-bord) behind the same trigger.
- *
- * State machine:
- *   form  → visitor types name/email/subject/message, submits
- *   chat  → conversation view, polls every 2s for new messages
- *
- * The chat id + token survive a reload via localStorage so a visitor
- * who refreshes keeps their place in the queue. We only reopen a
- * live chat (open or claimed); closed chats fall back to the form.
- *
- * Token is our auth secret — losing it locks the visitor out of
- * their own chat. That's acceptable; they can always start a new one.
+ * Live support chat modal. form → chat state machine, polls every 2s.
+ * Chat session persists across reloads via localStorage (id + token).
  */
 interface Props {
   open: boolean;
