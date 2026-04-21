@@ -46,6 +46,7 @@ export default function Footer() {
               <SocialLink
                 href="https://facebook.com/waselli"
                 label="Facebook Waselli"
+                tooltip="Waselli"
                 hoverBg="#1877F2"
               >
                 <svg className="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 24 24">
@@ -55,6 +56,7 @@ export default function Footer() {
               <SocialLink
                 href="https://instagram.com/waselli.dz"
                 label="Instagram Waselli"
+                tooltip="@waselli.dz"
                 hoverBg="linear-gradient(135deg,#833ab4,#fd1d1d 70%,#fcb045)"
               >
                 <svg className="w-[18px] h-[18px]" fill="currentColor" viewBox="0 0 24 24">
@@ -203,11 +205,13 @@ function FooterLink({ href, children }: { href: string; children: React.ReactNod
 function SocialLink({
   href,
   label,
+  tooltip,
   hoverBg,
   children,
 }: {
   href: string;
   label: string;
+  tooltip?: string;
   hoverBg: string;
   children: React.ReactNode;
 }) {
@@ -217,10 +221,16 @@ function SocialLink({
       target="_blank"
       rel="noopener noreferrer"
       aria-label={label}
-      className="group w-9 h-9 rounded-lg flex items-center justify-center transition-colors bg-dz-gray-800 hover:bg-[--hover] text-dz-gray-300 hover:text-white"
+      title={tooltip ?? label}
+      className="group relative w-9 h-9 rounded-lg flex items-center justify-center transition-colors bg-dz-gray-800 hover:bg-[--hover] text-dz-gray-300 hover:text-white"
       style={{ ["--hover" as string]: hoverBg }}
     >
       {children}
+      {tooltip && (
+        <span className="pointer-events-none absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-lg bg-gray-900 px-2.5 py-1 text-xs text-white opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+          {tooltip}
+        </span>
+      )}
     </a>
   );
 }
