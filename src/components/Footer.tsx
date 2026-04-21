@@ -138,9 +138,13 @@ export default function Footer() {
         </div>
 
         {/* ── Support strip ─────────────────────────────────────────
-             Sits above the legal bar on every page so the support
-             e-mail is one click away without forcing users to open
-             the contact form. */}
+             Sits above the legal bar on every page. The e-mail is
+             shown as plain text + a mailto (for users with a default
+             mail client) BUT the primary CTA links to /contact, which
+             always works even without a configured mail handler. The
+             previous `mailto:?subject=…` button silently did nothing
+             on browsers with no default e-mail app — which is most
+             desktop Chrome / Edge installs. */}
         <div className="border-t border-dz-gray-800 mt-14 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
           <p className="text-sm text-dz-gray-400">
             {t("footer_support_prefix") || "Besoin d'aide ? Écrivez-nous à"}{" "}
@@ -148,15 +152,15 @@ export default function Footer() {
               {email_contact}
             </a>
           </p>
-          <a
-            href={`mailto:${email_contact}?subject=Support%20Waselli`}
+          <Link
+            href="/contact"
             className="inline-flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-colors"
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.7}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
             {t("footer_support_cta") || "Contacter le support"}
-          </a>
+          </Link>
         </div>
 
         {/* ── Bottom bar ─── */}
