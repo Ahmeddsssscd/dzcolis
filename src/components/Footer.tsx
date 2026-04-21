@@ -53,7 +53,7 @@ export default function Footer() {
                 </svg>
               </SocialLink>
               <SocialLink
-                href="https://instagram.com/wasellidz"
+                href="https://instagram.com/waselli.dz"
                 label="Instagram Waselli"
                 hoverBg="linear-gradient(135deg,#833ab4,#fd1d1d 70%,#fcb045)"
               >
