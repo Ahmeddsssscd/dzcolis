@@ -150,7 +150,11 @@ const NAV: NavItem[] = [
   { href: "/admin/expeditions",  labelKey: "adm_nav_shipments", iconKey: "expeditions",  minRole: "viewer"      },
   { href: "/admin/kyc",          labelKey: "adm_nav_kyc",       iconKey: "kyc",          badgeKey: "kyc",      minRole: "moderator" },
   { href: "/admin/support",      labelKey: "adm_nav_support",   iconKey: "support",      minRole: "support"   },
-  { href: "/admin/contact",      labelKey: "adm_nav_contact",   iconKey: "contact",      minRole: "support"   },
+  // /admin/contact is intentionally removed from the sidebar: the
+  // public contact form now delivers straight to contact@waselli.com
+  // (and forwards to the owner's personal inbox), so there's no
+  // second tool to check. The route + DB backup still exist as a
+  // fallback in case email delivery is ever down.
   { href: "/admin/litiges",      labelKey: "adm_nav_disputes",  iconKey: "litiges",      badgeKey: "litiges",  minRole: "support"   },
   { href: "/admin/livreurs",     labelKey: "adm_nav_couriers",  iconKey: "livreurs",     badgeKey: "livreurs", minRole: "moderator" },
   { href: "/admin/paiements",    labelKey: "adm_nav_payments",  iconKey: "paiements",    minRole: "viewer"      },
