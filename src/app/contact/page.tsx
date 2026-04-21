@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import SupportChatWidget from "@/components/SupportChatWidget";
 
 const WHATSAPP_URL =
   "https://wa.me/40725028189?text=Bonjour%20Waselli%2C%20j%27ai%20besoin%20d%27aide.";
@@ -16,6 +17,7 @@ export default function ContactPage() {
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [chatOpen, setChatOpen] = useState(false);
 
   const subjects = [
     t("contact_subj_general"),
@@ -98,7 +100,28 @@ export default function ContactPage() {
       <div className="max-w-5xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Contact info */}
         <div className="space-y-4">
-          {contactInfo.map((info) => (
+          {/* Support card — clickable, opens the live chat widget */}
+          <button
+            type="button"
+            onClick={() => setChatOpen(true)}
+            className="w-full text-left bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-5 hover:border-dz-green hover:shadow-md transition-all group"
+          >
+            <div className="w-9 h-9 bg-dz-green/10 text-dz-green rounded-lg flex items-center justify-center mb-3 group-hover:bg-dz-green group-hover:text-white transition-colors">
+              {contactInfo[0].icon}
+            </div>
+            <p className="text-xs text-dz-gray-400 font-medium uppercase tracking-wide">{contactInfo[0].title}</p>
+            <p className="font-semibold text-dz-gray-900 mt-0.5">{contactInfo[0].value}</p>
+            <p className="text-xs text-dz-gray-400 mt-0.5">{contactInfo[0].sub}</p>
+            <p className="text-xs text-dz-green font-semibold mt-2 flex items-center gap-1">
+              {t("support_open_cta")}
+              <svg className="w-3.5 h-3.5 transition-transform group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </p>
+          </button>
+
+          {/* Other info cards stay static */}
+          {contactInfo.slice(1).map((info) => (
             <div key={info.title} className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-5">
               <div className="w-9 h-9 bg-dz-green/10 text-dz-green rounded-lg flex items-center justify-center mb-3">{info.icon}</div>
               <p className="text-xs text-dz-gray-400 font-medium uppercase tracking-wide">{info.title}</p>
@@ -238,6 +261,13 @@ export default function ContactPage() {
           )}
         </div>
       </div>
+
+      <SupportChatWidget
+        open={chatOpen}
+        onClose={() => setChatOpen(false)}
+        initialName={name}
+        initialEmail={email}
+      />
     </div>
   );
 }

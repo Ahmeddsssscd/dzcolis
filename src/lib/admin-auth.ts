@@ -142,6 +142,7 @@ export type AdminAction =
   // support+
   | "disputes.resolve"
   | "users.message"
+  | "support.respond"
   // moderator+
   | "kyc.review"
   | "courier_applications.review"
@@ -167,6 +168,7 @@ export const ACTION_MIN_ROLE: Record<AdminAction, AdminRole> = {
 
   "disputes.resolve":             "support",
   "users.message":                "support",
+  "support.respond":              "support",
 
   "kyc.review":                   "moderator",
   "courier_applications.review": "moderator",
