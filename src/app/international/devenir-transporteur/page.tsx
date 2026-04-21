@@ -4,6 +4,7 @@ import { useAuth } from "@/lib/context";
 import { EUROPEAN_COUNTRIES, ALGERIAN_CITIES } from "@/lib/data";
 import Link from "next/link";
 import PhoneInput from "@/components/PhoneInput";
+import { formatPhone } from "@/lib/phone";
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -116,7 +117,7 @@ export default function DevenirTransporteurInternationalPage() {
                 <svg className="w-4 h-4 text-dz-green flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                 </svg>
-                Appel sur <span className="font-medium">{user.phone || "votre numéro enregistré"}</span>
+                Appel sur <span className="font-medium">{formatPhone(user.phone) || "votre numéro enregistré"}</span>
               </div>
               <div className="flex items-center gap-3 text-sm text-dz-gray-600">
                 <svg className="w-4 h-4 text-dz-green flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -637,7 +638,7 @@ export default function DevenirTransporteurInternationalPage() {
                   {[
                     { label: "Nom complet", value: `${form.firstName} ${form.lastName}` },
                     { label: "Email", value: form.email },
-                    { label: "Téléphone", value: form.phone || "—" },
+                    { label: "Téléphone", value: formatPhone(form.phone) || "—" },
                     { label: "Date de naissance", value: form.dateOfBirth || "—" },
                     { label: "Adresse Europe", value: form.europeanAddress || "—" },
                     { label: "Passeport N°", value: form.passportNumber || "—" },

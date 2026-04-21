@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
 import { useAuth, useListings, useBookings, useToast } from "@/lib/context";
 import ReviewModal from "@/components/ReviewModal";
+import { formatPhone } from "@/lib/phone";
 
 // ─── Trust Score helpers ───────────────────────────────────────────────────
 
@@ -621,7 +622,7 @@ export default function DashboardPage() {
                           </div>
                           <p className="text-xs text-dz-gray-500">
                             Destinataire : <span className="font-medium">{String(b.recipient_name ?? String(b.sender_name ?? "—"))}</span>
-                            {b.recipient_phone ? ` · ${String(b.recipient_phone)}` : ""}
+                            {b.recipient_phone ? ` · ${formatPhone(String(b.recipient_phone))}` : ""}
                           </p>
                           {(b.pickup_address as string | null) && (
                             <p className="text-xs text-dz-gray-400 mt-0.5">📍 {String(b.pickup_address)}</p>
@@ -693,7 +694,7 @@ export default function DashboardPage() {
                           </div>
                           <p className="text-xs text-dz-gray-500">
                             De : <span className="font-medium">{String(b.sender_name ?? "—")}</span>
-                            {b.sender_phone ? ` · ${String(b.sender_phone)}` : ""}
+                            {b.sender_phone ? ` · ${formatPhone(String(b.sender_phone))}` : ""}
                             {" · "}{Number(b.weight ?? 0)}kg · {String(b.content ?? "")}
                           </p>
                           <p className="text-xs text-dz-gray-400 mt-0.5">

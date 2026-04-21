@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { adminSupabase } from "@/lib/supabase/admin";
+import { formatPhone } from "@/lib/phone";
 import PDFDocument from "pdfkit";
 
 export const runtime = "nodejs";
@@ -106,7 +107,7 @@ export async function GET(
     drawSection(doc, isSender ? "Vos informations (expéditeur)" : "Vos informations (transporteur)");
     const me = isSender ? sender : transporter;
     drawKV(doc, "Nom", `${me?.first_name ?? ""} ${me?.last_name ?? ""}`.trim() || "—");
-    drawKV(doc, "Téléphone", me?.phone ?? "—");
+    drawKV(doc, "Téléphone", formatPhone(me?.phone) || "—");
     drawKV(doc, "E-mail", me?.email ?? "—");
     doc.moveDown(0.8);
 
@@ -114,7 +115,7 @@ export async function GET(
     drawSection(doc, isSender ? "Transporteur" : "Expéditeur");
     const other = isSender ? transporter : sender;
     drawKV(doc, "Nom", other ? `${other.first_name ?? ""} ${other.last_name ?? ""}`.trim() || "—" : "—");
-    drawKV(doc, "Téléphone", other?.phone ?? "—");
+    drawKV(doc, "Téléphone", formatPhone(other?.phone) || "—");
     // E-mail of the counterparty is intentionally omitted — privacy.
     doc.moveDown(0.8);
 

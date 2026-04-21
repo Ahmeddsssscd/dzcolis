@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ALGERIAN_CITIES } from "@/lib/data";
 import { useAuth } from "@/lib/context";
+import PhoneInput from "@/components/PhoneInput";
 
 interface Livreur {
   id: string;
@@ -285,7 +286,11 @@ function ApplyModal({ onClose, prefill }: { onClose: () => void; prefill?: Apply
                     className={`${inputCls} ${prefill?.email ? "bg-slate-50 text-slate-500 cursor-not-allowed" : ""}`} />
                 </Field>
                 <Field label="Téléphone" required>
-                  <input type="tel" name="phone" value={form.phone} onChange={handleChange} required placeholder="0555 000 000" className={inputCls} />
+                  <PhoneInput
+                    value={form.phone}
+                    onChange={(v) => set("phone", v)}
+                    required
+                  />
                 </Field>
               </div>
 

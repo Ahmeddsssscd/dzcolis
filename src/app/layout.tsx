@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import ToastContainer from "@/components/Toast";
 import ThemeProvider from "@/components/ThemeProvider";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import FloatingSupportButton from "@/components/FloatingSupportButton";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { Analytics } from "@vercel/analytics/next";
@@ -102,6 +103,7 @@ export default function RootLayout({
               <Footer />
               <ToastContainer />
               <WhatsAppButton />
+              <FloatingSupportButton />
               <PWAInstallPrompt />
               <LanguageSwitcher />
             </AppProvider>

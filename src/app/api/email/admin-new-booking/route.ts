@@ -3,6 +3,7 @@ import { adminClient as adminSb } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { generateBookingProofPdf } from "@/lib/booking-pdf";
 import { sendAdminNewBookingEmail } from "@/lib/email";
+import { formatPhone } from "@/lib/phone";
 
 /**
  * Fires the "new booking — here is your signable Bon de livraison PDF"
@@ -76,7 +77,7 @@ export async function POST(req: NextRequest) {
       toCity: booking.listing?.to_city ?? "",
       senderName: `${senderProfile?.first_name ?? ""} ${senderProfile?.last_name ?? ""}`.trim() || "—",
       senderEmail: senderAuth?.user?.email ?? "—",
-      senderPhone: senderProfile?.phone ?? "—",
+      senderPhone: formatPhone(senderProfile?.phone) || "—",
       transporterName,
       transporterEmail,
       content: booking.content ?? "—",

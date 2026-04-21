@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth, useListings, useBookings, useToast } from "@/lib/context";
+import PhoneInput from "@/components/PhoneInput";
 
 const STEPS = ["Résumé", "Détails colis", "Paiement"];
 
@@ -64,18 +65,9 @@ export default function ReserverPage() {
     prohibited: false,
     signature: "",
   });
-  const [phoneCountry, setPhoneCountry] = useState("+213");
   const [paymentMethod, setPaymentMethod] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
 
-  const PHONE_COUNTRIES = [
-    { code: "+213", flag: "🇩🇿", label: "Algérie (+213)" },
-    { code: "+33",  flag: "🇫🇷", label: "France (+33)" },
-    { code: "+34",  flag: "🇪🇸", label: "Espagne (+34)" },
-    { code: "+39",  flag: "🇮🇹", label: "Italie (+39)" },
-    { code: "+49",  flag: "🇩🇪", label: "Allemagne (+49)" },
-    { code: "+32",  flag: "🇧🇪", label: "Belgique (+32)" },
-  ];
   const [submitting, setSubmitting] = useState(false);
   const [commissionRate, setCommissionRate] = useState(0.10); // default 10%
   const [minBookingAmount, setMinBookingAmount] = useState(0);
@@ -175,7 +167,7 @@ export default function ReserverPage() {
       content:         parcel.content,
       pickup_address:  parcel.pickupAddress,
       recipient_name:  parcel.recipientName,
-      recipient_phone: `${phoneCountry} ${parcel.recipientPhone}`.trim(),
+      recipient_phone: parcel.recipientPhone.trim(),
       instructions:    parcel.instructions || undefined,
       total_amount:    total,
     });
@@ -380,21 +372,11 @@ export default function ReserverPage() {
                     </div>
                     <div>
                       <label className="block text-xs font-semibold text-dz-gray-600 mb-1.5">Téléphone *</label>
-                      <div className="flex gap-1.5">
-                        <select
-                          value={phoneCountry}
-                          onChange={e => setPhoneCountry(e.target.value)}
-                          className="px-2 py-2.5 border border-dz-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green bg-white shrink-0"
-                        >
-                          {PHONE_COUNTRIES.map(c => (
-                            <option key={c.code} value={c.code}>{c.flag} {c.code}</option>
-                          ))}
-                        </select>
-                        <input type="tel" value={parcel.recipientPhone}
-                          onChange={e => updateParcel("recipientPhone", e.target.value)}
-                          placeholder="5XX XXX XXX"
-                          className="flex-1 px-3 py-2.5 border border-dz-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green"/>
-                      </div>
+                      <PhoneInput
+                        value={parcel.recipientPhone}
+                        onChange={v => updateParcel("recipientPhone", v)}
+                        required
+                      />
                     </div>
                   </div>
                 </div>
