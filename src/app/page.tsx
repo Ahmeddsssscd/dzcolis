@@ -608,21 +608,23 @@ export default function Home() {
                 {t("cta_transport")}
               </Link>
             </div>
+            {/* Mobile app "coming soon" — we avoid dead `#` links; badges
+                are non-interactive until the stores go live.                 */}
             <div className="mt-12 flex flex-col items-center gap-4">
               <p className="text-blue-200/60 text-sm">{t("cta_soon")}</p>
-              <div className="flex flex-wrap gap-3 justify-center">
-                <a href="#" className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-colors text-sm">
+              <div className="flex flex-wrap gap-3 justify-center" aria-hidden="true">
+                <span className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl border border-white/20 bg-white/10 text-white/90 text-sm select-none">
                   <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
                     <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
                   </svg>
                   App Store
-                </a>
-                <a href="#" className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl border border-white/20 bg-white/10 text-white hover:bg-white/20 transition-colors text-sm">
+                </span>
+                <span className="inline-flex items-center gap-3 px-5 py-2.5 rounded-xl border border-white/20 bg-white/10 text-white/90 text-sm select-none">
                   <svg viewBox="0 0 24 24" className="w-5 h-5" fill="currentColor">
                     <path d="M3.18 23.76c.3.17.64.24.99.19l12.81-7.4-2.83-2.83-10.97 10.04zM.23 1.46C.09 1.8.01 2.19.01 2.62v18.76c0 .43.08.82.22 1.16l.12.11 10.51-10.51v-.23L.35 1.35l-.12.11zM20.75 10.4l-2.8-1.62-3.17 3.17 3.17 3.17 2.82-1.63c.8-.46.8-1.22-.02-1.69zM4.17.24l12.81 7.4-2.83 2.83L3.18.43C3.48.05 3.87-.02 4.17.24z"/>
                   </svg>
                   Google Play
-                </a>
+                </span>
               </div>
             </div>
           </Fade>

@@ -158,8 +158,8 @@ export default function AnnoncesPage() {
     <div className="bg-dz-gray-50 min-h-screen">
       <div className="bg-white border-b border-dz-gray-200 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="text-2xl font-bold text-dz-gray-800">{t("annonces_title")}</h1>
-          <p className="text-dz-gray-500 mt-1">{t("annonces_subtitle")}</p>
+          <h1 className="text-3xl md:text-4xl font-bold text-dz-gray-800">{t("annonces_title")}</h1>
+          <p className="text-dz-gray-500 mt-2">{t("annonces_subtitle")}</p>
         </div>
       </div>
 

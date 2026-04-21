@@ -330,11 +330,12 @@ function ApplyModal({ onClose, prefill }: { onClose: () => void; prefill?: Apply
                 </Field>
               </div>
 
-              {/* Vehicle photo */}
+              {/* Vehicle photo — wrap in <label> so the native file input
+                  drives click + keyboard activation (space/enter). No
+                  onClick/ref needed; a11y tree stays clean. */}
               <Field label="Photo du véhicule" required>
-                <div
-                  onClick={() => photoInputRef.current?.click()}
-                  className={`relative border-2 border-dashed rounded-xl cursor-pointer transition-all overflow-hidden group ${
+                <label
+                  className={`relative block border-2 border-dashed rounded-xl cursor-pointer transition-all overflow-hidden group focus-within:ring-2 focus-within:ring-dz-green/30 ${
                     photoPreview ? "border-dz-green" : "border-slate-200 hover:border-dz-green/40"
                   }`}
                 >
@@ -342,7 +343,7 @@ function ApplyModal({ onClose, prefill }: { onClose: () => void; prefill?: Apply
                     <div className="relative">
                       <Image
                         src={photoPreview}
-                        alt="Aperçu"
+                        alt="Aperçu du véhicule"
                         width={600}
                         height={160}
                         unoptimized
@@ -359,8 +360,15 @@ function ApplyModal({ onClose, prefill }: { onClose: () => void; prefill?: Apply
                       <p className="text-xs text-slate-300">JPG ou PNG, maximum 8 Mo</p>
                     </div>
                   )}
-                  <input ref={photoInputRef} type="file" accept="image/*" onChange={handlePhoto} className="sr-only" />
-                </div>
+                  <input
+                    ref={photoInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handlePhoto}
+                    aria-label="Téléverser une photo du véhicule"
+                    className="sr-only"
+                  />
+                </label>
               </Field>
 
               {/* Zones */}
@@ -383,15 +391,25 @@ function ApplyModal({ onClose, prefill }: { onClose: () => void; prefill?: Apply
                   className={`${inputCls} resize-none`} />
               </Field>
 
-              {/* Availability toggle */}
-              <label className="flex items-center gap-3.5 py-3 px-4 rounded-lg border border-slate-200 hover:border-slate-300 cursor-pointer transition-colors">
-                <div
-                  className={`w-9 h-5 rounded-full relative transition-colors duration-200 flex-shrink-0 ${form.is_available ? "bg-dz-green" : "bg-slate-200"}`}
-                  onClick={() => set("is_available", !form.is_available)}
+              {/* Availability toggle — the <label> wraps the real checkbox
+                  so click + keyboard (space) work natively. The visual
+                  pill is purely presentational. */}
+              <label className="flex items-center gap-3.5 py-3 px-4 rounded-lg border border-slate-200 hover:border-slate-300 cursor-pointer transition-colors focus-within:ring-2 focus-within:ring-dz-green/30">
+                <input
+                  type="checkbox"
+                  name="is_available"
+                  checked={form.is_available}
+                  onChange={handleChange}
+                  className="sr-only peer"
+                />
+                <span
+                  aria-hidden="true"
+                  className={`w-9 h-5 rounded-full relative transition-colors duration-200 flex-shrink-0 ${
+                    form.is_available ? "bg-dz-green" : "bg-slate-200"
+                  }`}
                 >
                   <span className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow-sm transition-transform duration-200 ${form.is_available ? "translate-x-4" : "translate-x-0.5"}`} />
-                  <input type="checkbox" name="is_available" checked={form.is_available} onChange={handleChange} className="sr-only" />
-                </div>
+                </span>
                 <div>
                   <p className="text-sm font-medium text-slate-800">Disponible immédiatement</p>
                   <p className="text-xs text-slate-400">Votre profil s&apos;affiche en tête avec l&apos;indicateur de disponibilité</p>
