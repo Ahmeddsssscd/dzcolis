@@ -271,3 +271,100 @@ export async function sendDeliveryConfirmedEmail(to: string, data: {
     `),
   });
 }
+
+/**
+ * Contact-form submissions from the public /contact page.
+ *
+ * Delivers the message to our support inbox (CONTACT_EMAIL, default
+ * `contact@waselli.com`) with the submitter's email as `replyTo`, so a
+ * support agent hitting Reply in any mail client lands on the sender —
+ * not on our no-reply mailbox. We never set `from` to the submitter
+ * (that would fail DMARC/SPF on our domain and bounce).
+ */
+export async function sendContactEmail(data: {
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+}) {
+  const to = process.env.CONTACT_EMAIL ?? "contact@waselli.com";
+  // Preserve line breaks from the textarea without giving raw HTML a path in.
+  const messageHtml = esc(data.message).replace(/\n/g, "<br>");
+  await resend.emails.send({
+    from: FROM,
+    to,
+    replyTo: data.email,
+    subject: `[Contact] ${data.subject} — ${data.name}`,
+    html: baseHtml(`
+      <p><strong>Nouveau message depuis le formulaire de contact</strong></p>
+      <div class="card">
+        <p><strong>Nom :</strong> ${esc(data.name)}</p>
+        <p><strong>Email :</strong> ${esc(data.email)}</p>
+        <p><strong>Sujet :</strong> ${esc(data.subject)}</p>
+      </div>
+      <p style="margin-top:16px;"><strong>Message :</strong></p>
+      <div class="card" style="white-space:pre-wrap;">${messageHtml}</div>
+      <p style="font-size:12px;color:#6b7280;margin-top:20px;">
+        Répondez directement à cet email pour contacter l'expéditeur — le champ Reply-To est configuré sur
+        <strong>${esc(data.email)}</strong>.
+      </p>
+    `),
+  });
+}
+
+/**
+ * Admin alert when a sender creates a booking. Carries the Bon de
+ * livraison PDF as an attachment so ops can download/print it without
+ * opening the admin panel.
+ *
+ * Goes to ADMIN_NOTIFICATION_EMAIL (falling back to ADMIN_EMAIL, then
+ * to contact@waselli.com as a last resort) so the right people are
+ * paged regardless of which env var convention is in use.
+ */
+export async function sendAdminNewBookingEmail(data: {
+  bookingRef: string;
+  fromCity: string;
+  toCity: string;
+  senderName: string;
+  senderEmail: string;
+  senderPhone: string;
+  transporterName: string;
+  transporterEmail: string;
+  content: string;
+  weight: number;
+  totalAmount: number;
+  recipientName: string;
+  recipientPhone: string;
+  pdfBuffer: Buffer;
+  pdfFilename: string;
+}) {
+  const to =
+    process.env.ADMIN_NOTIFICATION_EMAIL ??
+    process.env.ADMIN_EMAIL ??
+    "contact@waselli.com";
+
+  await resend.emails.send({
+    from: FROM,
+    to,
+    subject: `📬 Nouvelle réservation — ${data.bookingRef}`,
+    html: baseHtml(`
+      <p><strong>Une nouvelle réservation vient d'être créée.</strong> Le bon de livraison est en pièce jointe (à signer par l'expéditeur et le transporteur lors de la prise en charge).</p>
+      <div class="card">
+        <p><strong>Référence :</strong> <span class="ref">${esc(data.bookingRef)}</span></p>
+        <p style="margin-top:12px"><strong>Trajet :</strong> ${esc(data.fromCity)} → ${esc(data.toCity)}</p>
+        <p><strong>Expéditeur :</strong> ${esc(data.senderName)} · ${esc(data.senderEmail)} · ${esc(data.senderPhone)}</p>
+        <p><strong>Transporteur :</strong> ${esc(data.transporterName)} · ${esc(data.transporterEmail)}</p>
+        <p><strong>Destinataire :</strong> ${esc(data.recipientName)} · ${esc(data.recipientPhone)}</p>
+        <p><strong>Contenu :</strong> ${esc(data.content)} (${esc(data.weight)} kg)</p>
+        <p><strong>Montant :</strong> ${esc(data.totalAmount.toLocaleString())} DA</p>
+      </div>
+      <a href="${esc(APP_URL)}/admin/expeditions" class="btn">Ouvrir dans l'admin →</a>
+    `),
+    attachments: [
+      {
+        filename: data.pdfFilename,
+        content: data.pdfBuffer,
+      },
+    ],
+  });
+}

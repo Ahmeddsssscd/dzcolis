@@ -408,6 +408,14 @@ export function AppProvider({ children }: { children: ReactNode }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bookingId: booking.id }),
       }).catch(() => {});
+
+      // Admin alert with the signable "Bon de livraison" PDF attached.
+      // Fire-and-forget: the booking must succeed even if email is down.
+      fetch("/api/email/admin-new-booking", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId: booking.id }),
+      }).catch(() => {});
     }
 
     // Send booking confirmation email to sender (fire and forget)

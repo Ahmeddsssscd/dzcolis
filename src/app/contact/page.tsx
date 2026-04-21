@@ -15,6 +15,7 @@ export default function ContactPage() {
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   const subjects = [
     t("contact_subj_general"),
@@ -47,13 +48,34 @@ export default function ContactPage() {
     },
   ];
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (sending) return;
     setSending(true);
-    setTimeout(() => {
-      setSending(false);
+    setErrorMsg(null);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, subject, message }),
+      });
+      if (!res.ok) {
+        // Prefer server-provided message (rate-limit text, validation), fall
+        // back to i18n generic so the user never sees a raw fetch failure.
+        let serverMsg = "";
+        try {
+          const body = await res.json();
+          if (body && typeof body.error === "string") serverMsg = body.error;
+        } catch { /* body wasn't JSON — ignore */ }
+        setErrorMsg(serverMsg || t("contact_send_error"));
+        return;
+      }
       setSent(true);
-    }, 800);
+    } catch {
+      setErrorMsg(t("contact_send_error"));
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -129,7 +151,7 @@ export default function ContactPage() {
                 {t("contact_sent_desc")}
               </p>
               <button
-                onClick={() => { setSent(false); setName(""); setEmail(""); setSubject(""); setMessage(""); }}
+                onClick={() => { setSent(false); setName(""); setEmail(""); setSubject(""); setMessage(""); setErrorMsg(null); }}
                 className="text-sm text-dz-green font-semibold hover:underline"
               >
                 {t("contact_send_another")}
@@ -138,6 +160,15 @@ export default function ContactPage() {
           ) : (
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-6 space-y-4">
               <h2 className="font-bold text-dz-gray-900 text-lg mb-2">{t("contact_form_title")}</h2>
+
+              {errorMsg && (
+                <div
+                  role="alert"
+                  className="bg-red-50 border border-red-200 text-red-800 text-sm rounded-xl px-4 py-3"
+                >
+                  {errorMsg}
+                </div>
+              )}
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>

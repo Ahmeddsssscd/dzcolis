@@ -18,6 +18,20 @@ const nextConfig: NextConfig = {
     ],
   },
 
+  // pdfkit loads its built-in fonts (Helvetica, Helvetica-Bold, etc.) at
+  // runtime from AFM files shipped inside the package. Vercel's output
+  // tracer doesn't see these `fs.readFileSync(path.join(__dirname,
+  // 'data', ...))` calls, so without this include the
+  // /api/admin/bookings/:id/proof-pdf and /api/email/admin-new-booking
+  // routes crash with "ENOENT Helvetica.afm" in production. The glob
+  // is scoped to the two routes that actually generate PDFs so we
+  // don't inflate every other lambda.
+  outputFileTracingIncludes: {
+    "/api/admin/bookings/*/proof-pdf":  ["./node_modules/pdfkit/js/data/**/*"],
+    "/api/email/admin-new-booking":     ["./node_modules/pdfkit/js/data/**/*"],
+    "/api/bookings/*/receipt-pdf":      ["./node_modules/pdfkit/js/data/**/*"],
+  },
+
   async headers() {
     return [
       {
