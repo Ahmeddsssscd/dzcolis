@@ -139,10 +139,12 @@ export type AdminAction =
   | "disputes.view"
   | "kyc.view"
   | "audit.view"
+  | "contact.view"
   // support+
   | "disputes.resolve"
   | "users.message"
   | "support.respond"
+  | "contact.manage"
   // moderator+
   | "kyc.review"
   | "courier_applications.review"
@@ -165,10 +167,12 @@ export const ACTION_MIN_ROLE: Record<AdminAction, AdminRole> = {
   "disputes.view":                "viewer",
   "kyc.view":                     "viewer",
   "audit.view":                   "viewer",
+  "contact.view":                 "viewer",
 
   "disputes.resolve":             "support",
   "users.message":                "support",
   "support.respond":              "support",
+  "contact.manage":               "support",
 
   "kyc.review":                   "moderator",
   "courier_applications.review": "moderator",

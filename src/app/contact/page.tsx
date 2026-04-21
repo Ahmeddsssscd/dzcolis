@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useI18n } from "@/lib/i18n";
+import { useAuth } from "@/lib/context";
 import SupportChatWidget from "@/components/SupportChatWidget";
 
 const WHATSAPP_URL =
@@ -10,14 +11,27 @@ const WHATSAPP_URL =
 
 export default function ContactPage() {
   const { t } = useI18n();
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const { user, authLoading } = useAuth();
+
+  // Name/email are derived from the logged-in account — not user-editable.
+  // This is both a spam control (prevents anonymous floods) and a
+  // data-integrity control (the reply-to we forward to Resend is
+  // guaranteed to be an address the submitter actually controls).
+  const accountName = user ? `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || (user.email ?? "") : "";
+  const accountEmail = user?.email ?? "";
+
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [sent, setSent] = useState(false);
   const [sending, setSending] = useState(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [chatOpen, setChatOpen] = useState(false);
+
+  // Clear any previous error/success when the user navigates away and back
+  // without a refresh (e.g. finishes login in another tab and returns).
+  useEffect(() => {
+    if (!user && sent) setSent(false);
+  }, [user, sent]);
 
   const subjects = [
     t("contact_subj_general"),
@@ -53,21 +67,24 @@ export default function ContactPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (sending) return;
+    if (!user) return; // UI prevents this, belt-and-suspenders.
     setSending(true);
     setErrorMsg(null);
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, subject, message }),
+        // `name` comes from the account; `email` is forced server-side
+        // to the session user's address, so no point in sending it.
+        body: JSON.stringify({ name: accountName, subject, message }),
       });
       if (!res.ok) {
-        // Prefer server-provided message (rate-limit text, validation), fall
-        // back to i18n generic so the user never sees a raw fetch failure.
         let serverMsg = "";
         try {
           const body = await res.json();
-          if (body && typeof body.error === "string") serverMsg = body.error;
+          if (body && typeof body.error === "string") {
+            serverMsg = typeof body.message === "string" ? body.message : body.error;
+          }
         } catch { /* body wasn't JSON — ignore */ }
         setErrorMsg(serverMsg || t("contact_send_error"));
         return;
@@ -174,15 +191,53 @@ export default function ContactPage() {
                 {t("contact_sent_desc")}
               </p>
               <button
-                onClick={() => { setSent(false); setName(""); setEmail(""); setSubject(""); setMessage(""); setErrorMsg(null); }}
+                onClick={() => { setSent(false); setSubject(""); setMessage(""); setErrorMsg(null); }}
                 className="text-sm text-dz-green font-semibold hover:underline"
               >
                 {t("contact_send_another")}
               </button>
             </div>
+          ) : authLoading ? (
+            <div className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-10 text-center text-dz-gray-400 text-sm">
+              …
+            </div>
+          ) : !user ? (
+            <div className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-8 text-center">
+              <div className="w-14 h-14 bg-dz-green/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <svg className="w-7 h-7 text-dz-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 11c0-1.657 1.343-3 3-3s3 1.343 3 3-1.343 3-3 3-3-1.343-3-3zm-8 0c0-1.657 1.343-3 3-3s3 1.343 3 3-1.343 3-3 3-3-1.343-3-3z M3 20a6 6 0 0112 0M14 20a4 4 0 018 0" />
+                </svg>
+              </div>
+              <h2 className="text-xl font-bold text-dz-gray-900 mb-2">{t("contact_login_required_title")}</h2>
+              <p className="text-dz-gray-500 mb-6 text-sm max-w-sm mx-auto">
+                {t("contact_login_required_desc")}
+              </p>
+              <div className="flex items-center justify-center gap-3">
+                <Link
+                  href="/connexion?redirect=/contact"
+                  className="bg-dz-green text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-dz-green-dark transition-colors"
+                >
+                  {t("nav_login")}
+                </Link>
+                <Link
+                  href="/inscription?redirect=/contact"
+                  className="border border-dz-gray-200 text-dz-gray-700 px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-dz-gray-50 transition-colors"
+                >
+                  {t("nav_register")}
+                </Link>
+              </div>
+            </div>
           ) : (
             <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-sm border border-dz-gray-100 p-6 space-y-4">
               <h2 className="font-bold text-dz-gray-900 text-lg mb-2">{t("contact_form_title")}</h2>
+
+              {/* Identity card — shows who the message will be attributed to.
+                  Purposefully locked so there's no ambiguity about who's asking. */}
+              <div className="bg-dz-gray-50 border border-dz-gray-100 rounded-xl px-4 py-3 text-sm">
+                <div className="text-xs text-dz-gray-500 mb-0.5">{t("contact_sending_as")}</div>
+                <div className="font-semibold text-dz-gray-900">{accountName || accountEmail}</div>
+                <div className="text-xs text-dz-gray-500">{accountEmail}</div>
+              </div>
 
               {errorMsg && (
                 <div
@@ -192,31 +247,6 @@ export default function ContactPage() {
                   {errorMsg}
                 </div>
               )}
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("contact_fullname")}</label>
-                  <input
-                    type="text"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    required
-                    placeholder={t("contact_fullname_ph")}
-                    className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("contact_email_label")}</label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    placeholder={t("contact_email_ph")}
-                    className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green"
-                  />
-                </div>
-              </div>
 
               <div>
                 <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("contact_subject_label")}</label>
@@ -241,7 +271,7 @@ export default function ContactPage() {
                   required
                   rows={6}
                   placeholder={t("contact_message_ph")}
-                  className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green resize-none"
+                  className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green resize-none placeholder:text-dz-gray-300"
                 />
               </div>
 
@@ -265,8 +295,8 @@ export default function ContactPage() {
       <SupportChatWidget
         open={chatOpen}
         onClose={() => setChatOpen(false)}
-        initialName={name}
-        initialEmail={email}
+        initialName={accountName}
+        initialEmail={accountEmail}
       />
     </div>
   );

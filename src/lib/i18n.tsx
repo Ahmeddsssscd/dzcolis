@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect, type ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, useCallback, useMemo, type ReactNode } from "react";
 
 export type Lang = "fr" | "ar" | "en";
 
@@ -623,6 +623,9 @@ const translations = {
     contact_subj_business:     "Solutions Business",
     contact_subj_press:        "Presse & partenariats",
     contact_subj_other:        "Autre",
+    contact_sending_as:        "Envoi en tant que",
+    contact_login_required_title: "Compte requis",
+    contact_login_required_desc:  "Pour éviter le spam, seuls les utilisateurs connectés peuvent nous contacter via ce formulaire. Connectez-vous ou créez un compte.",
 
     // ── Live support chat (visitor widget) ──
     support_open_cta:              "Ouvrir le chat en direct →",
@@ -1305,6 +1308,9 @@ const translations = {
     contact_subj_business:     "Business Solutions",
     contact_subj_press:        "Press & partnerships",
     contact_subj_other:        "Other",
+    contact_sending_as:        "Sending as",
+    contact_login_required_title: "Account required",
+    contact_login_required_desc:  "To prevent spam, only signed-in users can contact us through this form. Please sign in or create an account.",
 
     // ── Live support chat (visitor widget) ──
     support_open_cta:              "Open live chat →",
@@ -1987,6 +1993,9 @@ const translations = {
     contact_subj_business:     "حلول الأعمال",
     contact_subj_press:        "صحافة وشراكات",
     contact_subj_other:        "أخرى",
+    contact_sending_as:        "الإرسال باسم",
+    contact_login_required_title: "يتطلب حسابًا",
+    contact_login_required_desc:  "لمنع الرسائل غير المرغوب فيها، يمكن للمستخدمين المسجّلين فقط التواصل معنا عبر هذا النموذج. يُرجى تسجيل الدخول أو إنشاء حساب.",
 
     // ── Live support chat (visitor widget) ──
     support_open_cta:              "فتح الدردشة المباشرة ←",
@@ -2091,25 +2100,40 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
     if (saved && ["fr", "ar", "en"].includes(saved)) setLangState(saved);
   }, []);
 
-  const setLang = (l: Lang) => {
+  const setLang = useCallback((l: Lang) => {
     setLangState(l);
     localStorage.setItem("waselli_lang", l);
     document.documentElement.lang = l;
     document.documentElement.dir = l === "ar" ? "rtl" : "ltr";
-  };
+  }, []);
 
   useEffect(() => {
     document.documentElement.lang = lang;
     document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
   }, [lang]);
 
-  const t = (key: TranslationKey): string =>
-    (translations[lang] as Record<string, string>)[key] ??
-    (translations.fr as Record<string, string>)[key] ??
-    key;
+  // `t` must be stable across renders when `lang` doesn't change —
+  // it flows through React context to thousands of consumers, and
+  // several of them put `t` in effect/callback dependency arrays
+  // (e.g. /admin/journal polling). A fresh function identity every
+  // render would re-run every such effect.
+  const t = useCallback(
+    (key: TranslationKey): string =>
+      (translations[lang] as Record<string, string>)[key] ??
+      (translations.fr as Record<string, string>)[key] ??
+      key,
+    [lang]
+  );
+
+  const ctxValue = useMemo(
+    () => ({ lang, setLang, t, isRTL: lang === "ar" }),
+    // `setLang` is a stable useState setter so it's safe to omit. `t`
+    // and `lang` are the actual drivers of context freshness.
+    [lang, t, setLang]
+  );
 
   return (
-    <I18nContext.Provider value={{ lang, setLang, t, isRTL: lang === "ar" }}>
+    <I18nContext.Provider value={ctxValue}>
       {children}
     </I18nContext.Provider>
   );

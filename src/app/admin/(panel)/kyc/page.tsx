@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
+import { formatPhone } from "@/lib/phone";
 
 interface KycRecord {
   id: string;
@@ -123,7 +124,7 @@ export default function KYCPage() {
                   </div>
                   <div className="flex-1">
                     <h3 className="font-semibold text-gray-900 text-base">{u.name}</h3>
-                    <p className="text-gray-500 text-sm">{u.phone}</p>
+                    <p className="text-gray-500 text-sm">{formatPhone(u.phone) || "—"}</p>
                     <p className="text-gray-400 text-xs">{u.wilaya}</p>
                   </div>
                   <div className="text-right">

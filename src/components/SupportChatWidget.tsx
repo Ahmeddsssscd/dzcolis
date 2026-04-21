@@ -214,9 +214,9 @@ export default function SupportChatWidget({ open, onClose, initialName = "", ini
         aria-hidden
       />
 
-      <div className="relative bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col h-[85vh] sm:h-[600px]">
+      <div className="relative bg-[var(--card-bg)] w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl shadow-2xl flex flex-col h-[85vh] sm:h-[600px] border border-[var(--card-border)]">
         {/* Header */}
-        <div className="flex items-center justify-between px-5 py-4 border-b border-dz-gray-100">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-[var(--card-border)]">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-dz-green/10 text-dz-green flex items-center justify-center">
               <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
@@ -339,10 +339,10 @@ export default function SupportChatWidget({ open, onClose, initialName = "", ini
                 return (
                   <div key={m.id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
                     <div
-                      className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap break-words ${
+                      className={`max-w-[80%] rounded-2xl px-3 py-2 text-sm whitespace-pre-wrap break-words shadow-sm ${
                         isMe
                           ? "bg-dz-green text-white rounded-br-sm"
-                          : "bg-white text-dz-gray-900 border border-dz-gray-100 rounded-bl-sm"
+                          : "bg-white dark:bg-dz-gray-200 text-dz-gray-900 border border-dz-gray-200 rounded-bl-sm"
                       }`}
                     >
                       {m.body}
@@ -354,7 +354,7 @@ export default function SupportChatWidget({ open, onClose, initialName = "", ini
 
             {/* Composer */}
             {chat?.status === "closed" ? (
-              <div className="p-4 border-t border-dz-gray-100 bg-dz-gray-50 text-center space-y-2">
+              <div className="p-4 border-t border-[var(--card-border)] bg-dz-gray-50 text-center space-y-2">
                 <p className="text-sm text-dz-gray-500">{t("support_closed_notice")}</p>
                 <button
                   onClick={handleNewChat}
@@ -364,7 +364,7 @@ export default function SupportChatWidget({ open, onClose, initialName = "", ini
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSend} className="p-3 border-t border-dz-gray-100 flex items-end gap-2">
+              <form onSubmit={handleSend} className="p-3 border-t border-[var(--card-border)] flex items-end gap-2">
                 <textarea
                   value={draft}
                   onChange={(e) => setDraft(e.target.value)}

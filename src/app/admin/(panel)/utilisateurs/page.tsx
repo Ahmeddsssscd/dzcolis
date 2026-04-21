@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { formatPhone } from "@/lib/phone";
 
 type Statut = "actif" | "suspendu" | "en_attente_kyc";
 
@@ -201,7 +202,7 @@ export default function UtilisateursPage() {
                         <span className="text-sm font-medium text-gray-900 whitespace-nowrap">{user.nom}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{user.telephone}</td>
+                    <td className="px-4 py-3 text-sm text-gray-600 whitespace-nowrap">{formatPhone(user.telephone) || "—"}</td>
                     <td className="px-4 py-3">
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${

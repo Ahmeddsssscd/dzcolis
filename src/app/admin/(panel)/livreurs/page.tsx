@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
+import { formatPhone } from "@/lib/phone";
 
 interface Application {
   id: string;
@@ -74,6 +75,10 @@ export default function AdminLivreursPage() {
   const [actionLoading, setActionLoading] = useState<string | null>(null);
   const [filterVehicle, setFilterVehicle] = useState("");
   const [filterWilaya, setFilterWilaya]   = useState("");
+  // Multi-select for bulk actions (PDF export, copy phones).
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkLoading, setBulkLoading] = useState(false);
+  const [copyToast, setCopyToast] = useState("");
 
   const fetchApplications = useCallback(async () => {
     try {
@@ -123,6 +128,86 @@ export default function AdminLivreursPage() {
     if (filterWilaya  && !app.wilaya.toLowerCase().includes(filterWilaya.toLowerCase())) return false;
     return true;
   });
+
+  // Keep the selection in sync with the filtered view — if an admin
+  // changes filters, rows that disappeared should leave the selection
+  // so "select all visible" toggles correctly.
+  const filteredIds = useMemo(() => new Set(filtered.map(a => a.id)), [filtered]);
+  const selectedVisible = useMemo(
+    () => filtered.filter(a => selected.has(a.id)),
+    [filtered, selected]
+  );
+
+  function toggleOne(id: string) {
+    setSelected(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+  function toggleAllVisible() {
+    const allVisibleSelected = filtered.length > 0 && filtered.every(a => selected.has(a.id));
+    setSelected(prev => {
+      const next = new Set(prev);
+      if (allVisibleSelected) {
+        for (const id of filteredIds) next.delete(id);
+      } else {
+        for (const id of filteredIds) next.add(id);
+      }
+      return next;
+    });
+  }
+  function clearSelection() { setSelected(new Set()); }
+
+  async function copyAllPhones() {
+    const targets = selectedVisible.length > 0 ? selectedVisible : filtered;
+    const lines = targets
+      .map(a => formatPhone(a.phone))
+      .filter(Boolean);
+    if (lines.length === 0) {
+      setCopyToast("Aucun numéro à copier.");
+      return;
+    }
+    try {
+      await navigator.clipboard.writeText(lines.join("\n"));
+      setCopyToast(`${lines.length} numéro(s) copié(s)`);
+    } catch {
+      setCopyToast("Copie impossible — utilisez l'export PDF.");
+    }
+    setTimeout(() => setCopyToast(""), 2500);
+  }
+
+  async function exportPDF() {
+    const targets = selectedVisible.length > 0 ? selectedVisible : filtered;
+    if (targets.length === 0) {
+      setCopyToast("Aucune candidature à exporter.");
+      setTimeout(() => setCopyToast(""), 2500);
+      return;
+    }
+    setBulkLoading(true);
+    try {
+      const res = await fetch("/api/admin/couriers-pdf", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: targets.map(a => a.id) }),
+      });
+      if (!res.ok) throw new Error();
+      const blob = await res.blob();
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement("a");
+      a.href     = url;
+      a.download = `waselli-transporteurs-${new Date().toISOString().slice(0, 10)}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      setTimeout(() => URL.revokeObjectURL(url), 200);
+    } catch {
+      setCopyToast("Export PDF impossible.");
+      setTimeout(() => setCopyToast(""), 2500);
+    } finally {
+      setBulkLoading(false);
+    }
+  }
 
   const TABS: { key: FilterTab; label: string; count: number }[] = [
     { key: "all",      label: "Tous",        count: stats.total    },
@@ -189,13 +274,33 @@ export default function AdminLivreursPage() {
             </button>
           ))}
         </div>
-        <button
-          onClick={() => exportCSV(filtered)}
-          className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-600 text-sm font-medium rounded-xl hover:bg-slate-50 transition-colors"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
-          Exporter CSV ({filtered.length})
-        </button>
+        <div className="flex gap-2 flex-wrap">
+          <button
+            onClick={() => exportCSV(selectedVisible.length > 0 ? selectedVisible : filtered)}
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-600 text-sm font-medium rounded-xl hover:bg-slate-50 transition-colors"
+            title="Exporter au format CSV"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" /></svg>
+            CSV ({selectedVisible.length > 0 ? selectedVisible.length : filtered.length})
+          </button>
+          <button
+            onClick={exportPDF}
+            disabled={bulkLoading}
+            className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white border border-blue-600 text-sm font-medium rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-60"
+            title="Exporter au format PDF (annuaire)"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 13h6m-3-3v6m5-13H7a2 2 0 00-2 2v14a2 2 0 002 2h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7z" /></svg>
+            {bulkLoading ? "…" : `PDF (${selectedVisible.length > 0 ? selectedVisible.length : filtered.length})`}
+          </button>
+          <button
+            onClick={copyAllPhones}
+            className="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 text-slate-600 text-sm font-medium rounded-xl hover:bg-slate-50 transition-colors"
+            title="Copier les numéros au presse-papiers"
+          >
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" /></svg>
+            Copier N°
+          </button>
+        </div>
       </div>
 
       {/* ── Extra filters ── */}
@@ -221,6 +326,46 @@ export default function AdminLivreursPage() {
           </button>
         )}
       </div>
+
+      {/* ── Bulk-selection toolbar ── */}
+      {filtered.length > 0 && (
+        <div className="flex flex-wrap items-center gap-3 text-sm bg-slate-50 border border-slate-200 rounded-xl px-3 py-2">
+          <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+            <input
+              type="checkbox"
+              className="w-4 h-4 accent-blue-600"
+              checked={filtered.length > 0 && filtered.every(a => selected.has(a.id))}
+              ref={(el) => {
+                if (el) {
+                  const some = selectedVisible.length > 0;
+                  const all  = filtered.every(a => selected.has(a.id));
+                  el.indeterminate = some && !all;
+                }
+              }}
+              onChange={toggleAllVisible}
+            />
+            <span className="text-slate-600 font-medium">
+              Tout sélectionner
+              <span className="text-slate-400 font-normal"> ({filtered.length} visibles)</span>
+            </span>
+          </label>
+          <div className="ms-auto flex items-center gap-3">
+            {copyToast && (
+              <span className="text-xs font-medium text-green-700 bg-green-50 border border-green-200 px-2 py-1 rounded-lg">
+                {copyToast}
+              </span>
+            )}
+            {selected.size > 0 && (
+              <>
+                <span className="text-xs text-slate-500">{selected.size} sélectionné(s)</span>
+                <button onClick={clearSelection} className="text-xs text-red-500 hover:text-red-600 font-medium">
+                  Vider ×
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* ── Content ── */}
       {loading ? (
@@ -280,8 +425,18 @@ export default function AdminLivreursPage() {
           {filtered.map(app => {
             const initials = `${(app.first_name[0] ?? "?").toUpperCase()}${(app.last_name[0] ?? "").toUpperCase()}`;
             return (
-              <div key={app.id} className="bg-white rounded-2xl border border-slate-100 p-5 hover:shadow-md transition-shadow">
+              <div key={app.id} className={`bg-white rounded-2xl border p-5 hover:shadow-md transition-shadow ${selected.has(app.id) ? "border-blue-300 ring-1 ring-blue-200" : "border-slate-100"}`}>
                 <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+
+                  {/* Select checkbox */}
+                  <label className="inline-flex items-center justify-center cursor-pointer shrink-0" title="Sélectionner">
+                    <input
+                      type="checkbox"
+                      className="w-4 h-4 accent-blue-600"
+                      checked={selected.has(app.id)}
+                      onChange={() => toggleOne(app.id)}
+                    />
+                  </label>
 
                   {/* Avatar */}
                   <div className="w-12 h-12 rounded-xl bg-[#0f172a] flex items-center justify-center text-blue-300 font-bold text-base shrink-0">
@@ -303,7 +458,7 @@ export default function AdminLivreursPage() {
                     <div className="flex flex-wrap gap-x-3 gap-y-0.5 text-xs text-slate-500">
                       <span>{app.email}</span>
                       <span className="text-slate-300">·</span>
-                      <span>{app.phone}</span>
+                      <span>{formatPhone(app.phone)}</span>
                       <span className="text-slate-300">·</span>
                       <span>{app.wilaya}</span>
                       <span className="text-slate-300">·</span>

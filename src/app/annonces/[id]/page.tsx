@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useAuth, useToast } from "@/lib/context";
 import { createClient } from "@/lib/supabase/client";
 import type { Listing, Profile } from "@/lib/supabase/types";
+import { toTelHref, toWaNumber } from "@/lib/phone";
 
 type ListingRow = Listing;
 type ProfileRow = Profile;
@@ -81,17 +82,10 @@ export default function ListingDetailPage() {
     sendMsg(proposal);
   };
 
-  /** Normalise an Algerian phone number for wa.me / tel: links.
-   *  Accepts "06 12 34 56 78", "+213612345678", "0612345678", etc. */
-  function normalisePhone(raw: string | null | undefined): { tel: string; wa: string } | null {
-    if (!raw) return null;
-    const digits = raw.replace(/\D/g, "");
-    if (!digits) return null;
-    // Local Algerian format starts with 0 → swap for +213
-    const international = digits.startsWith("0") ? "213" + digits.slice(1) : digits;
-    return { tel: "+" + international, wa: international };
-  }
-  const phone = normalisePhone(transporter?.phone);
+  /** Normalise any phone (legacy Algerian or E.164) for wa.me / tel: links. */
+  const phone = transporter?.phone
+    ? { tel: toTelHref(transporter.phone).replace(/^tel:/, ""), wa: toWaNumber(transporter.phone) }
+    : null;
 
   if (loading) {
     return (

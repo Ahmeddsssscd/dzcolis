@@ -49,7 +49,7 @@ function hasRole(current: AdminRole, min: AdminRole) {
 type IconKey =
   | "dashboard" | "systeme" | "utilisateurs" | "annonces" | "expeditions"
   | "kyc" | "litiges" | "livreurs" | "paiements" | "parametres" | "equipe"
-  | "journal" | "support";
+  | "journal" | "support" | "contact";
 
 const ICONS: Record<IconKey, React.ReactNode> = {
   dashboard: (
@@ -119,6 +119,11 @@ const ICONS: Record<IconKey, React.ReactNode> = {
       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
     </svg>
   ),
+  contact: (
+    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>
+  ),
 };
 
 /*
@@ -145,6 +150,7 @@ const NAV: NavItem[] = [
   { href: "/admin/expeditions",  labelKey: "adm_nav_shipments", iconKey: "expeditions",  minRole: "viewer"      },
   { href: "/admin/kyc",          labelKey: "adm_nav_kyc",       iconKey: "kyc",          badgeKey: "kyc",      minRole: "moderator" },
   { href: "/admin/support",      labelKey: "adm_nav_support",   iconKey: "support",      minRole: "support"   },
+  { href: "/admin/contact",      labelKey: "adm_nav_contact",   iconKey: "contact",      minRole: "support"   },
   { href: "/admin/litiges",      labelKey: "adm_nav_disputes",  iconKey: "litiges",      badgeKey: "litiges",  minRole: "support"   },
   { href: "/admin/livreurs",     labelKey: "adm_nav_couriers",  iconKey: "livreurs",     badgeKey: "livreurs", minRole: "moderator" },
   { href: "/admin/paiements",    labelKey: "adm_nav_payments",  iconKey: "paiements",    minRole: "viewer"      },

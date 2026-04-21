@@ -12,6 +12,7 @@
  * Fallback order: current locale → fr → raw key.
  */
 
+import { useCallback } from "react";
 import { useI18n } from "@/lib/i18n";
 
 const DICT = {
@@ -34,6 +35,7 @@ const DICT = {
     adm_nav_kyc:                 "KYC",
     adm_nav_disputes:            "Litiges",
     adm_nav_support:             "Support chat",
+    adm_nav_contact:             "Contact",
     adm_nav_couriers:            "Candidatures",
     adm_nav_payments:            "Paiements",
     adm_nav_audit:               "Journal d'audit",
@@ -276,6 +278,28 @@ const DICT = {
     adm_support_send:            "Envoyer",
     adm_support_err_claim:       "Impossible de prendre en charge ce chat.",
     adm_support_err_send:        "Envoi impossible. Réessayez.",
+
+    /* Contact inbox */
+    adm_contact_title:           "Messages de contact",
+    adm_contact_subtitle:        "Boîte de réception du formulaire de contact",
+    adm_contact_f_all:           "Tous",
+    adm_contact_f_new:           "Nouveaux",
+    adm_contact_f_read:          "Lus",
+    adm_contact_f_archived:      "Archivés",
+    adm_contact_search_ph:       "Rechercher dans le contenu…",
+    adm_contact_loading:         "Chargement…",
+    adm_contact_empty:           "Aucun message dans cette vue.",
+    adm_contact_new_tag:         "NOUVEAU",
+    adm_contact_archived_tag:    "ARCHIVÉ",
+    adm_contact_select_hint:     "Sélectionnez un message pour le lire.",
+    adm_contact_from:            "De",
+    adm_contact_reply:           "Répondre",
+    adm_contact_archive:         "Archiver",
+    adm_contact_unarchive:       "Désarchiver",
+    adm_contact_mark_unread:     "Marquer non lu",
+    adm_contact_user_ref:        "Compte utilisateur :",
+    adm_contact_err_load:        "Chargement impossible.",
+    adm_contact_err_patch:       "Mise à jour impossible.",
   },
 
   /* ─── English ──────────────────────────────────────────────── */
@@ -297,6 +321,7 @@ const DICT = {
     adm_nav_kyc:                 "KYC",
     adm_nav_disputes:            "Disputes",
     adm_nav_support:             "Support chat",
+    adm_nav_contact:             "Contact",
     adm_nav_couriers:            "Courier applications",
     adm_nav_payments:            "Payments",
     adm_nav_audit:               "Audit log",
@@ -539,6 +564,28 @@ const DICT = {
     adm_support_send:            "Send",
     adm_support_err_claim:       "Unable to claim this chat.",
     adm_support_err_send:        "Could not send. Please try again.",
+
+    /* Contact inbox */
+    adm_contact_title:           "Contact messages",
+    adm_contact_subtitle:        "Contact form inbox",
+    adm_contact_f_all:           "All",
+    adm_contact_f_new:           "New",
+    adm_contact_f_read:          "Read",
+    adm_contact_f_archived:      "Archived",
+    adm_contact_search_ph:       "Search content…",
+    adm_contact_loading:         "Loading…",
+    adm_contact_empty:           "No messages in this view.",
+    adm_contact_new_tag:         "NEW",
+    adm_contact_archived_tag:    "ARCHIVED",
+    adm_contact_select_hint:     "Select a message to read it.",
+    adm_contact_from:            "From",
+    adm_contact_reply:           "Reply",
+    adm_contact_archive:         "Archive",
+    adm_contact_unarchive:       "Unarchive",
+    adm_contact_mark_unread:     "Mark unread",
+    adm_contact_user_ref:        "User account:",
+    adm_contact_err_load:        "Unable to load.",
+    adm_contact_err_patch:       "Update failed.",
   },
 
   /* ─── Arabic (RTL) ─────────────────────────────────────────── */
@@ -560,6 +607,7 @@ const DICT = {
     adm_nav_kyc:                 "التحقق من الهوية",
     adm_nav_disputes:            "النزاعات",
     adm_nav_support:             "دردشة الدعم",
+    adm_nav_contact:             "التواصل",
     adm_nav_couriers:            "طلبات السائقين",
     adm_nav_payments:            "المدفوعات",
     adm_nav_audit:               "سجل التدقيق",
@@ -802,6 +850,28 @@ const DICT = {
     adm_support_send:            "إرسال",
     adm_support_err_claim:       "تعذّر استلام هذه الدردشة.",
     adm_support_err_send:        "تعذّر الإرسال. حاول مجددًا.",
+
+    /* Contact inbox */
+    adm_contact_title:           "رسائل التواصل",
+    adm_contact_subtitle:        "صندوق الوارد لنموذج التواصل",
+    adm_contact_f_all:           "الكل",
+    adm_contact_f_new:           "جديد",
+    adm_contact_f_read:          "مقروء",
+    adm_contact_f_archived:      "مؤرشف",
+    adm_contact_search_ph:       "بحث في المحتوى…",
+    adm_contact_loading:         "جارٍ التحميل…",
+    adm_contact_empty:           "لا توجد رسائل في هذا العرض.",
+    adm_contact_new_tag:         "جديد",
+    adm_contact_archived_tag:    "مؤرشف",
+    adm_contact_select_hint:     "اختر رسالة لقراءتها.",
+    adm_contact_from:            "من",
+    adm_contact_reply:           "رد",
+    adm_contact_archive:         "أرشفة",
+    adm_contact_unarchive:       "إلغاء الأرشفة",
+    adm_contact_mark_unread:     "تعليم كغير مقروء",
+    adm_contact_user_ref:        "حساب المستخدم:",
+    adm_contact_err_load:        "تعذّر التحميل.",
+    adm_contact_err_patch:       "تعذّر التحديث.",
   },
 } as const;
 
@@ -820,10 +890,21 @@ export type AdminKey = keyof typeof DICT.fr;
  */
 export function useAdminT() {
   const { lang, isRTL, setLang } = useI18n();
-  const dict = (DICT[lang] ?? DICT.fr) as Record<string, string>;
-  const fallback = DICT.fr as Record<string, string>;
 
-  const t = (key: AdminKey): string => dict[key] ?? fallback[key] ?? key;
+  // IMPORTANT: `t` MUST have a stable identity across renders when `lang`
+  // hasn't changed. Components put `t` in effect/callback dep arrays
+  // (e.g. /admin/journal), so if `t` were recreated on every render we
+  // would loop forever — fetching the audit log on a tight 60 Hz cycle
+  // and melting the server. useCallback keyed on `lang` keeps identity
+  // stable until the user actually flips the language.
+  const t = useCallback(
+    (key: AdminKey): string => {
+      const dict = (DICT[lang] ?? DICT.fr) as Record<string, string>;
+      const fallback = DICT.fr as Record<string, string>;
+      return dict[key] ?? fallback[key] ?? key;
+    },
+    [lang]
+  );
 
   return { t, lang, isRTL, setLang };
 }

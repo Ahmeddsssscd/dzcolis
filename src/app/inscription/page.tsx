@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useAuth, useToast } from "@/lib/context";
 import { useI18n } from "@/lib/i18n";
 import WaselliLogo from "@/components/WaselliLogo";
+import PhoneInput from "@/components/PhoneInput";
 
 const WILAYAS = [
   "01 - Adrar","02 - Chlef","03 - Laghouat","04 - Oum El Bouaghi","05 - Batna",
@@ -164,16 +165,7 @@ export default function InscriptionPage() {
 
           <div>
             <label className="block text-sm font-medium text-dz-gray-700 mb-1.5">{t("auth_phone")}</label>
-            <div className="flex">
-              <span className="inline-flex items-center px-3 border border-r-0 border-dz-gray-200 rounded-l-[10px] bg-dz-gray-50 text-sm text-dz-gray-500 font-medium">+213</span>
-              <input
-                type="tel"
-                value={form.phone}
-                onChange={(e) => update("phone", e.target.value)}
-                placeholder="555 123 456"
-                className="input rounded-l-none flex-1"
-              />
-            </div>
+            <PhoneInput value={form.phone} onChange={(v) => update("phone", v)} />
           </div>
 
           <div>

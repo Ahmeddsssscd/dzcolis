@@ -3,6 +3,7 @@ import { useState, useRef } from "react";
 import { useAuth } from "@/lib/context";
 import { EUROPEAN_COUNTRIES, ALGERIAN_CITIES } from "@/lib/data";
 import Link from "next/link";
+import PhoneInput from "@/components/PhoneInput";
 
 type Step = 1 | 2 | 3 | 4;
 
@@ -230,13 +231,7 @@ export default function DevenirTransporteurInternationalPage() {
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-dz-gray-700 mb-1">Téléphone *</label>
-                      <input
-                        type="tel"
-                        value={form.phone}
-                        onChange={(e) => update("phone", e.target.value)}
-                        placeholder="+33 6 00 00 00 00"
-                        className="w-full px-4 py-3 border border-dz-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-dz-green/30 focus:border-dz-green"
-                      />
+                      <PhoneInput value={form.phone} onChange={(v) => update("phone", v)} defaultCode="+33" required />
                     </div>
                   </div>
                   <div className="grid grid-cols-2 gap-4">

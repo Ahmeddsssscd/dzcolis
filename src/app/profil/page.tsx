@@ -8,6 +8,7 @@ import { useAuth, useListings } from "@/lib/context";
 import { useToast } from "@/lib/context";
 import { useI18n } from "@/lib/i18n";
 import { ALGERIAN_CITIES } from "@/lib/data";
+import PhoneInput from "@/components/PhoneInput";
 
 const TRANSPORT_LABELS: Record<string, string> = {
   voiture: "Voiture", moto: "Moto", camionnette: "Camionnette",
@@ -429,9 +430,7 @@ export default function ProfilPage() {
 
             <div className="mb-4">
               <label className="block text-xs font-medium text-dz-gray-600 mb-1.5">{t("profil_phone")}</label>
-              <input type="tel" value={phone} onChange={(e) => setPhone(e.target.value)}
-                placeholder="+213 5XX XXX XXX"
-                className="w-full border border-dz-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-dz-green" />
+              <PhoneInput value={phone} onChange={setPhone} />
             </div>
 
             <div className="mb-6">
