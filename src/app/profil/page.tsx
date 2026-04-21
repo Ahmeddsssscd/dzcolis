@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth, useListings } from "@/lib/context";
@@ -251,8 +252,14 @@ export default function ProfilPage() {
           <div className="relative shrink-0">
             <div className="w-24 h-24 rounded-2xl overflow-hidden bg-white/20 flex items-center justify-center">
               {previewUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={previewUrl} alt={t("profil_change_photo")} className="w-full h-full object-cover" />
+                <Image
+                  src={previewUrl}
+                  alt={t("profil_change_photo")}
+                  width={96}
+                  height={96}
+                  unoptimized
+                  className="w-full h-full object-cover"
+                />
               ) : (
                 <span className="text-4xl font-black text-white">{user.avatar}</span>
               )}

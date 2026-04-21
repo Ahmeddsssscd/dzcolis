@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useRef } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ALGERIAN_CITIES } from "@/lib/data";
 import { useAuth } from "@/lib/context";
@@ -339,8 +340,14 @@ function ApplyModal({ onClose, prefill }: { onClose: () => void; prefill?: Apply
                 >
                   {photoPreview ? (
                     <div className="relative">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={photoPreview} alt="Aperçu" className="w-full h-40 object-cover" />
+                      <Image
+                        src={photoPreview}
+                        alt="Aperçu"
+                        width={600}
+                        height={160}
+                        unoptimized
+                        className="w-full h-40 object-cover"
+                      />
                       <div className="absolute inset-0 bg-slate-900/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
                         <span className="text-white text-xs font-medium bg-slate-900/60 px-3 py-1.5 rounded-full">Changer la photo</span>
                       </div>

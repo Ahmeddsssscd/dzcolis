@@ -10,6 +10,8 @@ import ThemeProvider from "@/components/ThemeProvider";
 import WhatsAppButton from "@/components/WhatsAppButton";
 import PWAInstallPrompt from "@/components/PWAInstallPrompt";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const jakarta = Plus_Jakarta_Sans({
   variable: "--font-jakarta",
@@ -103,6 +105,8 @@ export default function RootLayout({
               <PWAInstallPrompt />
               <LanguageSwitcher />
             </AppProvider>
+            <Analytics />
+            <SpeedInsights />
           </LanguageProvider>
         </ThemeProvider>
       </body>

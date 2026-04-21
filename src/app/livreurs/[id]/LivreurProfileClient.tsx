@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 
 interface LivreurData {
@@ -156,8 +157,14 @@ export default function LivreurProfileClient({ id }: { id: string }) {
           className="group relative block w-full h-52 md:h-64 overflow-hidden bg-[#0f172a] text-left"
           aria-label="Agrandir la photo du véhicule"
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={heroPhoto} alt="" className="w-full h-full object-cover opacity-70 group-hover:opacity-80 transition-opacity" />
+          <Image
+            src={heroPhoto}
+            alt=""
+            fill
+            sizes="100vw"
+            priority
+            className="object-cover opacity-70 group-hover:opacity-80 transition-opacity"
+          />
           <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a]/80 via-transparent to-transparent" />
           <div className="absolute bottom-4 left-6 flex items-center gap-3">
             <span className="text-xs font-semibold text-white/70 uppercase tracking-widest">
@@ -266,8 +273,13 @@ export default function LivreurProfileClient({ id }: { id: string }) {
                   className="group relative aspect-square overflow-hidden rounded-xl border border-slate-100 bg-slate-50"
                   aria-label={`Agrandir la photo ${i + 1}`}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={url} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <Image
+                    src={url}
+                    alt=""
+                    fill
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 300px"
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" />
                 </button>
               ))}
@@ -462,8 +474,14 @@ export default function LivreurProfileClient({ id }: { id: string }) {
           )}
 
           <div className="relative max-w-5xl max-h-[85vh]" onClick={(e) => e.stopPropagation()}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={photos[lightboxIndex]} alt="" className="max-w-full max-h-[85vh] object-contain rounded-lg" />
+            <Image
+              src={photos[lightboxIndex]}
+              alt=""
+              width={1600}
+              height={1200}
+              sizes="90vw"
+              className="max-w-full max-h-[85vh] w-auto h-auto object-contain rounded-lg"
+            />
             {photos.length > 1 && (
               <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-white/70 text-xs font-medium">
                 {lightboxIndex + 1} / {photos.length}

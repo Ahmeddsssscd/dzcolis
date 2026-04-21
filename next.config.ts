@@ -3,6 +3,21 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
 
+  // next/image is allowed to fetch + optimize images served from our own
+  // Supabase Storage public buckets (vehicle photos, avatars). Anything
+  // else must be explicitly whitelisted here — otherwise next/image refuses
+  // to render it, which is exactly the behaviour we want (no arbitrary
+  // third-party hot-linking).
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.supabase.co",
+        pathname: "/storage/v1/object/public/**",
+      },
+    ],
+  },
+
   async headers() {
     return [
       {

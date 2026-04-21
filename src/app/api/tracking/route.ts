@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { adminClient } from "@/lib/supabase/admin";
 import { createClient as createServerClient } from "@/lib/supabase/server";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 /**
  * Public tracking endpoint.
@@ -16,6 +17,17 @@ import { createClient as createServerClient } from "@/lib/supabase/server";
  * This lets recipients follow the progress without exposing PII.
  */
 export async function GET(req: NextRequest) {
+  // Public unauthenticated endpoint — throttle aggressively so nobody can
+  // enumerate booking_refs. 60 lookups / 5 min / IP is ~12 per minute,
+  // well above any legitimate polling pattern from a single user but far
+  // too slow to brute-force a random ref space.
+  const limited = checkRateLimit(req, {
+    bucket: "tracking-lookup",
+    max: 60,
+    windowMs: 5 * 60 * 1000,
+  });
+  if (limited) return limited;
+
   const ref = req.nextUrl.searchParams.get("ref");
   if (!ref) return NextResponse.json({ error: "Missing ref" }, { status: 400 });
 
